@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Game } from '../../../domain/entities/game.entity';
-import { IGameRepository } from '../../../domain/interfaces/game.repository.interface';
-import { GameOrmEntity } from './entities/game.orm-entity';
-import { GameMapper } from './mappers/game.mapper';
+import { Game } from '../../../../domain/entities/game.entity';
+import { IGameRepository } from '../../../../domain/interfaces/game.repository.interface';
+import { GameOrmEntity } from '../entities/game.orm-entity';
+import { GameMapper } from '../mappers/game.mapper';
 
 @Injectable()
 export class GameRepositoryAdapter implements IGameRepository {
