@@ -3,28 +3,69 @@
 # ------------------------------------------------------
 
 input CreateGameInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  category: GameCategory!
+  description: String
+  durationMinutes: Int!
+  imageUrl: String
+  maxPlayers: Int!
+  minPlayers: Int!
+  pricePerDay: Float!
+  stockTotal: Int!
+  title: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Game {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  category: GameCategory!
+  createdAt: DateTime!
+  description: String
+  durationMinutes: Int!
+  id: ID!
+  imageUrl: String
+  isDeleted: Boolean!
+  maxPlayers: Int!
+  minPlayers: Int!
+  pricePerDay: Float!
+  stockAvailable: Int!
+  stockTotal: Int!
+  title: String!
+  updatedAt: DateTime!
+}
+
+"""Categorías de juegos de mesa"""
+enum GameCategory {
+  ABSTRACTO
+  COOPERATIVO
+  ESTRATEGIA
+  FAMILIAR
+  PARTY
+  RPG
 }
 
 type Mutation {
   createGame(createGameInput: CreateGameInput!): Game!
-  removeGame(id: Int!): Game!
+  deleteGame(id: ID!): Boolean!
   updateGame(updateGameInput: UpdateGameInput!): Game!
 }
 
 type Query {
-  game(id: Int!): Game!
+  game(id: ID!): Game!
   games: [Game!]!
 }
 
 input UpdateGameInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  category: GameCategory
+  description: String
+  durationMinutes: Int
+  id: ID!
+  imageUrl: String
+  maxPlayers: Int
+  minPlayers: Int
+  pricePerDay: Float
+  stockTotal: Int
+  title: String
 }

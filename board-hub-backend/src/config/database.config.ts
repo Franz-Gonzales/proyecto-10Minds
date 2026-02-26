@@ -8,10 +8,9 @@ export const databaseConfig = registerAs('database', () => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [__dirname + '/../modules/**/*.orm.entity{.ts,.js}'], 
-    synchronize: process.env.NODE_ENV === 'development', 
-    // logging: process.env.NODE_ENV === 'development',
+    synchronize: process.env.NODE_ENV === 'development',
     autoLoadEntities: true,
+    // logging: process.env.NODE_ENV === 'development',
 }));
 
 
