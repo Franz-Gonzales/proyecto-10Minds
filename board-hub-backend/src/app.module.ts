@@ -11,6 +11,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { GamesModule } from './modules/game/games.module';
 import { GraphqlExceptionFilter } from './common/filters/graphql-exception.filter';
 import { join } from 'path';
+import { ClientModule } from './modules/client/client.module';
 
 @Module({
   imports: [
@@ -50,6 +51,8 @@ import { join } from 'path';
     // }),
 
     GamesModule,
+
+    ClientModule,
   ],
   controllers: [],
   providers: [

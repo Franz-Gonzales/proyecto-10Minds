@@ -2,6 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Client {
+  ci: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  direction: String
+  email: String!
+  id: ID!
+  isActive: Boolean!
+  lastName: String!
+  name: String!
+  phoneNumber: String!
+  updatedAt: DateTime!
+}
+
+input CreateClientInput {
+  ci: String!
+  direction: String
+  email: String!
+  lastName: String!
+  name: String!
+  phoneNumber: String!
+}
+
 input CreateGameInput {
   category: GameCategory!
   description: String
@@ -47,14 +70,29 @@ enum GameCategory {
 }
 
 type Mutation {
+  createClient(createClientInput: CreateClientInput!): Client!
   createGame(createGameInput: CreateGameInput!): Game!
   deleteGame(id: ID!): Boolean!
+  removeClient(id: ID!): Boolean!
+  updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!
 }
 
 type Query {
+  client(id: ID!): Client!
+  clients: [Client!]!
   game(id: ID!): Game!
   games: [Game!]!
+}
+
+input UpdateClientInput {
+  ci: String
+  direction: String
+  email: String
+  id: ID!
+  lastName: String
+  name: String
+  phoneNumber: String
 }
 
 input UpdateGameInput {
