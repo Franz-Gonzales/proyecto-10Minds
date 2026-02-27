@@ -37,6 +37,19 @@ input CreateGameInput {
   title: String!
 }
 
+input CreateLoanInput {
+  clientId: ID!
+  deliveryDate: DateTime
+  endDate: DateTime!
+  gameId: ID!
+  notes: String
+  pricePerDay: Float!
+  quantity: Int!
+  startDate: DateTime!
+  status: LoanStatus!
+  totalPrice: Float!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -69,13 +82,44 @@ enum GameCategory {
   RPG
 }
 
+type Loan {
+  client: Client
+  clientId: ID!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  deliveryDate: DateTime
+  endDate: DateTime!
+  game: Game
+  gameId: ID!
+  id: ID!
+  isDeleted: Boolean!
+  notes: String
+  pricePerDay: Float!
+  quantity: Int!
+  startDate: DateTime!
+  status: LoanStatus!
+  totalPrice: Float!
+  updatedAt: DateTime!
+}
+
+"""Status of a loan"""
+enum LoanStatus {
+  DELIVERED
+  LOANED
+  OVERDUE
+  RESERVED
+}
+
 type Mutation {
   createClient(createClientInput: CreateClientInput!): Client!
   createGame(createGameInput: CreateGameInput!): Game!
+  createLoan(createLoanInput: CreateLoanInput!): Loan!
   deleteGame(id: ID!): Boolean!
   removeClient(id: ID!): Boolean!
+  removeLoan(id: ID!): Loan!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!
+  updateLoan(updateLoanInput: UpdateLoanInput!): Loan!
 }
 
 type Query {
@@ -83,6 +127,7 @@ type Query {
   clients: [Client!]!
   game(id: ID!): Game!
   games: [Game!]!
+  loan(id: ID!): Loan!
 }
 
 input UpdateClientInput {
@@ -106,4 +151,18 @@ input UpdateGameInput {
   pricePerDay: Float
   stockTotal: Int
   title: String
+}
+
+input UpdateLoanInput {
+  clientId: ID
+  deliveryDate: DateTime
+  endDate: DateTime
+  gameId: ID
+  id: ID!
+  notes: String
+  pricePerDay: Float
+  quantity: Int
+  startDate: DateTime
+  status: LoanStatus
+  totalPrice: Float
 }

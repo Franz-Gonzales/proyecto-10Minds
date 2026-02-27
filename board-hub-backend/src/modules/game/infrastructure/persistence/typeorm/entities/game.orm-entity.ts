@@ -2,11 +2,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 
 import { GameCategory } from '../../../../domain/enums/game-category.enum';
+import { LoanOrmEntity } from '../../../../../loan/infrastructure/persistence/typeorm/entities/loan.orm-entity';
 
 @Entity('games')
 export class GameOrmEntity {
@@ -51,4 +53,8 @@ export class GameOrmEntity {
 
     @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
     updatedAt: Date;
+
+    // Relations
+    @OneToMany(() => LoanOrmEntity, (loan) => loan.game)
+    loans: LoanOrmEntity[];
 }
