@@ -10,7 +10,7 @@ export class Game {
   readonly maxPlayers: number;
   readonly durationMinutes: number;
   readonly stockTotal: number;
-  readonly stockAvailable: number;
+  public stockAvailable: number;
   readonly imageUrl: string | null;
   readonly isDeleted: boolean;
   readonly createdAt: Date;
@@ -46,5 +46,16 @@ export class Game {
     this.isDeleted = props.isDeleted ?? false;
     this.createdAt = props.createdAt ?? new Date();
     this.updatedAt = props.updatedAt ?? new Date();
+  }
+
+  decreaseStock(quantity: number): void {
+    if (!this.hasStock(quantity)) {
+      throw new Error(`Insufficient stock. Available: ${this.stockAvailable}`);
+    }
+    this.stockAvailable -= quantity;
+  }
+
+  hasStock(quantity: number): boolean {
+    return this.stockAvailable >= quantity;
   }
 }

@@ -39,15 +39,11 @@ input CreateGameInput {
 
 input CreateLoanInput {
   clientId: ID!
-  deliveryDate: DateTime
   endDate: DateTime!
   gameId: ID!
   notes: String
-  pricePerDay: Float!
   quantity: Int!
   startDate: DateTime!
-  status: LoanStatus!
-  totalPrice: Float!
 }
 
 """
@@ -155,14 +151,10 @@ input UpdateGameInput {
 
 input UpdateLoanInput {
   clientId: ID
-  deliveryDate: DateTime
   endDate: DateTime
   gameId: ID
   id: ID!
   notes: String
-  pricePerDay: Float
   quantity: Int
   startDate: DateTime
-  status: LoanStatus
-  totalPrice: Float
 }

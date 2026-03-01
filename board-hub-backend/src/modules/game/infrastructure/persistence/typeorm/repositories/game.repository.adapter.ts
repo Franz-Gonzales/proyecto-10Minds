@@ -22,7 +22,6 @@ export class GameRepositoryAdapter implements IGameRepository {
 
     async findAll(): Promise<Game[]> {
         const entities = await this.ormRepository.find({
-            where: { isDeleted: false },
             order: { createdAt: 'DESC' },
         });
         return entities.map(GameMapper.toDomain);
@@ -30,7 +29,7 @@ export class GameRepositoryAdapter implements IGameRepository {
 
     async findById(id: string): Promise<Game | null> {
         const entity = await this.ormRepository.findOne({
-            where: { id, isDeleted: false },
+            where: { id },
         });
 
         if (!entity) return null;

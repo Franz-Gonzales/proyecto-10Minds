@@ -26,23 +26,6 @@ export class CreateLoanInput {
   @IsNotEmpty()
   endDate: Date;
 
-  @Field(() => Date, { nullable: true })
-  @IsOptional()
-  deliveryDate?: Date | null;
-
-  @Field(() => LoanStatus)
-  @IsNotEmpty()
-  @IsEnum(LoanStatus)
-  status: LoanStatus;
-
-  @Field(() => Float)
-  @IsNotEmpty()
-  pricePerDay: number;
-
-  @Field(() => Float)
-  @IsNotEmpty()
-  totalPrice: number;
-
   @Field({ nullable: true })
   @IsOptional()
   @IsString()

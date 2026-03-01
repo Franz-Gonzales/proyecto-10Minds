@@ -22,3 +22,41 @@ export class InvalidLoanDataException extends InvalidDataException {
         super(message);
     }
 }
+
+
+export class LoanInsufficientStockException extends Error {
+    constructor(available: number, requested: number) {
+        super(
+            `Stock insuficiente. Disponible: ${available}, solicitado: ${requested}.`,
+        );
+        this.name = 'LoanInsufficientStockException';
+    }
+}
+
+export class LoanInvalidDateRangeException extends Error {
+    constructor(message?: string) {
+        super(message ?? 'La fecha de fin debe ser posterior a la fecha de inicio.');
+        this.name = 'LoanInvalidDateRangeException';
+    }
+}
+
+export class LoanAlreadyReturnedException extends Error {
+    constructor(id: string) {
+        super(`El préstamo "${id}" ya fue marcado como entregado.`);
+        this.name = 'LoanAlreadyReturnedException';
+    }
+}
+
+export class LoanAlreadyDeletedException extends Error {
+    constructor(id: string) {
+        super(`El préstamo con ID "${id}" ya fue eliminado.`);
+        this.name = 'LoanAlreadyDeletedException';
+    }
+}
+
+export class LoanCannotBeReturnedException extends Error {
+    constructor(status: string) {
+        super(`Un préstamo en estado "${status}" no puede ser marcado como entregado.`);
+        this.name = 'LoanCannotBeReturnedException';
+    }
+}

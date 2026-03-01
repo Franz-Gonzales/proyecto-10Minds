@@ -28,3 +28,9 @@ export class InsufficientStockException extends InsufficientResourceException {
         super(`Insufficient stock for game with id "${gameId}"`);
     }
 }
+
+export class GameDeletedException extends NotFoundException {
+    constructor(id: string) {
+        super(`Game with id ${id} is deleted`);
+    }
+}

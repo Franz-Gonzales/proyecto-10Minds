@@ -51,4 +51,20 @@ export class Loan {
         this.updatedAt = props.updatedAt ?? new Date();
         this.deletedAt = props.deletedAt ?? null;
     }
+
+    static calculateTotalPrice(
+        startDate: Date,
+        endDate: Date,
+        quantity: number,
+        pricePerDay: number,
+    ): number {
+        // Calculate how many milliseconds are in a day (24 hours)
+        const msPerDay = 1000 * 3600 * 24;
+
+        // Calculate the difference in days between dates
+        const days = Math.max(1, Math.ceil((endDate.getTime() - startDate.getTime()) / msPerDay));
+        
+        // Calculate the final price and format it
+        return parseFloat((days * quantity * pricePerDay).toFixed(2));
+    }
 }
