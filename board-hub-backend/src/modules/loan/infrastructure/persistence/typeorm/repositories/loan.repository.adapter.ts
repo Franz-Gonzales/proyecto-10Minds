@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 
 import { ILoanRepository } from "src/modules/loan/domain/interfaces/loan.repository.interface";
 import { LoanOrmEntity } from "../entities/loan.orm-entity";
-import { Loan } from "src/modules/loan/domain/entieties/loan.entity";
+import { Loan } from "src/modules/loan/domain/entities/loan.entity";
 import { LoanMapper } from "../mappers/loan.mapper";
 
 @Injectable()

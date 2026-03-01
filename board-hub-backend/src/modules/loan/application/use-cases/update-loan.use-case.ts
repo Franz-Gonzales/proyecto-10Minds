@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { LOAN_REPOSITORY } from "../../domain/interfaces/loan.repository.interface";
 import type { ILoanRepository } from "../../domain/interfaces/loan.repository.interface";
-import { Loan } from "../../domain/entieties/loan.entity";
+import { Loan } from "../../domain/entities/loan.entity";
 import { LoanStatus } from "../../domain/enums/loan-status.enum";
 
 export interface UpdateLoanCommand {

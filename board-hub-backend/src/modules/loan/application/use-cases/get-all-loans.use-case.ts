@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { type ILoanRepository, LOAN_REPOSITORY } from '../../domain/interfaces/loan.repository.interface';
-import { Loan } from '../../domain/entieties/loan.entity';
+import { Loan } from '../../domain/entities/loan.entity';
 
 @Injectable()
 export class GetAllLoansUseCase {

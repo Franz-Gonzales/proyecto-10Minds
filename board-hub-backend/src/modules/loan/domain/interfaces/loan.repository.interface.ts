@@ -1,4 +1,4 @@
-import { Loan } from "../entieties/loan.entity";
+import { Loan } from "../entities/loan.entity";
 
 export const LOAN_REPOSITORY = Symbol('LOAN_REPOSITORY');
 

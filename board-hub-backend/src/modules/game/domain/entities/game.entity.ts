@@ -66,6 +66,9 @@ export class Game {
     if (quantity <= 0) {
       throw new Error('Quantity must be a positive number');
     }
+    if (this.stockAvailable + quantity > this.stockTotal) {
+      throw new Error(`Cannot increase stock beyond total. Available: ${this.stockAvailable}, Total: ${this.stockTotal}`);
+    }
     this.stockAvailable += quantity;
   }
 }

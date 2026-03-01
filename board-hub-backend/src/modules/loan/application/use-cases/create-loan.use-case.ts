@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 
 import { v4 as uuidv4 } from 'uuid';
-import { Loan } from "../../domain/entieties/loan.entity";
+import { Loan } from "../../domain/entities/loan.entity";
 import { LOAN_REPOSITORY } from "../../domain/interfaces/loan.repository.interface";
 import type { ILoanRepository } from "../../domain/interfaces/loan.repository.interface";
 import { LoanStatus } from "../../domain/enums/loan-status.enum";

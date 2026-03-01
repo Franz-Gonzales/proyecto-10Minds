@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import type { ILoanRepository } from '../../domain/interfaces/loan.repository.interface';
 import { LOAN_REPOSITORY } from '../../domain/interfaces/loan.repository.interface';
-import { Loan } from '../../domain/entieties/loan.entity';
+import { Loan } from '../../domain/entities/loan.entity';
 import { LoanNotFoundException } from '../../domain/exceptions/loan.exceptions';
 
 @Injectable()

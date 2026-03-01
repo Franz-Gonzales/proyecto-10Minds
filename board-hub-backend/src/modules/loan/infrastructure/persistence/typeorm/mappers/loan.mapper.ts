@@ -1,4 +1,4 @@
-import { Loan } from "src/modules/loan/domain/entieties/loan.entity";
+import { Loan } from "src/modules/loan/domain/entities/loan.entity";
 import { LoanOrmEntity } from "../entities/loan.orm-entity";
 
 export class LoanMapper {

@@ -4,7 +4,7 @@ import { GetLoanByIdUseCase } from '../use-cases/get-loan-by-id.use-case';
 import { DeleteLoanUseCase } from '../use-cases/delete-laon.use-case';
 import { CreateLoanCommand, CreateLoantUseCase } from '../use-cases/create-loan.use-case';
 import { UpdateLoanCommand, UpdateLoanUseCase } from '../use-cases/update-loan.use-case';
-import { Loan } from '../../domain/entieties/loan.entity';
+import { Loan } from '../../domain/entities/loan.entity';
 import { ReturnLoanUseCase } from '../use-cases/return-loan.use-case';
 
 

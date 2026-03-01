@@ -4,7 +4,7 @@ import { LoanAlreadyReturnedException, LoanCannotBeReturnedException, LoanNotFou
 import { LoanStatus } from "../../domain/enums/loan-status.enum";
 import { GAME_REPOSITORY, type IGameRepository } from '../../../game/domain/interfaces/game.repository.interface';
 import { GameDeletedException, GameNotFoundException } from '../../../game/domain/exceptions/game.exceptions';
-import { Loan } from "../../domain/entieties/loan.entity";
+import { Loan } from "../../domain/entities/loan.entity";
 
 export interface ReturnLoanCommand {
     id: string;
