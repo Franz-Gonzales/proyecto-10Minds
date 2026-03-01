@@ -49,6 +49,9 @@ export class Game {
   }
 
   decreaseStock(quantity: number): void {
+    if (quantity <= 0) {
+      throw new Error('Quantity must be a positive number');
+    }
     if (!this.hasStock(quantity)) {
       throw new Error(`Insufficient stock. Available: ${this.stockAvailable}`);
     }

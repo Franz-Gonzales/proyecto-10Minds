@@ -24,12 +24,11 @@ export class InvalidLoanDataException extends InvalidDataException {
 }
 
 
-export class LoanInsufficientStockException extends Error {
+export class LoanInsufficientStockException extends InsufficientResourceException {
     constructor(available: number, requested: number) {
         super(
             `Stock insuficiente. Disponible: ${available}, solicitado: ${requested}.`,
         );
-        this.name = 'LoanInsufficientStockException';
     }
 }
 

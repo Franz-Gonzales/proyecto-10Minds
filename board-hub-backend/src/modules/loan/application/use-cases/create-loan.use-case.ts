@@ -67,15 +67,15 @@ export class CreateLoantUseCase {
             throw new LoanInsufficientStockException(game.stockAvailable, command.quantity);
         }
         
-        const totalPrice = Loan.calculateTotalPrice(command.startDate, command.endDate, command.quantity, game.pricePerDay);
+        const totalPrice = Loan.calculateTotalPrice(start, end, command.quantity, game.pricePerDay);
 
         const loan = new Loan({
             id: uuidv4(),
             gameId: command.gameId,
             clientId: command.clientId,
             quantity: command.quantity,
-            startDate: command.startDate,
-            endDate: command.endDate,
+            startDate: start,
+            endDate: end,
             status: LoanStatus.RESERVED,
             pricePerDay: game.pricePerDay,
             totalPrice,
