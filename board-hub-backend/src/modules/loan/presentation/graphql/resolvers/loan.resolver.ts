@@ -33,4 +33,9 @@ export class LoanResolver {
   async removeLoan(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
     return this.loanService.remove(id);
   }
+
+  @Mutation(() => LoanType, { name: 'returnLoan' })
+  async returnLoan(@Args('id', { type: () => ID }) id: string): Promise<LoanType> {
+    return this.loanService.returnLoan(id);
+  }
 }

@@ -61,4 +61,11 @@ export class Game {
   hasStock(quantity: number): boolean {
     return this.stockAvailable >= quantity;
   }
+
+  increaseStock(quantity: number): void {
+    if (quantity <= 0) {
+      throw new Error('Quantity must be a positive number');
+    }
+    this.stockAvailable += quantity;
+  }
 }

@@ -113,6 +113,7 @@ type Mutation {
   deleteGame(id: ID!): Boolean!
   removeClient(id: ID!): Boolean!
   removeLoan(id: ID!): Loan!
+  returnLoan(id: ID!): Loan!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!
   updateLoan(updateLoanInput: UpdateLoanInput!): Loan!

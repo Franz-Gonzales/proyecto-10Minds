@@ -8,8 +8,8 @@ export class Loan {
     readonly quantity: number;
     readonly startDate: Date;
     readonly endDate: Date;
-    readonly deliveryDate: Date | null;
-    readonly status: LoanStatus;
+    public deliveryDate: Date | null;
+    public status: LoanStatus;
     readonly pricePerDay: number;
     readonly totalPrice: number;
     readonly notes: string | null;
@@ -67,4 +67,17 @@ export class Loan {
         // Calculate the final price and format it
         return parseFloat((days * quantity * pricePerDay).toFixed(2));
     }
+
+    canBeReturned(): boolean {
+        return this.status === LoanStatus.RESERVED || this.status === LoanStatus.OVERDUE;
+    }
+
+    markAsReturned(): void {
+        if (!this.canBeReturned()) {
+            throw new Error(`Loan with status ${this.status} cannot be marked as returned`);
+        }
+        this.status = LoanStatus.DELIVERED;
+        this.deliveryDate = new Date();
+    }
+
 }

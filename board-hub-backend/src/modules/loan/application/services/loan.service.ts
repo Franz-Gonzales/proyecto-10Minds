@@ -5,6 +5,7 @@ import { DeleteLoanUseCase } from '../use-cases/delete-laon.use-case';
 import { CreateLoanCommand, CreateLoantUseCase } from '../use-cases/create-loan.use-case';
 import { UpdateLoanCommand, UpdateLoanUseCase } from '../use-cases/update-loan.use-case';
 import { Loan } from '../../domain/entieties/loan.entity';
+import { ReturnLoanUseCase } from '../use-cases/return-loan.use-case';
 
 
 @Injectable()
@@ -16,6 +17,7 @@ export class LoanService {
     private readonly getAllLoansUseCase: GetAllLoansUseCase,
     private readonly getLoanByIdUseCase: GetLoanByIdUseCase,
     private readonly deleteLoanUseCase: DeleteLoanUseCase,
+    private readonly returnLoanUseCase: ReturnLoanUseCase,
   ) { }
   async create(command: CreateLoanCommand): Promise<Loan> {
     return this.createLoanUseCase.execute(command);
@@ -35,5 +37,9 @@ export class LoanService {
 
   async remove(id: string): Promise<boolean> {
     return this.deleteLoanUseCase.execute(id);
+  }
+
+  async returnLoan(id: string): Promise<Loan>{
+    return this.returnLoanUseCase.execute({ id });
   }
 }
