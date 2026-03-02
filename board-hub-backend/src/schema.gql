@@ -126,6 +126,21 @@ type Query {
   game(id: ID!): Game!
   games: [Game!]!
   loan(id: ID!): Loan!
+
+  """Get all loans. Supports filters by status, client, and game."""
+  loans(
+    """Filter by client ID"""
+    clientId: ID
+
+    """Filter by game ID"""
+    gameId: ID
+
+    """Whether to include deleted loans (default: true)"""
+    includeDeleted: Boolean
+
+    """Filter by loan status (e.g. ACTIVE, OVERDUE, DELIVERED)"""
+    status: LoanStatus
+  ): [Loan!]!
 }
 
 input UpdateClientInput {

@@ -3,6 +3,7 @@ import { LoanService } from '../../../application/services/loan.service';
 import { CreateLoanInput } from '../inputs/create-loan.input';
 import { UpdateLoanInput } from '../inputs/update-loan.input';
 import { LoanType } from '../types/loan.type';
+import { LoanStatus } from 'src/modules/loan/domain/enums/loan-status.enum';
 
 
 @Resolver(() => LoanType)
@@ -14,9 +15,22 @@ export class LoanResolver {
     return this.loanService.create(createLoanInput);
   }
 
-  @Query(() => [LoanType], { name: 'loan' })
-  async findAll(): Promise<LoanType[]> {
-    return this.loanService.findAll();
+  @Query(() => [LoanType], { 
+    name: 'loans',
+    description: 'Get all loans. Supports filters by status, client, and game.'
+  })
+  async findAll(
+    @Args('status', { type: () => LoanStatus, nullable: true, description: 'Filter by loan status (e.g. ACTIVE, OVERDUE, DELIVERED)' }) status?: LoanStatus,
+    @Args('clientId', { type: () => ID, nullable: true, description: 'Filter by client ID' }) clientId?: string,
+    @Args('gameId', { type: () => ID, nullable: true, description: 'Filter by game ID' }) gameId?: string,
+    @Args('includeDeleted', { type: () => Boolean, nullable: true, description: 'Whether to include deleted loans (default: true)' }) includeDeleted?: boolean,
+  ): Promise<LoanType[]> {
+    return this.loanService.findAll({
+      status,
+      clientId,
+      gameId,
+      includeDeleted
+    });
   }
 
   @Query(() => LoanType, { name: 'loan' })

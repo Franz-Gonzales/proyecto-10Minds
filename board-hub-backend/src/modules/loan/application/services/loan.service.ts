@@ -7,6 +7,7 @@ import { UpdateLoanCommand, UpdateLoanUseCase } from '../use-cases/update-loan.u
 import { Loan } from '../../domain/entities/loan.entity';
 import { ReturnLoanUseCase } from '../use-cases/return-loan.use-case';
 import { CheckOverdueLoansUseCase } from '../use-cases/check-overdue-loans.use-case';
+import { FindAllLoansOptions } from '../../domain/interfaces/loan.repository.interface';
 
 
 @Injectable()
@@ -25,8 +26,8 @@ export class LoanService {
     return this.createLoanUseCase.execute(command);
   }
 
-  async findAll(): Promise<Loan[]> {
-    return this.getAllLoansUseCase.execute();
+  async findAll(query?: FindAllLoansOptions): Promise<Loan[]> {
+    return this.getAllLoansUseCase.execute(query || {});
   }
 
   async findOne(id: string): Promise<Loan> {

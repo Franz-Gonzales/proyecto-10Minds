@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, Repository } from "typeorm";
 
-import { ILoanRepository } from "src/modules/loan/domain/interfaces/loan.repository.interface";
+import { FindAllLoansOptions, ILoanRepository } from "src/modules/loan/domain/interfaces/loan.repository.interface";
 import { LoanOrmEntity } from "../entities/loan.orm-entity";
 import { Loan } from "src/modules/loan/domain/entities/loan.entity";
 import { LoanMapper } from "../mappers/loan.mapper";
@@ -21,11 +21,30 @@ export class LoanRepositoryAdapter implements ILoanRepository {
         return LoanMapper.toDomain(saved);
     }
 
-    async findAll(): Promise<Loan[]> {
-        const entities = await this.ormRepository.find({
-            where: { isDeleted: false },
-            order: { createdAt: 'DESC' },
-        });
+    async findAll(options: FindAllLoansOptions = {}): Promise<Loan[]> {
+        const qb = this.ormRepository.createQueryBuilder('loan')
+            .leftJoinAndSelect('loan.game', 'game')
+            .leftJoinAndSelect('loan.client', 'client')
+
+        if (!options.includeDeleted) {
+            qb.andWhere('loan.isDeleted = false');
+        }
+
+        if (options.status) {
+            qb.andWhere('loan.status = :status', { status: options.status });
+        }
+
+        if (options.clientId) {
+            qb.andWhere('loan.clientId = :clientId', { clientId: options.clientId });
+        }
+
+        if (options.gameId) {
+            qb.andWhere('loan.gameId = :gameId', { gameId: options.gameId });
+        }
+
+        qb.orderBy('loan.createdAt', 'DESC');
+
+        const entities = await qb.getMany();
         return entities.map(LoanMapper.toDomain);
     }
 
@@ -46,7 +65,7 @@ export class LoanRepositoryAdapter implements ILoanRepository {
         });
         return entities.map(LoanMapper.toDomain);
     }
-    
+
     async findByClientId(clientId: string): Promise<Loan[]> {
         const entities = await this.ormRepository.find({
             where: { clientId, isDeleted: false },
@@ -80,20 +99,20 @@ export class LoanRepositoryAdapter implements ILoanRepository {
     async findOverdue(): Promise<Loan[]> {
         const now = new Date();
         // now.setHours(0, 0, 0, 0);
-        
+
         const entities = await this.ormRepository.find({
             where: {
                 status: LoanStatus.RESERVED,
                 endDate: LessThan(now),
                 isDeleted: false,
-            },  
+            },
             relations: ['game', 'client'],
         });
         return entities.map(LoanMapper.toDomain);
     }
 
     async updateMany(loans: Loan[]): Promise<void> {
-        if(loans.length === 0) return;
+        if (loans.length === 0) return;
 
         await Promise.all(
             loans.map(loan => this.ormRepository.update(loan.id, {
