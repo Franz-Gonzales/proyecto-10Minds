@@ -7,7 +7,7 @@ import {
 
 export class LoanNotFoundException extends NotFoundException {
     constructor(id: string) {
-        super(`Loan with id ${id} not found`);
+        super(`Loan with id "${id}" not found`);
     }
 }
 
@@ -23,39 +23,34 @@ export class InvalidLoanDataException extends InvalidDataException {
     }
 }
 
-
 export class LoanInsufficientStockException extends InsufficientResourceException {
     constructor(available: number, requested: number) {
         super(
-            `Stock insuficiente. Disponible: ${available}, solicitado: ${requested}.`,
+            `Insufficient stock. Available: ${available}, requested: ${requested}`,
         );
     }
 }
 
-export class LoanInvalidDateRangeException extends Error {
+export class LoanInvalidDateRangeException extends InvalidDataException {
     constructor(message?: string) {
-        super(message ?? 'La fecha de fin debe ser posterior a la fecha de inicio.');
-        this.name = 'LoanInvalidDateRangeException';
+        super(message ?? 'End date must be after start date');
     }
 }
 
-export class LoanAlreadyReturnedException extends Error {
+export class LoanAlreadyReturnedException extends InvalidDataException {
     constructor(id: string) {
-        super(`El préstamo "${id}" ya fue marcado como entregado.`);
-        this.name = 'LoanAlreadyReturnedException';
+        super(`Loan "${id}" has already been returned`);
     }
 }
 
-export class LoanAlreadyDeletedException extends Error {
+export class LoanAlreadyDeletedException extends InvalidDataException {
     constructor(id: string) {
-        super(`El préstamo con ID "${id}" ya fue eliminado.`);
-        this.name = 'LoanAlreadyDeletedException';
+        super(`Loan with id "${id}" has already been deleted`);
     }
 }
 
-export class LoanCannotBeReturnedException extends Error {
+export class LoanCannotBeReturnedException extends InvalidDataException {
     constructor(status: string) {
-        super(`Un préstamo en estado "${status}" no puede ser marcado como entregado.`);
-        this.name = 'LoanCannotBeReturnedException';
+        super(`A loan with status "${status}" cannot be marked as returned`);
     }
 }

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+
 import { GetAllLoansUseCase } from '../use-cases/get-all-loans.use-case';
 import { GetLoanByIdUseCase } from '../use-cases/get-loan-by-id.use-case';
-import { DeleteLoanUseCase } from '../use-cases/delete-laon.use-case';
-import { CreateLoanCommand, CreateLoantUseCase } from '../use-cases/create-loan.use-case';
+import { DeleteLoanUseCase } from '../use-cases/delete-loan.use-case';
+import { CreateLoanCommand, CreateLoanUseCase } from '../use-cases/create-loan.use-case';
 import { UpdateLoanCommand, UpdateLoanUseCase } from '../use-cases/update-loan.use-case';
 import { Loan } from '../../domain/entities/loan.entity';
 import { ReturnLoanUseCase } from '../use-cases/return-loan.use-case';
@@ -14,7 +15,7 @@ import { FindAllLoansOptions } from '../../domain/interfaces/loan.repository.int
 export class LoanService {
 
   constructor(
-    private readonly createLoanUseCase: CreateLoantUseCase,
+    private readonly createLoanUseCase: CreateLoanUseCase,
     private readonly updateLoanUseCase: UpdateLoanUseCase,
     private readonly getAllLoansUseCase: GetAllLoansUseCase,
     private readonly getLoanByIdUseCase: GetLoanByIdUseCase,

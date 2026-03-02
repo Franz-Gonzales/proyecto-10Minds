@@ -1,5 +1,5 @@
-import { LoanOrmEntity } from "src/modules/loan/infrastructure/persistence/typeorm/entities/loan.orm-entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { LoanOrmEntity } from '../../../../../loan/infrastructure/persistence/typeorm/entities/loan.orm-entity';
 
 @Entity('clients')
 export class ClientOrmEntity {

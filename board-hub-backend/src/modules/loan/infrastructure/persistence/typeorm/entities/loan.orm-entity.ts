@@ -1,7 +1,16 @@
-import { ClientOrmEntity } from "src/modules/client/infrastructure/persistence/typeorm/entities/client.orm-entity";
-import { GameOrmEntity } from "src/modules/game/infrastructure/persistence/typeorm/entities/game.orm-entity";
-import { LoanStatus } from "src/modules/loan/domain/enums/loan-status.enum";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { 
+    Column, 
+    CreateDateColumn, 
+    Entity, 
+    JoinColumn, 
+    ManyToOne, 
+    PrimaryGeneratedColumn, 
+    UpdateDateColumn 
+} from "typeorm";
+
+import { ClientOrmEntity } from "../../../../../client/infrastructure/persistence/typeorm/entities/client.orm-entity";
+import { GameOrmEntity } from "../../../../../game/infrastructure/persistence/typeorm/entities/game.orm-entity";
+import { LoanStatus } from "../../../../domain/enums/loan-status.enum";
 
 @Entity('loans')
 export class LoanOrmEntity {
@@ -14,7 +23,7 @@ export class LoanOrmEntity {
     @Column({ type: 'uuid', name: 'client_id' })
     clientId: string;
 
-    @Column({ type: 'integer', name: 'quantity' })
+    @Column({ type: 'integer' })
     quantity: number;
 
     @Column({ type: 'timestamp', name: 'start_date' })
@@ -26,7 +35,7 @@ export class LoanOrmEntity {
     @Column({ type: 'timestamp', name: 'delivery_date', nullable: true })
     deliveryDate: Date | null;
 
-    @Column({ type: 'varchar', length: 100, name: 'status' })
+    @Column({ type: 'varchar', length: 100 })
     status: LoanStatus;
 
     @Column({ type: 'decimal', precision: 10, scale: 2, name: 'price_per_day' })

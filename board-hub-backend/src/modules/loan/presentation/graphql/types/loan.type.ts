@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
+
 import { LoanStatus } from '../../../domain/enums/loan-status.enum';
 import { GameType } from '../../../../game/presentation/graphql/types/game.type';
 import { ClientType } from '../../../../client/presentation/graphql/types/client.type';

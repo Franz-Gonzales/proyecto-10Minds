@@ -113,7 +113,7 @@ type Mutation {
   createLoan(createLoanInput: CreateLoanInput!): Loan!
   deleteGame(id: ID!): Boolean!
   removeClient(id: ID!): Boolean!
-  removeLoan(id: ID!): Loan!
+  removeLoan(id: ID!): Boolean!
   returnLoan(id: ID!): Loan!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!
@@ -135,10 +135,10 @@ type Query {
     """Filter by game ID"""
     gameId: ID
 
-    """Whether to include deleted loans (default: true)"""
+    """Whether to include deleted loans"""
     includeDeleted: Boolean = true
 
-    """Filter by loan status (e.g. ACTIVE, OVERDUE, DELIVERED)"""
+    """Filter by loan status"""
     status: LoanStatus
   ): [Loan!]!
 }

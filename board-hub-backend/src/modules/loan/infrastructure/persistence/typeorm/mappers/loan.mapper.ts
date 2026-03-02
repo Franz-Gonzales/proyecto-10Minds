@@ -1,10 +1,12 @@
-import { Loan } from "src/modules/loan/domain/entities/loan.entity";
+import { Loan } from "../../../../domain/entities/loan.entity";
 import { LoanOrmEntity } from "../entities/loan.orm-entity";
+import { GameMapper } from "../../../../../game/infrastructure/persistence/typeorm/mappers/game.mapper";
+import { ClientMapper } from "../../../../../client/infrastructure/persistence/typeorm/mappers/client.mapper";
 
 export class LoanMapper {
 
     static toDomain(ormEntity: LoanOrmEntity): Loan {
-        return new Loan({
+        const loan = new Loan({
             id: ormEntity.id,
             gameId: ormEntity.gameId,
             clientId: ormEntity.clientId,
@@ -13,14 +15,18 @@ export class LoanMapper {
             endDate: ormEntity.endDate,
             deliveryDate: ormEntity.deliveryDate,
             status: ormEntity.status,
-            pricePerDay: ormEntity.pricePerDay,
-            totalPrice: ormEntity.totalPrice,
+            pricePerDay: Number(ormEntity.pricePerDay),
+            totalPrice: Number(ormEntity.totalPrice),
             notes: ormEntity.notes,
             isDeleted: ormEntity.isDeleted,
             createdAt: ormEntity.createdAt,
             updatedAt: ormEntity.updatedAt,
             deletedAt: ormEntity.deletedAt,
+            game: ormEntity.game ? GameMapper.toDomain(ormEntity.game) : undefined,
+            client: ormEntity.client ? ClientMapper.toDomain(ormEntity.client) : undefined,
         });
+
+        return loan;
     }
 
     static toOrm(domain: Loan): LoanOrmEntity {
@@ -36,7 +42,7 @@ export class LoanMapper {
         ormEntity.pricePerDay = domain.pricePerDay;
         ormEntity.totalPrice = domain.totalPrice;
         ormEntity.notes = domain.notes;
-
+        ormEntity.isDeleted = domain.isDeleted;
         return ormEntity;
     }
 }

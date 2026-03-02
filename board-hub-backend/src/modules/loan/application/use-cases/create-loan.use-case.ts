@@ -6,10 +6,12 @@ import { LOAN_REPOSITORY } from "../../domain/interfaces/loan.repository.interfa
 import type { ILoanRepository } from "../../domain/interfaces/loan.repository.interface";
 import { LoanStatus } from "../../domain/enums/loan-status.enum";
 
-import { GAME_REPOSITORY, type IGameRepository } from "src/modules/game/domain/interfaces/game.repository.interface";
-import { CLIENT_REPOSITORY, type IClientRepository } from '../../../client/domain/interfaces/client.repository.interface';
+import { GAME_REPOSITORY } from "../../../game/domain/interfaces/game.repository.interface";
+import type { IGameRepository } from "../../../game/domain/interfaces/game.repository.interface";
+import { CLIENT_REPOSITORY } from '../../../client/domain/interfaces/client.repository.interface';
+import type { IClientRepository } from '../../../client/domain/interfaces/client.repository.interface';
 import { LoanInsufficientStockException, LoanInvalidDateRangeException } from "../../domain/exceptions/loan.exceptions";
-import { GameDeletedException, GameNotFoundException } from "src/modules/game/domain/exceptions/game.exceptions";
+import { GameDeletedException, GameNotFoundException } from "../../../game/domain/exceptions/game.exceptions";
 import { ClientInactiveException, ClientNotFoundException } from '../../../client/domain/exceptions/client.exceptions';
 
 export interface CreateLoanCommand {
@@ -22,7 +24,7 @@ export interface CreateLoanCommand {
 }
 
 @Injectable()
-export class CreateLoantUseCase {
+export class CreateLoanUseCase {
     constructor(
         @Inject(LOAN_REPOSITORY)
         private readonly loanRepository: ILoanRepository,
@@ -40,7 +42,7 @@ export class CreateLoantUseCase {
         const start = new Date(command.startDate);
         const end = new Date(command.endDate);
 
-        if (start > end) {
+        if (start >= end) {
             throw new LoanInvalidDateRangeException();
         }
 
@@ -49,7 +51,7 @@ export class CreateLoantUseCase {
         if (!game) {
             throw new GameNotFoundException(command.gameId);
         }
-        if(game.isDeleted) {
+        if (game.isDeleted) {
             throw new GameDeletedException(command.gameId);
         }
 
@@ -58,12 +60,12 @@ export class CreateLoantUseCase {
         if (!client) {
             throw new ClientNotFoundException(command.clientId);
         }
-        if(client.isActive === false) {
+        if (!client.isActive) {
             throw new ClientInactiveException(command.clientId);
         }
 
         // Check available stock
-        if(command.quantity > game.stockAvailable) {
+        if (command.quantity > game.stockAvailable) {
             throw new LoanInsufficientStockException(game.stockAvailable, command.quantity);
         }
         
@@ -80,7 +82,6 @@ export class CreateLoantUseCase {
             pricePerDay: game.pricePerDay,
             totalPrice,
             notes: command.notes ?? null,
-            isDeleted: false,
         });
 
         // Update game stock
@@ -89,5 +90,4 @@ export class CreateLoantUseCase {
 
         return this.loanRepository.create(loan);
     }
-
 }

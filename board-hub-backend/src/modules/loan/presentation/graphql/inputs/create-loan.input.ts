@@ -1,6 +1,5 @@
-import { InputType, Int, Field, ID, Float } from '@nestjs/graphql';
-import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { LoanStatus } from 'src/modules/loan/domain/enums/loan-status.enum';
+import { InputType, Int, Field, ID } from '@nestjs/graphql';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 @InputType()
 export class CreateLoanInput {
@@ -26,7 +25,7 @@ export class CreateLoanInput {
   @IsNotEmpty()
   endDate: Date;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString()
   notes?: string;

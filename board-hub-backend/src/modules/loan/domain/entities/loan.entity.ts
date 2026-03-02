@@ -1,4 +1,6 @@
 import { LoanStatus } from "../enums/loan-status.enum";
+import type { Game } from "../../../game/domain/entities/game.entity";
+import type { Client } from '../../../client/domain/entieties/client.entity';
 
 export class Loan {
 
@@ -18,6 +20,10 @@ export class Loan {
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 
+    // Optional relations (loaded when joined)
+    readonly game?: Game;
+    readonly client?: Client;
+
     constructor(props: {
         id: string;
         gameId: string;
@@ -34,6 +40,8 @@ export class Loan {
         createdAt?: Date;
         updatedAt?: Date;
         deletedAt?: Date | null;
+        game?: Game;
+        client?: Client;
     }) {
         this.id = props.id;
         this.gameId = props.gameId;
@@ -50,6 +58,8 @@ export class Loan {
         this.createdAt = props.createdAt ?? new Date();
         this.updatedAt = props.updatedAt ?? new Date();
         this.deletedAt = props.deletedAt ?? null;
+        this.game = props.game;
+        this.client = props.client;
     }
 
     static calculateTotalPrice(
@@ -86,5 +96,4 @@ export class Loan {
         }
         this.status = LoanStatus.OVERDUE;
     }
-
 }

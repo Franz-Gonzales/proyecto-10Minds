@@ -1,9 +1,10 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+
 import { LoanService } from '../../../application/services/loan.service';
 import { CreateLoanInput } from '../inputs/create-loan.input';
 import { UpdateLoanInput } from '../inputs/update-loan.input';
 import { LoanType } from '../types/loan.type';
-import { LoanStatus } from 'src/modules/loan/domain/enums/loan-status.enum';
+import { LoanStatus } from '../../../domain/enums/loan-status.enum';
 
 
 @Resolver(() => LoanType)
@@ -20,10 +21,10 @@ export class LoanResolver {
     description: 'Get all loans. Supports filters by status, client, and game.'
   })
   async findAll(
-    @Args('status', { type: () => LoanStatus, nullable: true, description: 'Filter by loan status (e.g. ACTIVE, OVERDUE, DELIVERED)' }) status?: LoanStatus,
+    @Args('status', { type: () => LoanStatus, nullable: true, description: 'Filter by loan status' }) status?: LoanStatus,
     @Args('clientId', { type: () => ID, nullable: true, description: 'Filter by client ID' }) clientId?: string,
     @Args('gameId', { type: () => ID, nullable: true, description: 'Filter by game ID' }) gameId?: string,
-    @Args('includeDeleted', { type: () => Boolean, nullable: true, defaultValue: true, description: 'Whether to include deleted loans (default: true)' }) includeDeleted?: boolean,
+    @Args('includeDeleted', { type: () => Boolean, nullable: true, defaultValue: true, description: 'Whether to include deleted loans' }) includeDeleted?: boolean,
   ): Promise<LoanType[]> {
     return this.loanService.findAll({
       status,
@@ -38,12 +39,13 @@ export class LoanResolver {
     return this.loanService.findOne(id);
   }
 
-  @Mutation(() => LoanType,  { name: 'updateLoan' })
+  @Mutation(() => LoanType, { name: 'updateLoan' })
   async updateLoan(@Args('updateLoanInput') updateLoanInput: UpdateLoanInput): Promise<LoanType> {
-    return this.loanService.update(updateLoanInput.id, updateLoanInput);
+    const { id, ...data } = updateLoanInput;
+    return this.loanService.update(id, data);
   }
 
-  @Mutation(() => LoanType)
+  @Mutation(() => Boolean, { name: 'removeLoan' })
   async removeLoan(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
     return this.loanService.remove(id);
   }

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { type ILoanRepository, LOAN_REPOSITORY } from "../../domain/interfaces/loan.repository.interface";
 
+import { type ILoanRepository, LOAN_REPOSITORY } from "../../domain/interfaces/loan.repository.interface";
 
 @Injectable()
 export class CheckOverdueLoansUseCase {

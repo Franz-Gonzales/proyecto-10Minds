@@ -1,9 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { v4 as uuidv4 } from 'uuid';
+
 import { CLIENT_REPOSITORY } from "../../domain/interfaces/client.repository.interface";
 import type { IClientRepository } from "../../domain/interfaces/client.repository.interface";
 import { Client } from "../../domain/entieties/client.entity";
 import { ClientAlreadyExistsException } from "../../domain/exceptions/client.exceptions";
-import { v4 as uuidv4 } from 'uuid';
 
 export interface CreateClientCommand {
     name: string;

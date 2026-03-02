@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { FindAllLoansOptions, type ILoanRepository, LOAN_REPOSITORY } from '../../domain/interfaces/loan.repository.interface';
 import { Loan } from '../../domain/entities/loan.entity';
 import { CheckOverdueLoansUseCase } from './check-overdue-loans.use-case';

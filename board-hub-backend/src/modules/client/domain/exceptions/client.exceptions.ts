@@ -22,7 +22,7 @@ export class InvalidClientDataException extends InvalidDataException {
     }
 }
 
-export class ClientInactiveException extends Error {
+export class ClientInactiveException extends InvalidDataException {
     constructor(id: string) {
         super(`Client with id "${id}" is inactive`);
     }

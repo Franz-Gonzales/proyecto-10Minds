@@ -1,6 +1,5 @@
 import { Client } from "../entieties/client.entity";
 
-
 export const CLIENT_REPOSITORY = Symbol('CLIENT_REPOSITORY');
 
 export interface  IClientRepository {

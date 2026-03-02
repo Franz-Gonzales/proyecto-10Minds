@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { join } from 'path';
+
 import { appConfig, appValidationSchema } from './config/app.config';
 import { databaseConfig, databaseValidationSchema } from './config/database.config';
 import { graphqlConfig } from './config/graphql.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { GamesModule } from './modules/game/games.module';
 import { GraphqlExceptionFilter } from './common/filters/graphql-exception.filter';
-import { join } from 'path';
 import { ClientModule } from './modules/client/client.module';
 import { LoanModule } from './modules/loan/loan.module';
 
