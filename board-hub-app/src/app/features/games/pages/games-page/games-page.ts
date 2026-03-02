@@ -67,7 +67,8 @@ export default class GamesPage implements OnInit {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(GameFormDialog, {
-      width: '600px',
+      width: '640px',
+      maxHeight: '90vh',
       data: {} satisfies GameFormDialogData,
     });
 
@@ -75,18 +76,21 @@ export default class GamesPage implements OnInit {
       if (!result) return;
 
       this.gameService.create(result).subscribe({
-        next: () => {
+        next: (created) => {
           this.notification.success('Juego creado exitosamente');
           this.loadGames();
         },
-        error: (err) => this.notification.error(extractGraphQLError(err)),
+        error: (err) => {
+          this.notification.error(extractGraphQLError(err));
+        },
       });
     });
   }
 
   openEditDialog(game: Game): void {
     const dialogRef = this.dialog.open(GameFormDialog, {
-      width: '600px',
+      width: '640px',
+      maxHeight: '90vh',
       data: { game } satisfies GameFormDialogData,
     });
 
@@ -94,11 +98,13 @@ export default class GamesPage implements OnInit {
       if (!result) return;
 
       this.gameService.update(result).subscribe({
-        next: () => {
+        next: (updated) => {
           this.notification.success('Juego actualizado exitosamente');
           this.loadGames();
         },
-        error: (err) => this.notification.error(extractGraphQLError(err)),
+        error: (err) => {
+          this.notification.error(extractGraphQLError(err));
+        },
       });
     });
   }
@@ -122,7 +128,9 @@ export default class GamesPage implements OnInit {
           this.notification.success('Juego eliminado exitosamente');
           this.loadGames();
         },
-        error: (err) => this.notification.error(extractGraphQLError(err)),
+        error: (err) => {
+          this.notification.error(extractGraphQLError(err));
+        },
       });
     });
   }

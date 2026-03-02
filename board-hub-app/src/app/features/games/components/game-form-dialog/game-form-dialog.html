@@ -1,76 +1,188 @@
-<h2 mat-dialog-title>{{ isEdit ? 'Editar juego' : 'Nuevo juego' }}</h2>
+<div class="relative bg-[#151925] text-slate-200 h-full rounded-xl overflow-hidden flex flex-col">
+  <div class="flex items-center gap-4 px-6 pt-6 pb-4 border-b border-slate-700/50 bg-[#1a2030]">
+    <div class="flex items-center justify-center w-11 h-11 rounded-lg bg-blue-600/10 border border-blue-500/20">
+      <mat-icon class="text-blue-500">{{ isEdit ? 'edit' : 'sports_esports' }}</mat-icon>
+    </div>
+    <div>
+      <h2 class="text-lg font-bold text-white m-0 tracking-wide">
+        {{ isEdit ? 'Editar juego' : 'Nuevo juego' }}
+      </h2>
+      <p class="text-xs text-slate-400 m-0 mt-0.5">
+        {{ isEdit ? 'Modifica los datos del juego en el catálogo' : 'Completa los datos para registrar un juego en el catálogo' }}
+      </p>
+    </div>
+  </div>
 
-<mat-dialog-content class="!max-h-[70vh]">
-  <form [formGroup]="form" class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 pt-2">
-    <!-- Title (full width) -->
-    <mat-form-field class="sm:col-span-2" appearance="outline">
-      <mat-label>Nombre del juego</mat-label>
-      <input title="Nombre del juego" matInput formControlName="title" placeholder="Ej: Catán" />
-      @if (form.get('title')?.hasError('required')) {
-        <mat-error>El nombre es obligatorio</mat-error>
-      }
-    </mat-form-field>
+  <mat-dialog-content class="!max-h-[68vh] !px-6 !py-6 custom-scrollbar">
+    <form [formGroup]="form" class="flex flex-col gap-8">
 
-    <!-- Category -->
-    <mat-form-field appearance="outline">
-      <mat-label>Categoría</mat-label>
-      <mat-select formControlName="category">
-        @for (cat of categories; track cat.value) {
-          <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+      <div class="flex flex-col gap-3">
+        <span class="text-[0.7rem] font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
+          <mat-icon class="!w-4 !h-4 !text-[16px]">info</mat-icon>
+          Información básica
+        </span>
 
-    <!-- Price per day -->
-    <mat-form-field appearance="outline">
-      <mat-label>Precio por día (Bs.)</mat-label>
-      <input title="Precio por día en bolivianos" matInput type="number" formControlName="pricePerDay" min="0.01" step="0.50" />
-      @if (form.get('pricePerDay')?.hasError('min')) {
-        <mat-error>Mínimo Bs. 0.01</mat-error>
-      }
-    </mat-form-field>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2">
+          <mat-form-field class="sm:col-span-2 w-full" appearance="outline">
+            <mat-label class="text-slate-400">Nombre del juego</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">sports_esports</mat-icon>
+            <input matInput formControlName="title" placeholder="Ej: Catán, Carcassonne..." class="text-slate-200" />
+            @if (form.get('title')?.hasError('required')) {
+            <mat-error>El nombre es obligatorio</mat-error>
+            }
+            @if (form.get('title')?.hasError('maxlength')) {
+            <mat-error>Máximo 255 caracteres</mat-error>
+            }
+          </mat-form-field>
 
-    <!-- Min players -->
-    <mat-form-field appearance="outline">
-      <mat-label>Mín. jugadores</mat-label>
-      <input title="Número mínimo de jugadores" matInput type="number" formControlName="minPlayers" min="1" />
-    </mat-form-field>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-slate-400">Categoría</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">category</mat-icon>
+            <mat-select formControlName="category" class="text-slate-200">
+              @for (cat of categories; track cat.value) {
+              <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
 
-    <!-- Max players -->
-    <mat-form-field appearance="outline">
-      <mat-label>Máx. jugadores</mat-label>
-      <input title="Número máximo de jugadores" matInput type="number" formControlName="maxPlayers" min="1" />
-    </mat-form-field>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-slate-400">Precio por día (Bs.)</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">payments</mat-icon>
+            <input title="Precio por día en bolivianos" matInput type="number" formControlName="pricePerDay" min="0.01"
+              step="0.50" class="text-slate-200" />
+            @if (form.get('pricePerDay')?.hasError('required')) {
+            <mat-error>El precio es obligatorio</mat-error>
+            }
+            @if (form.get('pricePerDay')?.hasError('min')) {
+            <mat-error>Mínimo Bs. 0.01</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
 
-    <!-- Duration -->
-    <mat-form-field appearance="outline">
-      <mat-label>Duración (min)</mat-label>
-      <input title="Duración del juego en minutos" matInput type="number" formControlName="durationMinutes" min="1" />
-    </mat-form-field>
+      <div class="flex flex-col gap-3">
+        <span class="text-[0.7rem] font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
+          <mat-icon class="!w-4 !h-4 !text-[16px]">tune</mat-icon>
+          Detalles del juego
+        </span>
 
-    <!-- Stock -->
-    <mat-form-field appearance="outline">
-      <mat-label>Stock total</mat-label>
-      <input title="Stock total del juego" matInput type="number" formControlName="stockTotal" min="1" />
-    </mat-form-field>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-5 gap-y-2">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-slate-400">Mín. jugadores</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">person</mat-icon>
+            <input title="Min de Jugadores" matInput type="number" formControlName="minPlayers" min="1"
+              class="text-slate-200" />
+            @if (form.get('minPlayers')?.hasError('min')) {
+            <mat-error>Mínimo 1</mat-error>
+            }
+          </mat-form-field>
 
-    <!-- Image URL (full width) -->
-    <mat-form-field class="sm:col-span-2" appearance="outline">
-      <mat-label>URL de imagen (opcional)</mat-label>
-      <input title="URL de la imagen del juego" matInput formControlName="imageUrl" placeholder="https://..." />
-    </mat-form-field>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-slate-400">Máx. jugadores</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">groups</mat-icon>
+            <input title="Max de Jugadores" matInput type="number" formControlName="maxPlayers" min="1"
+              class="text-slate-200" />
+            @if (form.get('maxPlayers')?.hasError('min')) {
+            <mat-error>Mínimo 1</mat-error>
+            }
+          </mat-form-field>
 
-    <!-- Description (full width) -->
-    <mat-form-field class="sm:col-span-2" appearance="outline">
-      <mat-label>Descripción (opcional)</mat-label>
-      <textarea title="Descripción del juego" matInput formControlName="description" rows="3"></textarea>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-slate-400">Duración (min)</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">timer</mat-icon>
+            <input title="Duración del juego en minutos" matInput type="number" formControlName="durationMinutes"
+              min="1" class="text-slate-200" />
+            @if (form.get('durationMinutes')?.hasError('min')) {
+            <mat-error>Mínimo 1 min</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">Cancelar</button>
-  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="form.invalid">
-    {{ isEdit ? 'Guardar cambios' : 'Crear juego' }}
-  </button>
-</mat-dialog-actions>
+      <div class="flex flex-col gap-3">
+        <span class="text-[0.7rem] font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
+          <mat-icon class="!w-4 !h-4 !text-[16px]">inventory_2</mat-icon>
+          Inventario
+        </span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-slate-400">Stock total</mat-label>
+            <mat-icon matPrefix class="text-slate-500 mr-2">layers</mat-icon>
+            <input title="Stock total del juego" matInput type="number" formControlName="stockTotal" min="1"
+              class="text-slate-200" />
+            @if (form.get('stockTotal')?.hasError('min')) {
+            <mat-error>Mínimo 1 unidad</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <span class="text-[0.7rem] font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
+          <mat-icon class="!w-4 !h-4 !text-[16px]">image</mat-icon>
+          Fotografía
+        </span>
+
+        <div>
+          @if (imagePreview()) {
+          <div
+            class="border border-slate-700 bg-[#1a2030] rounded-xl p-4 flex flex-col items-center gap-3 relative group">
+            <img [src]="imagePreview()" alt="Preview" class="max-h-[180px] object-contain rounded-lg" />
+            <div
+              class="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button mat-flat-button color="warn" type="button" (click)="removeImage()"
+                class="!rounded-lg !bg-red-600/90 hover:!bg-red-600">
+                <mat-icon class="mr-1">delete</mat-icon> Quitar imagen
+              </button>
+            </div>
+            <span class="text-xs text-slate-400">{{ imageFileName() }}</span>
+          </div>
+          } @else {
+          <label
+            class="border-2 border-dashed border-slate-600 hover:border-blue-500 bg-[#1a2030] hover:bg-blue-600/5 transition-colors duration-200 rounded-xl p-8 flex flex-col items-center gap-3 cursor-pointer group">
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
+              (change)="onFileSelected($event)" />
+            <div
+              class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-800 group-hover:bg-blue-600/20 transition-colors">
+              <mat-icon
+                class="text-slate-400 group-hover:text-blue-500 text-[32px]! transition-colors">cloud_upload</mat-icon>
+            </div>
+            <div class="text-center">
+              <p class="text-sm font-medium text-slate-300 m-0">Haz clic para subir una imagen</p>
+              <p class="text-xs text-slate-500 m-0 mt-1">JPG, PNG, WebP o GIF · Máx. 2 MB</p>
+            </div>
+          </label>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <span class="text-[0.7rem] font-bold uppercase tracking-widest text-blue-500 flex items-center gap-2">
+          <mat-icon class="!w-4 !h-4 !text-[16px]">description</mat-icon>
+          Descripción
+        </span>
+
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label class="text-slate-400">Descripción del juego (opcional)</mat-label>
+          <textarea matInput formControlName="description" rows="3"
+            placeholder="Ej: Un juego de estrategia donde los jugadores..."
+            class="text-slate-200 resize-none"></textarea>
+        </mat-form-field>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="!px-6 !py-4 flex justify-end gap-3 border-t border-slate-700/50 bg-[#1a2030] mt-auto">
+    <button mat-button (click)="dialogRef.close()"
+      class="!text-slate-300 hover:!bg-slate-700/50 !rounded-md !px-5 transition-colors">
+      Cancelar
+    </button>
+    <button mat-flat-button (click)="onSubmit()" [disabled]="form.invalid"
+      class="!bg-blue-600 hover:!bg-blue-700 !text-white !rounded-md !px-6 transition-colors disabled:!bg-slate-700 disabled:!text-slate-500">
+      <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'add' }}</mat-icon>
+      {{ isEdit ? 'Guardar cambios' : 'Crear juego' }}
+    </button>
+  </mat-dialog-actions>
+</div>

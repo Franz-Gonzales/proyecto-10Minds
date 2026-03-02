@@ -29,7 +29,7 @@ export class CreateGameInput {
 
     @Field(() => Float)
     @IsNumber()
-    @Min(0)
+    @Min(0.01)
     pricePerDay: number;
 
     @Field(() => Int)
