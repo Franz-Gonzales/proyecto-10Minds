@@ -1,4 +1,4 @@
-import { Client } from "../../../../domain/entieties/client.entity";
+import { Client } from "../../../../domain/entities/client.entity";
 import { ClientOrmEntity } from "../entities/client.orm-entity";
 
 export class ClientMapper {

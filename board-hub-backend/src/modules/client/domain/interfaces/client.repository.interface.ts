@@ -1,4 +1,4 @@
-import { Client } from "../entieties/client.entity";
+import { Client } from "../entities/client.entity";
 
 export const CLIENT_REPOSITORY = Symbol('CLIENT_REPOSITORY');
 

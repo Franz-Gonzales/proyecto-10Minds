@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 
 import { IClientRepository } from "../../../../domain/interfaces/client.repository.interface";
 import { ClientOrmEntity } from "../entities/client.orm-entity";
-import { Client } from "../../../../domain/entieties/client.entity";
+import { Client } from "../../../../domain/entities/client.entity";
 import { ClientMapper } from "../mappers/client.mapper";
 
 @Injectable()

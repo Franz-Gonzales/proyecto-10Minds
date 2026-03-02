@@ -1,6 +1,6 @@
 import { LoanStatus } from "../enums/loan-status.enum";
 import type { Game } from "../../../game/domain/entities/game.entity";
-import type { Client } from '../../../client/domain/entieties/client.entity';
+import type { Client } from '../../../client/domain/entities/client.entity';
 
 export class Loan {
 
