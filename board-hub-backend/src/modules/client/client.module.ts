@@ -35,9 +35,8 @@ import { ClientResolver } from './presentation/graphql/resolvers/client.resolver
     DeleteClientUseCase,
 
     ClientResolver,
-
-    ClientService
+    ClientService,
   ],
-  exports: [ClientService]
+  exports: [ClientService, CLIENT_REPOSITORY],
 })
 export class ClientModule {}

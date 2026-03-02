@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 
 import { IClientRepository } from "../../../../domain/interfaces/client.repository.interface";
 import { ClientOrmEntity } from "../entities/client.orm-entity";
-import { Client } from "../../../../domain/entieties/client.entity";
+import { Client } from "../../../../domain/entities/client.entity";
 import { ClientMapper } from "../mappers/client.mapper";
 
 @Injectable()
@@ -22,7 +22,6 @@ export class ClientRepositoryAdapter implements IClientRepository {
 
     async findAll(): Promise<Client[]> {
         const entities = await this.ormRepository.find({
-            where: { isActive: true },
             order: { createdAt: 'DESC' },
         });
         return entities.map(ClientMapper.toDomain);
@@ -30,7 +29,7 @@ export class ClientRepositoryAdapter implements IClientRepository {
 
     async findById(id: string): Promise<Client | null> {
         const entity = await this.ormRepository.findOne({
-            where: { id, isActive: true },
+            where: { id },
         });
 
         if (!entity) return null;

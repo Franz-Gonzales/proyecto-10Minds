@@ -37,6 +37,15 @@ input CreateGameInput {
   title: String!
 }
 
+input CreateLoanInput {
+  clientId: ID!
+  endDate: DateTime!
+  gameId: ID!
+  notes: String
+  quantity: Int!
+  startDate: DateTime!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -69,20 +78,69 @@ enum GameCategory {
   RPG
 }
 
+type Loan {
+  client: Client
+  clientId: ID!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  deliveryDate: DateTime
+  endDate: DateTime!
+  game: Game
+  gameId: ID!
+  id: ID!
+  isDeleted: Boolean!
+  notes: String
+  pricePerDay: Float!
+  quantity: Int!
+  startDate: DateTime!
+  status: LoanStatus!
+  totalPrice: Float!
+  updatedAt: DateTime!
+}
+
+"""Status of a loan"""
+enum LoanStatus {
+  DELIVERED
+  LOANED
+  OVERDUE
+  RESERVED
+}
+
 type Mutation {
+  checkOverdueLoans: Int!
   createClient(createClientInput: CreateClientInput!): Client!
   createGame(createGameInput: CreateGameInput!): Game!
+  createLoan(createLoanInput: CreateLoanInput!): Loan!
   deleteGame(id: ID!): Boolean!
   removeClient(id: ID!): Boolean!
+  removeLoan(id: ID!): Boolean!
+  returnLoan(id: ID!): Loan!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!
+  updateLoan(updateLoanInput: UpdateLoanInput!): Loan!
 }
 
 type Query {
   client(id: ID!): Client!
   clients: [Client!]!
   game(id: ID!): Game!
-  games: [Game!]!
+  games(category: GameCategory): [Game!]!
+  loan(id: ID!): Loan!
+
+  """Get all loans. Supports filters by status, client, and game."""
+  loans(
+    """Filter by client ID"""
+    clientId: ID
+
+    """Filter by game ID"""
+    gameId: ID
+
+    """Whether to include deleted loans"""
+    includeDeleted: Boolean = true
+
+    """Filter by loan status"""
+    status: LoanStatus
+  ): [Loan!]!
 }
 
 input UpdateClientInput {
@@ -106,4 +164,14 @@ input UpdateGameInput {
   pricePerDay: Float
   stockTotal: Int
   title: String
+}
+
+input UpdateLoanInput {
+  clientId: ID
+  endDate: DateTime
+  gameId: ID
+  id: ID!
+  notes: String
+  quantity: Int
+  startDate: DateTime
 }

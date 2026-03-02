@@ -4,6 +4,7 @@ import { GamesService } from '../../../application/services/games.service';
 import { GameType } from '../types/game.type';
 import { CreateGameInput } from '../inputs/create-game.input';
 import { UpdateGameInput } from '../inputs/update-game.input';
+import { GameCategory } from 'src/modules/game/domain/enums/game-category.enum';
 
 @Resolver(() => GameType)
 export class GamesResolver {
@@ -19,8 +20,8 @@ export class GamesResolver {
   }
 
   @Query(() => [GameType], { name: 'games' })
-  async findAll(): Promise<GameType[]> {
-    return this.gamesService.findAll();
+  async findAll(@Args('category', {type: () => GameCategory, nullable: true }) category?: GameCategory): Promise<GameType[]> {
+    return this.gamesService.findAll({category});
   }
 
   @Query(() => GameType, { name: 'game' })

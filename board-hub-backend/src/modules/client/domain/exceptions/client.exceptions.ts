@@ -21,3 +21,9 @@ export class InvalidClientDataException extends InvalidDataException {
         super(message);
     }
 }
+
+export class ClientInactiveException extends InvalidDataException {
+    constructor(id: string) {
+        super(`Client with id "${id}" is inactive`);
+    }
+}

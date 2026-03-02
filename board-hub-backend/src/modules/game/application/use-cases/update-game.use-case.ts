@@ -44,7 +44,7 @@ export class UpdateGameUseCase {
         }
 
         // Lógica de Stock (Calculamos antes de crear el objeto)
-        let newStockAvailable = existGame.stockAvailable; // exit=20  new=30  = 30 - 20 =  dif=>10 new=20 + 10 = 30
+        let newStockAvailable = existGame.stockAvailable;
 
         if (command.stockTotal !== undefined && command.stockTotal !== existGame.stockTotal) {
             const stockDifference = command.stockTotal - existGame.stockTotal;

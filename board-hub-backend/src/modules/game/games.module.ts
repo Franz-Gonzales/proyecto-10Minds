@@ -41,6 +41,6 @@ import { GamesResolver } from './presentation/graphql/resolvers/games.resolver';
     // Resolver
     GamesResolver,
   ],
-  exports: [GamesService],
+  exports: [GamesService, GAME_REPOSITORY],
 })
 export class GamesModule { }

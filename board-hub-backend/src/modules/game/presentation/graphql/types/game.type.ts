@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID, Int, Float } from '@nestjs/graphql';
+
 import { GameCategory } from '../../../domain/enums/game-category.enum';
 
 @ObjectType('Game')

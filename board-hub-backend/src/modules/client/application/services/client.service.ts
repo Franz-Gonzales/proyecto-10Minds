@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+
 import { CreateClientCommand, CreateClientUseCase } from '../use-cases/create-client.use-case';
 import { GetAllClientUseCase } from '../use-cases/get-all-clients.use-case';
 import { UpdateClientCommand, UpdateClientUseCase } from '../use-cases/update-client.use-case';
 import { DeleteClientUseCase } from '../use-cases/delete-client.use-case';
 import { GetClientByIdUseCase } from '../use-cases/get-client-by-id.use-case';
-import { Client } from '../../domain/entieties/client.entity';
+import { Client } from '../../domain/entities/client.entity';
 
 @Injectable()
 export class ClientService {

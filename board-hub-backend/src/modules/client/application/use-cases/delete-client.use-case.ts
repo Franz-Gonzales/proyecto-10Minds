@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import type { IClientRepository } from '../../domain/interfaces/client.repository.interface';
 import { CLIENT_REPOSITORY } from '../../domain/interfaces/client.repository.interface';
 import { ClientNotFoundException, InvalidClientDataException } from '../../domain/exceptions/client.exceptions';

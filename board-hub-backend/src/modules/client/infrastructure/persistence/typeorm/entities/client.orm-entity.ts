@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { LoanOrmEntity } from '../../../../../loan/infrastructure/persistence/typeorm/entities/loan.orm-entity';
 
 @Entity('clients')
 export class ClientOrmEntity {
@@ -34,4 +35,7 @@ export class ClientOrmEntity {
 
     @Column({ type: 'timestamp', nullable: true, name: 'deleted_at' })
     deletedAt: Date | null;
+
+    @OneToMany(() => LoanOrmEntity, (loan) => loan.client)
+    loans: LoanOrmEntity[];
 }
