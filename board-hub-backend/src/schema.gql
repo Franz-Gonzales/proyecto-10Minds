@@ -107,6 +107,7 @@ enum LoanStatus {
 }
 
 type Mutation {
+  checkOverdueLoans: Int!
   createClient(createClientInput: CreateClientInput!): Client!
   createGame(createGameInput: CreateGameInput!): Game!
   createLoan(createLoanInput: CreateLoanInput!): Loan!

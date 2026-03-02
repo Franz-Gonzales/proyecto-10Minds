@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { LessThan, Repository } from "typeorm";
 
 import { ILoanRepository } from "src/modules/loan/domain/interfaces/loan.repository.interface";
 import { LoanOrmEntity } from "../entities/loan.orm-entity";
 import { Loan } from "src/modules/loan/domain/entities/loan.entity";
 import { LoanMapper } from "../mappers/loan.mapper";
+import { LoanStatus } from "src/modules/loan/domain/enums/loan-status.enum";
 
 @Injectable()
 export class LoanRepositoryAdapter implements ILoanRepository {
@@ -74,5 +75,30 @@ export class LoanRepositoryAdapter implements ILoanRepository {
             isDeleted: true,
             deletedAt: new Date(),
         } as any);
+    }
+
+    async findOverdue(): Promise<Loan[]> {
+        const now = new Date();
+        // now.setHours(0, 0, 0, 0);
+        
+        const entities = await this.ormRepository.find({
+            where: {
+                status: LoanStatus.RESERVED,
+                endDate: LessThan(now),
+                isDeleted: false,
+            },  
+            relations: ['game', 'client'],
+        });
+        return entities.map(LoanMapper.toDomain);
+    }
+
+    async updateMany(loans: Loan[]): Promise<void> {
+        if(loans.length === 0) return;
+
+        await Promise.all(
+            loans.map(loan => this.ormRepository.update(loan.id, {
+                status: loan.status
+            }))
+        )
     }
 }

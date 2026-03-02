@@ -38,4 +38,9 @@ export class LoanResolver {
   async returnLoan(@Args('id', { type: () => ID }) id: string): Promise<LoanType> {
     return this.loanService.returnLoan(id);
   }
+
+  @Mutation(() => Int, { name: 'checkOverdueLoans' })
+  async checkOverdueLoans(): Promise<number> {
+    return this.loanService.checkOverdue();
+  }
 }

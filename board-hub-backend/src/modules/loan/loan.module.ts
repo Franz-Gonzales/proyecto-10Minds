@@ -29,6 +29,7 @@ import { CLIENT_REPOSITORY } from '../client/domain/interfaces/client.repository
 import { GameOrmEntity } from '../game/infrastructure/persistence/typeorm/entities/game.orm-entity';
 import { ClientOrmEntity } from '../client/infrastructure/persistence/typeorm/entities/client.orm-entity';
 import { ReturnLoanUseCase } from './application/use-cases/return-loan.use-case';
+import { CheckOverdueLoansUseCase } from './application/use-cases/check-overdue-loans.use-case';
 
 @Module({
     imports: [
@@ -65,6 +66,7 @@ import { ReturnLoanUseCase } from './application/use-cases/return-loan.use-case'
         UpdateLoanUseCase,
         DeleteLoanUseCase,
         ReturnLoanUseCase,
+        CheckOverdueLoansUseCase,
 
         // Service (Facade)
         LoanService,

@@ -80,4 +80,11 @@ export class Loan {
         this.deliveryDate = new Date();
     }
 
+    markAsOverdue(): void {
+        if (this.status !== LoanStatus.RESERVED) {
+            throw new Error(`Only loans with status RESERVED can be marked as overdue`);
+        }
+        this.status = LoanStatus.OVERDUE;
+    }
+
 }
