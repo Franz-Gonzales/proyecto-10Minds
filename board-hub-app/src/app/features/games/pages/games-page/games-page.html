@@ -1,0 +1,36 @@
+<app-page-header
+  title="Juegos"
+  subtitle="Gestiona el catálogo de juegos de mesa"
+  actionLabel="Nuevo juego"
+  actionIcon="add"
+  (action)="openCreateDialog()"
+/>
+
+<app-game-filters
+  [activeCategory]="activeCategory()"
+  [searchTerm]="searchTerm()"
+  (categoryChange)="onCategoryChange($event)"
+  (searchChange)="onSearchChange($event)"
+/>
+
+@if (loading()) {
+  <div class="flex items-center justify-center py-20">
+    <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+  </div>
+} @else if (filteredGames().length === 0) {
+  <app-empty-state
+    icon="sports_esports"
+    title="Sin juegos"
+    subtitle="No se encontraron juegos. Crea uno nuevo para empezar."
+  />
+} @else {
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    @for (game of filteredGames(); track game.id) {
+      <app-game-card
+        [game]="game"
+        (edit)="openEditDialog($event)"
+        (delete)="confirmDelete($event)"
+      />
+    }
+  </div>
+}

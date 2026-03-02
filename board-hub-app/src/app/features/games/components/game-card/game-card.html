@@ -1,0 +1,67 @@
+<div
+  class="bg-base-200 rounded-2xl overflow-hidden border border-base-300 hover:border-primary/30 transition-colors group flex flex-col h-[520px]">
+  <!-- Imagen -->
+  <div class="relative h-80 flex-shrink-0 overflow-hidden">
+    <img title="games"
+      src="https://atmgaming.eu/cdn/shop/articles/foto_cd767f0d-09aa-4f6a-b548-e4d916c1fcaf.webp?crop=center&height=1200&v=1769013402&width=1200"
+      [alt]="game().title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+    <!-- <img title="games" [src]="game().imageUrl ?? placeholderImage" [alt]="game().title"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" /> -->
+
+    <!-- Categoría -->
+    <span
+      class="absolute top-4 left-4 text-base-content/70 text-sm font-medium drop-shadow-lg bg-black/70 px-4 py-2 rounded-full">
+      {{ categoryLabels[game().category] }}
+    </span>
+
+    <!-- Menú de 3 puntos verticales -->
+    <!-- Menú de 3 puntos verticales -->
+    <div class="absolute top-4 right-4 z-30">
+      <button [matMenuTriggerFor]="cardMenu"
+        class="flex items-center justify-center bg-black/70 hover:bg-black/90 text-white w-10 h-10 rounded-lg cursor-pointer border-none">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+
+    <mat-menu #cardMenu="matMenu">
+      <button mat-menu-item (click)="edit.emit(game())">
+        <mat-icon>edit</mat-icon>
+        <span>Editar</span>
+      </button>
+      <button mat-menu-item (click)="delete.emit(game())">
+        <mat-icon class="text-error">delete</mat-icon>
+        <span class="text-error">Eliminar</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <!-- Contenido inferior -->
+  <div class="p-6 flex flex-col flex-grow space-y-4">
+    <!-- Título + Precio (misma línea, como en la imagen) -->
+    <div class="flex items-start justify-between gap-3">
+      <h3 class="text-base-content font-semibold text-lg line-clamp-2 flex-1">
+        {{ game().title }}
+      </h3>
+      <span class="shrink-0 px-3 py-1.5 bg-yellow-400 text-gray-900 font-bold text-sm rounded-md whitespace-nowrap">
+        {{ game().pricePerDay | currencyBs }}/día
+      </span>
+    </div>
+
+    <!-- Jugadores y duración -->
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-base-content/60 text-sm">
+      <span class="flex items-center gap-2">
+        <mat-icon class="text-lg">group</mat-icon>
+        {{ game().minPlayers }}-{{ game().maxPlayers }} jugadores
+      </span>
+      <span class="flex items-center gap-2">
+        <mat-icon class="text-lg">schedule</mat-icon>
+        {{ game().durationMinutes }}m
+      </span>
+    </div>
+
+    <!-- Badge de stock -->
+    <div class="mt-4 flex items-center">
+      <app-stock-badge [stock]="game().stockAvailable" />
+    </div>
+  </div>
+</div>
