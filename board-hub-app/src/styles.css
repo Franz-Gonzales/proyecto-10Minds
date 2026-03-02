@@ -1,3 +1,68 @@
-/* You can add global styles to this file, and also import other style files */
 
+/* Import Tailwind v4 */
 @import "tailwindcss";
+
+/* Habilita daisyUI y lista el tema custom (opcional pero recomendado) */
+@plugin "daisyui" {
+  themes: boardhub-dark --default;
+}
+
+/* Bloque para el tema custom (sintaxis oficial v5, con --color- prefix) */
+@plugin "daisyui/theme" {
+  name: "boardhub-dark";
+  default: true;                 /* Fuerza como default */
+  prefersdark: true;             /* Preferencia dark */
+  color-scheme: dark;
+
+  --color-base-100: #0F172A;     /* Fondo principal navy */
+  --color-base-200: #1e293b;     /* Tarjetas / sidebar */
+  --color-base-300: #334155;     /* Bordes / hover */
+
+  --color-base-content: #f1f5f9; /* Texto claro */
+
+  --color-primary: #3b82f6;      /* Azul botones +Nuevo */
+  --color-primary-content: #ffffff;
+
+  --color-success: #22c55e;      /* Verde stock >0 */
+  --color-error: #ef4444;        /* Rojo agotado / vencido */
+
+  --color-neutral: #475569;
+  --color-neutral-content: #f1f5f9;
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+}
+
+
+
+/* Snackbar custom styles */
+.snack-success .mdc-snackbar__surface {
+  background-color: #166534 !important;
+}
+
+.snack-error .mdc-snackbar__surface {
+  background-color: #991b1b !important;
+}
+
+.snack-warning .mdc-snackbar__surface {
+  background-color: #92400e !important;
+}
+
+.snack-info .mdc-snackbar__surface {
+  background-color: #1e40af !important;
+}
+
+.snack-success .mdc-snackbar__label,
+.snack-error .mdc-snackbar__label,
+.snack-warning .mdc-snackbar__label,
+.snack-info .mdc-snackbar__label {
+  color: #f1f5f9 !important;
+}
+
+.snack-success .mat-mdc-button,
+.snack-error .mat-mdc-button,
+.snack-warning .mat-mdc-button,
+.snack-info .mat-mdc-button {
+  color: #f1f5f9 !important;
+}

@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar juego' : 'Nuevo juego' }}</h2>
+
+<mat-dialog-content class="!max-h-[70vh]">
+  <form [formGroup]="form" class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 pt-2">
+    <!-- Title (full width) -->
+    <mat-form-field class="sm:col-span-2" appearance="outline">
+      <mat-label>Nombre del juego</mat-label>
+      <input title="Nombre del juego" matInput formControlName="title" placeholder="Ej: Catán" />
+      @if (form.get('title')?.hasError('required')) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Category -->
+    <mat-form-field appearance="outline">
+      <mat-label>Categoría</mat-label>
+      <mat-select formControlName="category">
+        @for (cat of categories; track cat.value) {
+          <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Price per day -->
+    <mat-form-field appearance="outline">
+      <mat-label>Precio por día (Bs.)</mat-label>
+      <input title="Precio por día en bolivianos" matInput type="number" formControlName="pricePerDay" min="0.01" step="0.50" />
+      @if (form.get('pricePerDay')?.hasError('min')) {
+        <mat-error>Mínimo Bs. 0.01</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Min players -->
+    <mat-form-field appearance="outline">
+      <mat-label>Mín. jugadores</mat-label>
+      <input title="Número mínimo de jugadores" matInput type="number" formControlName="minPlayers" min="1" />
+    </mat-form-field>
+
+    <!-- Max players -->
+    <mat-form-field appearance="outline">
+      <mat-label>Máx. jugadores</mat-label>
+      <input title="Número máximo de jugadores" matInput type="number" formControlName="maxPlayers" min="1" />
+    </mat-form-field>
+
+    <!-- Duration -->
+    <mat-form-field appearance="outline">
+      <mat-label>Duración (min)</mat-label>
+      <input title="Duración del juego en minutos" matInput type="number" formControlName="durationMinutes" min="1" />
+    </mat-form-field>
+
+    <!-- Stock -->
+    <mat-form-field appearance="outline">
+      <mat-label>Stock total</mat-label>
+      <input title="Stock total del juego" matInput type="number" formControlName="stockTotal" min="1" />
+    </mat-form-field>
+
+    <!-- Image URL (full width) -->
+    <mat-form-field class="sm:col-span-2" appearance="outline">
+      <mat-label>URL de imagen (opcional)</mat-label>
+      <input title="URL de la imagen del juego" matInput formControlName="imageUrl" placeholder="https://..." />
+    </mat-form-field>
+
+    <!-- Description (full width) -->
+    <mat-form-field class="sm:col-span-2" appearance="outline">
+      <mat-label>Descripción (opcional)</mat-label>
+      <textarea title="Descripción del juego" matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="form.invalid">
+    {{ isEdit ? 'Guardar cambios' : 'Crear juego' }}
+  </button>
+</mat-dialog-actions>

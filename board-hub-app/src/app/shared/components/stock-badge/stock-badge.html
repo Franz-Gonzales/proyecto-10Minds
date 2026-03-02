@@ -1,0 +1,14 @@
+<span
+  class="inline-flex items-center gap-3 px-5 py-3 text-base font-medium rounded-full shadow-md border border-opacity-40 min-w-[140px] justify-center"
+  [class]="
+    isAvailable()
+      ? 'text-success border-success/40 bg-success/15'
+      : 'text-error border-error/40 bg-error/15'
+  "
+>
+  <span
+    class="w-3.5 h-3.5 rounded-full flex-shrink-0"
+    [class]="isAvailable() ? 'bg-success' : 'bg-error'"
+  ></span>
+  {{ label() }}
+</span>
