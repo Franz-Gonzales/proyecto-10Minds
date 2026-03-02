@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Game } from '../../domain/entities/game.entity';
 import { CreateGameUseCase, CreateGameCommand } from '../use-cases/create-game.use-case';
-import { GetAllGamesUseCase } from '../use-cases/get-all-games.use-case';
+import { GetAllGamesQuery, GetAllGamesUseCase } from '../use-cases/get-all-games.use-case';
 import { GetGameByIdUseCase } from '../use-cases/get-game-by-id.use-case';
 import { UpdateGameUseCase, UpdateGameCommand } from '../use-cases/update-game.use-case';
 import { DeleteGameUseCase } from '../use-cases/delete-game.use-case';
@@ -22,8 +22,8 @@ export class GamesService {
     return this.createGameUseCase.execute(command);
   }
 
-  async findAll(): Promise<Game[]> {
-    return this.getAllGamesUseCase.execute();
+  async findAll(query?: GetAllGamesQuery): Promise<Game[]> {
+    return this.getAllGamesUseCase.execute(query);
   }
 
   async findOne(id: string): Promise<Game> {

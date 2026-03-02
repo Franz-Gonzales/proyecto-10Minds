@@ -23,7 +23,7 @@ export class LoanResolver {
     @Args('status', { type: () => LoanStatus, nullable: true, description: 'Filter by loan status (e.g. ACTIVE, OVERDUE, DELIVERED)' }) status?: LoanStatus,
     @Args('clientId', { type: () => ID, nullable: true, description: 'Filter by client ID' }) clientId?: string,
     @Args('gameId', { type: () => ID, nullable: true, description: 'Filter by game ID' }) gameId?: string,
-    @Args('includeDeleted', { type: () => Boolean, nullable: true, description: 'Whether to include deleted loans (default: true)' }) includeDeleted?: boolean,
+    @Args('includeDeleted', { type: () => Boolean, nullable: true, defaultValue: true, description: 'Whether to include deleted loans (default: true)' }) includeDeleted?: boolean,
   ): Promise<LoanType[]> {
     return this.loanService.findAll({
       status,

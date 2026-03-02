@@ -124,7 +124,7 @@ type Query {
   client(id: ID!): Client!
   clients: [Client!]!
   game(id: ID!): Game!
-  games: [Game!]!
+  games(category: GameCategory): [Game!]!
   loan(id: ID!): Loan!
 
   """Get all loans. Supports filters by status, client, and game."""
@@ -136,7 +136,7 @@ type Query {
     gameId: ID
 
     """Whether to include deleted loans (default: true)"""
-    includeDeleted: Boolean
+    includeDeleted: Boolean = true
 
     """Filter by loan status (e.g. ACTIVE, OVERDUE, DELIVERED)"""
     status: LoanStatus

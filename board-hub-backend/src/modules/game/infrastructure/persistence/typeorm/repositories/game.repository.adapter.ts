@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Game } from '../../../../domain/entities/game.entity';
-import { IGameRepository } from '../../../../domain/interfaces/game.repository.interface';
+import { FindAllGamesOptions, IGameRepository } from '../../../../domain/interfaces/game.repository.interface';
 import { GameOrmEntity } from '../entities/game.orm-entity';
 import { GameMapper } from '../mappers/game.mapper';
 
@@ -20,10 +20,20 @@ export class GameRepositoryAdapter implements IGameRepository {
         return GameMapper.toDomain(saved);
     }
 
-    async findAll(): Promise<Game[]> {
-        const entities = await this.ormRepository.find({
-            order: { createdAt: 'DESC' },
-        });
+    async findAll(options: FindAllGamesOptions = {}): Promise<Game[]> {
+        const qb = this.ormRepository.createQueryBuilder('game');
+
+        if (!options.includeDeleted) {
+            qb.where('game.isDeleted = :isDeleted', { isDeleted: false });
+        }
+
+        if (options.category) {
+            qb.andWhere('game.category = :category', { category: options.category });
+        }
+
+        qb.orderBy('game.createdAt', 'DESC');
+
+        const entities = await qb.getMany();
         return entities.map(GameMapper.toDomain);
     }
 
