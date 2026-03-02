@@ -130,7 +130,7 @@
             class="border border-slate-700 bg-[#1a2030] rounded-xl p-4 flex flex-col items-center gap-3 relative group">
             <img [src]="imagePreview()" alt="Preview" class="max-h-[180px] object-contain rounded-lg" />
             <div
-              class="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              class="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex items-center justify-center">
               <button mat-flat-button color="warn" type="button" (click)="removeImage()"
                 class="!rounded-lg !bg-red-600/90 hover:!bg-red-600">
                 <mat-icon class="mr-1">delete</mat-icon> Quitar imagen
@@ -146,7 +146,7 @@
             <div
               class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-800 group-hover:bg-blue-600/20 transition-colors">
               <mat-icon
-                class="text-slate-400 group-hover:text-blue-500 text-[32px]! transition-colors">cloud_upload</mat-icon>
+                class="text-slate-400 group-hover:text-blue-500 !text-[32px] transition-colors">cloud_upload</mat-icon>
             </div>
             <div class="text-center">
               <p class="text-sm font-medium text-slate-300 m-0">Haz clic para subir una imagen</p>
@@ -181,7 +181,7 @@
     </button>
     <button mat-flat-button (click)="onSubmit()" [disabled]="form.invalid"
       class="!bg-blue-600 hover:!bg-blue-700 !text-white !rounded-md !px-6 transition-colors disabled:!bg-slate-700 disabled:!text-slate-500">
-      <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'add' }}</mat-icon>
+      <mat-icon class="mr-1 !text-[18px]">{{ isEdit ? 'save' : 'add' }}</mat-icon>
       {{ isEdit ? 'Guardar cambios' : 'Crear juego' }}
     </button>
   </mat-dialog-actions>

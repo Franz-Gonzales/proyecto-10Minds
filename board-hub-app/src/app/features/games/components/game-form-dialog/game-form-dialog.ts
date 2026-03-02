@@ -124,6 +124,10 @@ export class GameFormDialog implements OnInit {
     this.imageFileName.set(file.name);
 
     const reader = new FileReader();
+    reader.onerror = () => {
+      this.notification.warning('Error al leer el archivo. Inténtalo de nuevo.');
+      input.value = '';
+    };
     reader.onload = () => {
       const base64 = reader.result as string;
       this.imagePreview.set(base64);
