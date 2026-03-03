@@ -12,8 +12,8 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { extractGraphQLError } from '../../../../core/interceptors/error.interceptor';
 
 import { Game, GameCategory, CreateGameInput, UpdateGameInput } from '../../models/game.model';
-import { EmptyState } from '../../components/empty-state/empty-state';
-import { ConfirmDialog, ConfirmDialogData } from '../../components/confirm-dialog/confirm-dialog';
+import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
+import { ConfirmDialog, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-games-page',

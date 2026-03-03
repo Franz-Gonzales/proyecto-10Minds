@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Domain
@@ -13,6 +13,8 @@ import { UpdateLoanUseCase } from './application/use-cases/update-loan.use-case'
 import { DeleteLoanUseCase } from './application/use-cases/delete-loan.use-case';
 import { ReturnLoanUseCase } from './application/use-cases/return-loan.use-case';
 import { CheckOverdueLoansUseCase } from './application/use-cases/check-overdue-loans.use-case';
+import { CountActiveLoansByClientUseCase } from './application/use-cases/count-active-loans-by-client.use-case';
+import { CountHistoricLoansByClientUseCase } from './application/use-cases/count-historic-loans-by-client.use-case';
 
 // Infrastructure
 import { LoanOrmEntity } from './infrastructure/persistence/typeorm/entities/loan.orm-entity';
@@ -29,7 +31,7 @@ import { ClientModule } from '../client/client.module';
     imports: [
         TypeOrmModule.forFeature([LoanOrmEntity]),
         GamesModule,
-        ClientModule,
+        forwardRef(() => ClientModule),
     ],
     providers: [
         // Repository binding (Port → Adapter)
@@ -46,6 +48,8 @@ import { ClientModule } from '../client/client.module';
         DeleteLoanUseCase,
         ReturnLoanUseCase,
         CheckOverdueLoansUseCase,
+        CountActiveLoansByClientUseCase,
+        CountHistoricLoansByClientUseCase,
 
         // Service (Facade)
         LoanService,

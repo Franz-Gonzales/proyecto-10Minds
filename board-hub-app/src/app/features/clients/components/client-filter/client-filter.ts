@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './client-filter.html',
 })
 export class ClientFilter {
-
   readonly searchTerm = input<string>('');
   readonly searchChange = output<string>();
 

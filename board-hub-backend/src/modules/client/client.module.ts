@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CLIENT_REPOSITORY } from './domain/interfaces/client.repository.interface';
@@ -14,11 +14,13 @@ import { ClientRepositoryAdapter } from './infrastructure/persistence/typeorm/re
 import { ClientOrmEntity } from './infrastructure/persistence/typeorm/entities/client.orm-entity';
 
 import { ClientResolver } from './presentation/graphql/resolvers/client.resolver';
+import { LoanModule } from '../loan/loan.module';
 
 @Module({
 
   imports: [
-    TypeOrmModule.forFeature([ClientOrmEntity])
+    TypeOrmModule.forFeature([ClientOrmEntity]),
+    forwardRef(() => LoanModule),
   ],
 
   providers: [

@@ -23,4 +23,8 @@ export interface ILoanRepository {
 
     // To update DELAYED in batch
     updateMany(loans: Loan[]): Promise<void>;
+
+    // Count methods for client stats
+    countActiveByClientId(clientId: string): Promise<number>;
+    countHistoricByClientId(clientId: string): Promise<number>;
 }

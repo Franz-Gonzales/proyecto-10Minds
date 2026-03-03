@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType('Client')
 export class ClientType {
@@ -34,4 +34,11 @@ export class ClientType {
 
     @Field(() => Date, { nullable: true })
     deletedAt: Date | null;
+
+    
+    @Field(() => Int, { description: 'Number of active loans (RESERVED + OVERDUE)' })
+    activeLoans?: number;
+
+    @Field(() => Int, { description: 'Total historic loans count' })
+    totalHistoric?: number;
 }
