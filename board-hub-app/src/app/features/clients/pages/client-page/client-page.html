@@ -1,0 +1,14 @@
+<app-page-header
+  title="Clientes"
+  subtitle="Gestiona los préstamos de tus juegos de mesa"
+  actionLabel="Nuevo cliente"
+  actionIcon="add"
+  (action)="openCreateDialog()"
+></app-page-header>
+
+<app-client-filter
+  [searchTerm]="searchTerm()"
+  (searchChange)="onSearchChange($event)"
+></app-client-filter>
+
+
