@@ -1,0 +1,132 @@
+<div class="w-full bg-base-200 border border-base-300 rounded-xl overflow-hidden shadow-lg">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse whitespace-nowrap">
+
+      <!-- Header -->
+      <thead>
+        <tr class="border-b border-base-300 text-[13px] font-semibold text-base-content/50 bg-base-200">
+          <th class="px-6 py-4 font-medium w-12">#</th>
+          <th class="px-6 py-4 font-medium">Juego</th>
+          <th class="px-6 py-4 font-medium">Cliente</th>
+          <th class="px-6 py-4 font-medium">Período</th>
+          <th class="px-6 py-4 font-medium">Cant.</th>
+          <th class="px-6 py-4 font-medium">Estado</th>
+          <th class="px-6 py-4 font-medium">Precio Total</th>
+          <th class="px-6 py-4 font-medium text-center w-20">Acciones</th>
+        </tr>
+      </thead>
+
+      <!-- Body -->
+      <tbody class="text-sm">
+        @for (loan of loans(); track loan.id; let i = $index) {
+          <tr class="border-b border-base-300/60 hover:bg-base-300/30 transition-colors duration-200">
+
+            <!-- # -->
+            <td class="px-6 py-4 text-base-content/40">{{ i + 1 }}</td>
+
+            <!-- Juego -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                @if (getGameImage(loan)) {
+                  <img
+                    title="{{ getGameTitle(loan) }}"
+                    [src]="getGameImage(loan)"
+                    [alt]="getGameTitle(loan)"
+                    class="w-10 h-10 rounded-lg object-cover border border-base-300"
+                  />
+                } @else {
+                  <div class="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                    <mat-icon class="text-primary text-[20px]!">sports_esports</mat-icon>
+                  </div>
+                }
+                <div class="flex flex-col">
+                  <span class="font-medium text-base-content">{{ getGameTitle(loan) }}</span>
+                  <span class="text-xs text-base-content/40">{{ loan.game?.category ?? '' }}</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Cliente -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                  [class]="getAvatarColor(getClientFullName(loan))"
+                >
+                  {{ getClientInitials(loan) }}
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-medium text-base-content">{{ getClientFullName(loan) }}</span>
+                  <span class="text-xs text-base-content/40">{{ loan.client?.phoneNumber ?? '' }}</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Período -->
+            <td class="px-6 py-4">
+              <div class="flex flex-col gap-0.5">
+                <div class="flex items-center gap-1.5 text-base-content/70">
+                  <mat-icon class="text-[14px]! text-base-content/40">calendar_today</mat-icon>
+                  <span class="text-xs">{{ loan.startDate | date:'dd MMM yyyy' }}</span>
+                </div>
+                <div class="flex items-center gap-1.5" [class]="isDateOverdue(loan) ? 'text-red-400' : 'text-base-content/70'">
+                  <mat-icon class="text-[14px]!" [class]="isDateOverdue(loan) ? 'text-red-400' : 'text-base-content/40'">event</mat-icon>
+                  <span class="text-xs font-medium">{{ loan.endDate | date:'dd MMM yyyy' }}</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Cantidad -->
+            <td class="px-6 py-4 text-base-content/70 text-center">
+              {{ loan.quantity }}
+            </td>
+
+            <!-- Estado -->
+            <td class="px-6 py-4">
+              <span
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium border"
+                [class]="statusColors[loan.status].bg + ' ' + statusColors[loan.status].text + ' ' + statusColors[loan.status].border"
+              >
+                <span
+                  class="w-1.5 h-1.5 rounded-full"
+                  [class]="statusColors[loan.status].dot"
+                ></span>
+                {{ statusLabels[loan.status] }}
+              </span>
+            </td>
+
+            <!-- Precio Total -->
+            <td class="px-6 py-4 font-medium text-base-content">
+              {{ formatCurrency(loan.totalPrice) }}
+            </td>
+
+            <!-- Acciones -->
+            <td class="px-6 py-4 text-center">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="loanMenu"
+                class="!w-8 !h-8"
+                matTooltip="Opciones"
+              >
+                <mat-icon class="text-base-content/50 text-[20px]!">more_vert</mat-icon>
+              </button>
+
+              <mat-menu #loanMenu="matMenu">
+                @if (canBeReturned(loan)) {
+                  <button mat-menu-item (click)="returnLoan.emit(loan)">
+                    <mat-icon class="text-emerald-400">assignment_return</mat-icon>
+                    <span>Marcar entregado</span>
+                  </button>
+                }
+                <button mat-menu-item (click)="deleteLoan.emit(loan)" class="!text-red-400">
+                  <mat-icon class="text-red-400">delete</mat-icon>
+                  <span>Eliminar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
