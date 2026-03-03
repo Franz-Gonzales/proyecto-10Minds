@@ -19,10 +19,10 @@ export const routes: Routes = [
         path: 'clientes',
         loadComponent: () => import('./features/clients/pages/client-page/client-page'),
       },
-      // {
-      //   path: 'prestamos',
-      //   loadComponent: () => import('./features/loans/pages/loans-page/loans-page'),
-      // },
+      {
+        path: 'prestamos',
+        loadComponent: () => import('./features/loans/pages/loans-page/loans-page'),
+      },
     ],
   },
   {

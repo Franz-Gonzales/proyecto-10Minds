@@ -4,7 +4,7 @@
 
 type Client {
   """Number of active loans (RESERVED + OVERDUE)"""
-  activeLoans: Int!
+  activeLoans: Int
   ci: String!
   createdAt: DateTime!
   deletedAt: DateTime
@@ -17,7 +17,7 @@ type Client {
   phoneNumber: String!
 
   """Total historic loans count"""
-  totalHistoric: Int!
+  totalHistoric: Int
   updatedAt: DateTime!
 }
 

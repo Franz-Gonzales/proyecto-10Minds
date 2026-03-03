@@ -1,0 +1,32 @@
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+  <!-- Status tabs -->
+  <div class="flex flex-wrap gap-2">
+    @for (tab of tabs; track tab.value) {
+      <button
+        (click)="selectStatus(tab.value)"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        [class]="
+          activeStatus() === tab.value
+            ? 'bg-primary text-primary-content'
+            : 'bg-base-200 text-base-content/70 hover:bg-base-300'
+        "
+      >
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Search -->
+  <div class="relative w-full sm:w-72">
+    <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-[18px]!">
+      search
+    </mat-icon>
+    <input
+      type="text"
+      placeholder="Buscar por juego o cliente..."
+      class="w-full pl-10 pr-4 py-2 bg-base-200 border border-base-300 rounded-lg text-sm text-base-content placeholder:text-base-content/40 focus:outline-none focus:border-primary transition-colors"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearch($event)"
+    />
+  </div>
+</div>

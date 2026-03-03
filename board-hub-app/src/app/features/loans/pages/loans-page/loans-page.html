@@ -1,0 +1,41 @@
+<app-page-header
+  title="Préstamos"
+  subtitle="Gestiona los préstamos de juegos de mesa"
+  actionLabel="Nuevo préstamo"
+  actionIcon="add"
+  (action)="openCreateDialog()"
+/>
+
+<app-loan-filters
+  [activeStatus]="activeStatus()"
+  [searchTerm]="searchTerm()"
+  (statusChange)="onStatusChange($event)"
+  (searchChange)="onSearchChange($event)"
+/>
+
+@if (loading()) {
+  <div class="flex items-center justify-center py-20">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-sm text-base-content/50">Cargando préstamos...</span>
+    </div>
+  </div>
+} @else if (filteredLoans().length === 0) {
+  <app-empty-state
+    [title]="searchTerm()
+      ? 'No hay resultados para &quot;' + searchTerm() + '&quot;'
+      : activeStatus()
+        ? 'No hay préstamos con este estado'
+        : 'No hay préstamos registrados'"
+    [subtitle]="searchTerm()
+      ? 'Intenta con otro término de búsqueda'
+      : 'Comienza creando un nuevo préstamo'"
+    [icon]="searchTerm() ? 'search_off' : 'receipt_long'"
+  />
+} @else {
+  <app-list-loans
+    [loans]="filteredLoans()"
+    (returnLoan)="onReturnLoan($event)"
+    (deleteLoan)="onDeleteLoan($event)"
+  />
+}
