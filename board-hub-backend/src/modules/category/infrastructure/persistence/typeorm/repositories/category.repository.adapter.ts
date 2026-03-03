@@ -56,7 +56,7 @@ export class CategoryRepositoryAdapter implements ICategoryRepository {
         if (!entity) throw new CategoryNotFoundException(id);
 
         const mappedPartial = CategoryMapper.toOrmPartial(partial);
-        
+
         const updatedEntity = this.ormRepository.merge(entity, mappedPartial);
         const saved = await this.ormRepository.save(updatedEntity);
         return CategoryMapper.toDomain(saved);
@@ -66,13 +66,15 @@ export class CategoryRepositoryAdapter implements ICategoryRepository {
         const entity = await this.ormRepository.findOne({ where: { id } });
         if (!entity) throw new CategoryNotFoundException(id);
 
-        // Cambiamos isActive a false antes del soft-delete
-        await this.ormRepository.update(id, { isActive: false });
-
         // Marcamos como borrado suave
         const result = await this.ormRepository.softDelete(id);
+        if (result.affected && result.affected > 0) {
+            // Cambiamos isActive a false antes del soft-delete
+            await this.ormRepository.update(id, { isActive: false });
+            return true;
+        }
 
-        return !!(result.affected && result.affected > 0);
+        return false;
     }
 
     async restore(id: string): Promise<boolean> {
