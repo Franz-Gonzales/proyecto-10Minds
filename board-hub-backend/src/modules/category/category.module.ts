@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CategoryService } from './application/services/category.service';
 import { CategoryResolver } from './presentation/graphql/resolvers/category.resolver';
-import { CategoryOrmEntity } from './infrastructure/persistence/typeorm/entities/category.orm-entitie';
+import { CategoryOrmEntity } from './infrastructure/persistence/typeorm/entities/category.orm-entity';
 import { CATEGORY_REPOSITORY } from './domain/interfaces/category.repository.interface';
 import { CategoryRepositoryAdapter } from './infrastructure/persistence/typeorm/repositories/category.repository.adapter';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';

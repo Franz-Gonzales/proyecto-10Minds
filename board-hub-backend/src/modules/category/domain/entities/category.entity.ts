@@ -24,8 +24,9 @@ export class Category {
     this.description = props.description;
     this.icon = props.icon;
     this.isActive = props.isActive ?? true;
-    this.createdAt = props.createdAt ?? new Date();
-    this.updatedAt = props.updatedAt ?? new Date();
+    const now = new Date();
+    this.createdAt = props.createdAt ?? now;
+    this.updatedAt = props.updatedAt ?? now;
     this.deletedAt = props.deletedAt ?? null;
   }
 }

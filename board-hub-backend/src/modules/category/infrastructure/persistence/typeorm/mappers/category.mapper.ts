@@ -1,4 +1,4 @@
-import { CategoryOrmEntity } from "../entities/category.orm-entitie";
+import { CategoryOrmEntity } from "../entities/category.orm-entity";
 import { Category } from '../../../../domain/entities/category.entity';
 
 export class CategoryMapper {
@@ -23,6 +23,17 @@ export class CategoryMapper {
         ormEntity.description = domain.description;
         ormEntity.icon = domain.icon;
         ormEntity.isActive = domain.isActive;
+        ormEntity.deletedAt = domain.deletedAt;
         return ormEntity;
+    }
+
+    static toOrmPartial(partial: Partial<Category>): Partial<CategoryOrmEntity> {
+        const ormPartial: Partial<CategoryOrmEntity> = {};
+        if (partial.name !== undefined) ormPartial.name = partial.name;
+        if (partial.description !== undefined) ormPartial.description = partial.description;
+        if (partial.icon !== undefined) ormPartial.icon = partial.icon;
+        if (partial.isActive !== undefined) ormPartial.isActive = partial.isActive;
+        if (partial.deletedAt !== undefined) ormPartial.deletedAt = partial.deletedAt;
+        return ormPartial;
     }
 }
