@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LessThan, Repository } from "typeorm";
+import { In, LessThan, Repository } from "typeorm";
 
 import { FindAllLoansOptions, ILoanRepository } from "../../../../domain/interfaces/loan.repository.interface";
 import { LoanOrmEntity } from "../entities/loan.orm-entity";
@@ -124,5 +124,24 @@ export class LoanRepositoryAdapter implements ILoanRepository {
                 updatedAt: new Date(),
             }))
         );
+    }
+
+    async countActiveByClientId(clientId: string): Promise<number> {
+        return this.ormRepository.count({
+            where: {
+                clientId,
+                status: In([LoanStatus.RESERVED, LoanStatus.OVERDUE]),
+                isDeleted: false,
+            },
+        });
+    }
+
+    async countHistoricByClientId(clientId: string): Promise<number> {
+        return this.ormRepository.count({
+            where: {
+                clientId,
+                isDeleted: false,
+            },
+        });
     }
 }

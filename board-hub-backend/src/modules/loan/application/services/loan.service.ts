@@ -9,6 +9,8 @@ import { Loan } from '../../domain/entities/loan.entity';
 import { ReturnLoanUseCase } from '../use-cases/return-loan.use-case';
 import { CheckOverdueLoansUseCase } from '../use-cases/check-overdue-loans.use-case';
 import { FindAllLoansOptions } from '../../domain/interfaces/loan.repository.interface';
+import { CountActiveLoansByClientUseCase } from '../use-cases/count-active-loans-by-client.use-case';
+import { CountHistoricLoansByClientUseCase } from '../use-cases/count-historic-loans-by-client.use-case';
 
 
 @Injectable()
@@ -22,7 +24,10 @@ export class LoanService {
     private readonly deleteLoanUseCase: DeleteLoanUseCase,
     private readonly returnLoanUseCase: ReturnLoanUseCase,
     private readonly checkOverdueUseCase: CheckOverdueLoansUseCase,
+    private readonly countActiveLoansByClientUseCase: CountActiveLoansByClientUseCase,
+    private readonly countHistoricLoansByClientUseCase: CountHistoricLoansByClientUseCase,
   ) { }
+
   async create(command: CreateLoanCommand): Promise<Loan> {
     return this.createLoanUseCase.execute(command);
   }
@@ -43,11 +48,19 @@ export class LoanService {
     return this.deleteLoanUseCase.execute(id);
   }
 
-  async returnLoan(id: string): Promise<Loan>{
+  async returnLoan(id: string): Promise<Loan> {
     return this.returnLoanUseCase.execute({ id });
   }
 
-  async checkOverdue(): Promise<number>{
+  async checkOverdue(): Promise<number> {
     return this.checkOverdueUseCase.execute();
+  }
+
+  async countActiveByClient(clientId: string): Promise<number> {
+    return this.countActiveLoansByClientUseCase.execute(clientId);
+  }
+
+  async countHistoricByClient(clientId: string): Promise<number> {
+    return this.countHistoricLoansByClientUseCase.execute(clientId);
   }
 }

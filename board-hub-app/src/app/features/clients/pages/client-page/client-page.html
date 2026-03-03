@@ -1,14 +1,37 @@
 <app-page-header
   title="Clientes"
-  subtitle="Gestiona los préstamos de tus juegos de mesa"
+  subtitle="Gestiona los clientes de tu negocio de juegos de mesa"
   actionLabel="Nuevo cliente"
-  actionIcon="add"
+  actionIcon="person_add"
   (action)="openCreateDialog()"
-></app-page-header>
+/>
 
 <app-client-filter
   [searchTerm]="searchTerm()"
   (searchChange)="onSearchChange($event)"
-></app-client-filter>
+/>
 
-
+@if (loading()) {
+  <div class="flex items-center justify-center py-20">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-sm text-base-content/50">Cargando clientes...</span>
+    </div>
+  </div>
+} @else if (filteredClients().length === 0) {
+  <app-empty-state
+    [title]="searchTerm()
+      ? 'No hay resultados para &quot;' + searchTerm() + '&quot;'
+      : 'No hay clientes registrados'"
+    [subtitle]="searchTerm()
+      ? 'Intenta con otro término de búsqueda'
+      : 'Comienza agregando tu primer cliente'"
+    [icon]="searchTerm() ? 'search_off' : 'person_add'"
+  />
+} @else {
+  <app-client-list
+    [clients]="filteredClients()"
+    (edit)="openEditDialog($event)"
+    (delete)="confirmDelete($event)"
+  />
+}

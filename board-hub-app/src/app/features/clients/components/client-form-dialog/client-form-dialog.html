@@ -1,0 +1,118 @@
+<div class="relative">
+  <!-- Header -->
+  <div class="flex items-center gap-3 px-6 pt-6 pb-4">
+    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/15">
+      <mat-icon class="text-primary">{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+    </div>
+    <div>
+      <h2 class="text-lg font-bold text-base-content m-0">
+        {{ isEdit ? 'Editar cliente' : 'Nuevo cliente' }}
+      </h2>
+      <p class="text-xs text-base-content/50 m-0">
+        {{ isEdit ? 'Modifica los datos del cliente' : 'Completa los datos para registrar un cliente' }}
+      </p>
+    </div>
+  </div>
+
+  <mat-divider />
+
+  <mat-dialog-content class="!max-h-[68vh] !px-6 !py-4">
+    <form [formGroup]="form" class="flex flex-col gap-5">
+
+      <!-- ═══════ Sección: Datos personales ═══════ -->
+      <div>
+        <span class="section-title">Datos personales</span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-2">
+          <!-- Nombre -->
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">person</mat-icon>
+            <input matInput formControlName="name" placeholder="Ej: Juan" />
+            @if (form.get('name')?.hasError('required')) {
+              <mat-error>El nombre es obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Apellido -->
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">person_outline</mat-icon>
+            <input matInput formControlName="lastName" placeholder="Ej: Pérez" />
+            @if (form.get('lastName')?.hasError('required')) {
+              <mat-error>El apellido es obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- CI -->
+          <mat-form-field appearance="outline">
+            <mat-label>Cédula de Identidad</mat-label>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">badge</mat-icon>
+            <input matInput formControlName="ci" placeholder="Ej: 12345678" />
+            @if (form.get('ci')?.hasError('required')) {
+              <mat-error>El CI es obligatorio</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- ═══════ Sección: Contacto ═══════ -->
+      <div>
+        <span class="section-title">Información de contacto</span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-2">
+          <!-- Teléfono -->
+          <mat-form-field appearance="outline">
+            <mat-label>Número de celular</mat-label>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">phone</mat-icon>
+            <input matInput formControlName="phoneNumber" placeholder="Ej: +591 71234567" />
+            @if (form.get('phoneNumber')?.hasError('required')) {
+              <mat-error>El teléfono es obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">email</mat-icon>
+            <input matInput formControlName="email" type="email" placeholder="Ej: juan@email.com" />
+            @if (form.get('email')?.hasError('required')) {
+              <mat-error>El correo es obligatorio</mat-error>
+            }
+            @if (form.get('email')?.hasError('email')) {
+              <mat-error>Ingresa un correo válido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- ═══════ Sección: Dirección ═══════ -->
+      <div>
+        <span class="section-title">Dirección (opcional)</span>
+
+        <div class="mt-2">
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Dirección</mat-label>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">location_on</mat-icon>
+            <textarea matInput formControlName="direction" rows="2"
+              placeholder="Ej: Av. América #123, Zona Central"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-divider />
+
+  <!-- Footer -->
+  <mat-dialog-actions class="!px-6 !py-4 flex justify-end gap-2">
+    <button mat-button (click)="dialogRef.close()" class="!text-base-content/60">
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="form.invalid"
+      class="!rounded-lg !px-6">
+      <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'person_add' }}</mat-icon>
+      {{ isEdit ? 'Guardar cambios' : 'Registrar cliente' }}
+    </button>
+  </mat-dialog-actions>
+</div>
