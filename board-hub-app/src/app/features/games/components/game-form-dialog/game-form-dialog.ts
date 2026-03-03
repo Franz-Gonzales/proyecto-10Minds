@@ -105,35 +105,38 @@ export class GameFormDialog implements OnInit {
   }
 
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
+      const input = event.target as HTMLInputElement;
+      const file = input.files?.[0];
+      if (!file) return;
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-      this.notification.warning('Tipo de archivo no permitido. Usa JPG, PNG, WebP o GIF.');
-      return;
-    }
+      // Validar tipos permitidos
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        this.notification.warning('Tipo de archivo no permitido. Usa JPG, PNG, WebP o GIF.');
+        return;
+      }
 
-    const maxSizeBytes = 2 * 1024 * 1024;
-    if (file.size > maxSizeBytes) {
-      this.notification.warning('La imagen excede el límite de 2 MB.');
-      return;
-    }
+      // Validar tamaño (máximo 4 MB)
+      const maxSizeBytes = 4 * 1024 * 1024;
+      if (file.size > maxSizeBytes) {
+        this.notification.warning('La imagen excede el límite de 4 MB.');
+        return;
+      }
 
-    this.imageFileName.set(file.name);
+      this.imageFileName.set(file.name);
 
-    const reader = new FileReader();
-    reader.onerror = () => {
-      this.notification.warning('Error al leer el archivo. Inténtalo de nuevo.');
-      input.value = '';
-    };
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      this.imagePreview.set(base64);
-      this.form.patchValue({ imageUrl: base64 });
-    };
-    reader.readAsDataURL(file);
+      // Leer el archivo para vista previa y formulario
+      const reader = new FileReader();
+      reader.onerror = () => {
+        this.notification.warning('Error al leer el archivo. Inténtalo de nuevo.');
+        input.value = '';
+      };
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        this.imagePreview.set(base64); // Actualiza la vista previa (Signal)
+        this.form.patchValue({ imageUrl: base64 }); // Actualiza el formulario
+      };
+      reader.readAsDataURL(file);
   }
 
   removeImage(): void {

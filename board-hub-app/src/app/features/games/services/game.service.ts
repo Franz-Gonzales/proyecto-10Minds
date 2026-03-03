@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+
 import { GraphqlClientService } from '../../../core/graphql/graphql-client.service';
 import { GET_ALL_GAMES, GET_GAME_BY_ID } from '../graphql/games.queries';
 import { CREATE_GAME, DELETE_GAME, UPDATE_GAME } from '../graphql/games.mutations';
