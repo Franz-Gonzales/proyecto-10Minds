@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Category {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  description: String!
+  icon: String!
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  updatedAt: DateTime!
+}
+
 type Client {
   """Number of active loans (RESERVED + OVERDUE)"""
   activeLoans: Int
@@ -19,6 +30,12 @@ type Client {
   """Total historic loans count"""
   totalHistoric: Int
   updatedAt: DateTime!
+}
+
+input CreateCategoryInput {
+  description: String!
+  icon: String!
+  name: String!
 }
 
 input CreateClientInput {
@@ -113,19 +130,24 @@ enum LoanStatus {
 
 type Mutation {
   checkOverdueLoans: Int!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
   createClient(createClientInput: CreateClientInput!): Client!
   createGame(createGameInput: CreateGameInput!): Game!
   createLoan(createLoanInput: CreateLoanInput!): Loan!
   deleteGame(id: ID!): Boolean!
+  removeCategory(id: ID!): Boolean!
   removeClient(id: ID!): Boolean!
   removeLoan(id: ID!): Boolean!
   returnLoan(id: ID!): Loan!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!
   updateLoan(updateLoanInput: UpdateLoanInput!): Loan!
 }
 
 type Query {
+  categories: [Category!]!
+  category(id: ID!): Category!
   client(id: ID!): Client!
   clients: [Client!]!
   game(id: ID!): Game!
@@ -146,6 +168,13 @@ type Query {
     """Filter by loan status"""
     status: LoanStatus
   ): [Loan!]!
+}
+
+input UpdateCategoryInput {
+  description: String
+  icon: String
+  id: ID!
+  name: String
 }
 
 input UpdateClientInput {

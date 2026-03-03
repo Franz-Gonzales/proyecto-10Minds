@@ -14,6 +14,7 @@ import { GamesModule } from './modules/game/games.module';
 import { GraphqlExceptionFilter } from './common/filters/graphql-exception.filter';
 import { ClientModule } from './modules/client/client.module';
 import { LoanModule } from './modules/loan/loan.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -57,6 +58,8 @@ import { LoanModule } from './modules/loan/loan.module';
     ClientModule,
 
     LoanModule,
+
+    CategoryModule,
   ],
   controllers: [],
   providers: [
