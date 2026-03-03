@@ -36,9 +36,9 @@ export class ClientType {
     deletedAt: Date | null;
 
     
-    @Field(() => Int, { description: 'Number of active loans (RESERVED + OVERDUE)' })
+    @Field(() => Int, { nullable: true, description: 'Number of active loans (RESERVED + OVERDUE)' })
     activeLoans?: number;
 
-    @Field(() => Int, { description: 'Total historic loans count' })
+    @Field(() => Int, { nullable: true, description: 'Total historic loans count' })
     totalHistoric?: number;
 }

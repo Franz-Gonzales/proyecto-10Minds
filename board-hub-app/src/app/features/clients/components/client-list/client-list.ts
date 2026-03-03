@@ -32,6 +32,9 @@ export class ClientList {
       'bg-rose-600/20 text-rose-400 border-rose-500/30',
       'bg-cyan-600/20 text-cyan-400 border-cyan-500/30',
     ];
+    if (!name) {
+      return colors[0];
+    }
     const index = name.charCodeAt(0) % colors.length;
     return colors[index];
   }

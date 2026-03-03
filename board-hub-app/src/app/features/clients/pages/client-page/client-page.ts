@@ -37,9 +37,9 @@ export default class ClientPage implements OnInit {
       const fullName = `${c.name} ${c.lastName}`.toLowerCase();
       return (
         fullName.includes(term) ||
-        c.ci.toLowerCase().includes(term) ||
-        c.phoneNumber.toLowerCase().includes(term) ||
-        c.email.toLowerCase().includes(term)
+        (c.ci ?? '').toLowerCase().includes(term) ||
+        (c.phoneNumber ?? '').toLowerCase().includes(term) ||
+        (c.email ?? '').toLowerCase().includes(term)
       );
     });
   });
