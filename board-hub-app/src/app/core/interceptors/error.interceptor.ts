@@ -36,13 +36,13 @@ export function extractGraphQLError(error: unknown): string {
 
   if (graphqlErrors.length > 0) {
     const code = graphqlErrors[0]?.extensions?.code as string;
-    return GRAPHQL_ERROR_CODES[code] ?? graphqlErrors[0]?.message ?? 'Error desconocido.';
+    return GRAPHQL_ERROR_CODES[code] ?? graphqlErrors[0]?.message ?? 'Unknown error.';
   }
 
   const networkError = (error as any)?.networkError;
   if (networkError) {
-    return 'Error de red. Verifica tu conexión.';
+    return 'Network error. Check your connection.';
   }
 
-  return 'Ocurrió un error inesperado.';
+  return 'Unknown error occurred.';
 }

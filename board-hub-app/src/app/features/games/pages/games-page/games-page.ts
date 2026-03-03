@@ -77,7 +77,7 @@ export default class GamesPage implements OnInit {
 
       this.gameService.create(result).subscribe({
         next: (created) => {
-          this.notification.success('Juego creado exitosamente');
+          this.notification.success('Game successfully created');
           this.loadGames();
         },
         error: (err) => {
@@ -99,7 +99,7 @@ export default class GamesPage implements OnInit {
 
       this.gameService.update(result).subscribe({
         next: (updated) => {
-          this.notification.success('Juego actualizado exitosamente');
+          this.notification.success('Game successfully updated');
           this.loadGames();
         },
         error: (err) => {
@@ -113,9 +113,9 @@ export default class GamesPage implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialog, {
       width: '420px',
       data: {
-        title: 'Eliminar juego',
-        message: `¿Estás seguro de eliminar "${game.title}"? Esta acción no se puede deshacer.`,
-        confirmLabel: 'Eliminar',
+        title: 'Delete game',
+        message: `Are you sure you want to delete "${game.title}"? This action cannot be undone.`,
+        confirmLabel: 'Delete',
         confirmColor: 'warn',
       } satisfies ConfirmDialogData,
     });
@@ -125,7 +125,7 @@ export default class GamesPage implements OnInit {
 
       this.gameService.delete(game.id).subscribe({
         next: () => {
-          this.notification.success('Juego eliminado exitosamente');
+          this.notification.success('Game successfully deleted');
           this.loadGames();
         },
         error: (err) => {
