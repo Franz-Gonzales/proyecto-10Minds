@@ -18,14 +18,22 @@ export const GET_ALL_LOANS = gql`
       createdAt
       updatedAt
       deletedAt
+
       game {
         id
         title
-        category
+        categoryId
         imageUrl
         pricePerDay
         stockAvailable
+
+        category {
+          id
+          name
+          icon
+        }
       }
+
       client {
         id
         name
@@ -56,14 +64,22 @@ export const GET_LOAN_BY_ID = gql`
       createdAt
       updatedAt
       deletedAt
+
       game {
         id
         title
-        category
+        categoryId
         imageUrl
         pricePerDay
         stockAvailable
+
+        category {
+          id
+          name
+          icon
+        }
       }
+      
       client {
         id
         name
