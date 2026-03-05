@@ -2,12 +2,14 @@
   <!-- Header -->
   <div class="flex items-center gap-3 px-6 pt-6 pb-4">
     <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/15">
-      <mat-icon class="text-primary">receipt_long</mat-icon>
+      <mat-icon class="text-primary">{{ isEdit ? 'edit' : 'receipt_long' }}</mat-icon>
     </div>
     <div>
-      <h2 class="text-lg font-bold text-base-content m-0">Nuevo préstamo</h2>
+      <h2 class="text-lg font-bold text-base-content m-0">
+        {{ isEdit ? 'Editar préstamo' : 'Nuevo préstamo' }}
+      </h2>
       <p class="text-xs text-base-content/50 m-0">
-        Completa los datos para registrar un nuevo préstamo
+        {{ isEdit ? 'Modifica los datos del préstamo' : 'Completa los datos para registrar un nuevo préstamo' }}
       </p>
     </div>
   </div>
@@ -87,7 +89,7 @@
           <!-- Fecha inicio -->
           <mat-form-field appearance="outline">
             <mat-label>Fecha inicio</mat-label>
-            <input title="Star Date" matInput [matDatepicker]="startPicker" formControlName="startDate" />
+            <input title="Start Date" matInput [matDatepicker]="startPicker" formControlName="startDate" />
             <mat-datepicker-toggle matSuffix [for]="startPicker" />
             <mat-datepicker #startPicker />
             @if (form.get('startDate')?.hasError('required')) {
@@ -114,7 +116,7 @@
               <mat-icon class="text-primary text-[18px]!">info</mat-icon>
               <span>
                 Precio por día: <strong class="text-base-content">Bs. {{ selectedGame()!.pricePerDay.toFixed(2) }}</strong>
-                · Stock disponible: <strong class="text-base-content">{{ selectedGame()!.stockAvailable }}</strong>
+                · Stock disponible: <strong class="text-base-content">{{ getMaxQuantity() }}</strong>
               </span>
             </div>
           </div>
@@ -155,8 +157,8 @@
       [disabled]="form.invalid"
       class="!rounded-lg !px-6"
     >
-      <mat-icon class="mr-1 text-[18px]!">add_circle</mat-icon>
-      Registrar préstamo
+      <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'add_circle' }}</mat-icon>
+      {{ isEdit ? 'Guardar cambios' : 'Registrar préstamo' }}
     </button>
   </mat-dialog-actions>
 </div>

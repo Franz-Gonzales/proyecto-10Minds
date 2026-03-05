@@ -112,16 +112,22 @@
               </button>
 
               <mat-menu #loanMenu="matMenu">
-                @if (canBeReturned(loan)) {
-                  <button mat-menu-item (click)="returnLoan.emit(loan)">
-                    <mat-icon class="text-emerald-400">assignment_return</mat-icon>
-                    <span>Marcar entregado</span>
-                  </button>
-                }
-                <button mat-menu-item (click)="deleteLoan.emit(loan)" class="!text-red-400">
-                  <mat-icon class="text-red-400">delete</mat-icon>
-                  <span>Eliminar</span>
-                </button>
+                <div class="w-full p-2 flex flex-col gap-2">
+
+                  @if (canBeReturned(loan)) {
+                    <app-button variant="outline-blue" icon="assignment_return" label="Marcar entregado" (clicked)="returnLoan.emit(loan)" />
+                  }
+
+                  @if (canBeReverted(loan)) {
+                    <app-button variant="outline-slate" icon="undo" label="Restaurar" (clicked)="revertLoan.emit(loan)" />
+                  }
+
+                  @if (canBeEdited(loan)) {
+                    <app-button variant="outline-green" icon="edit" label="Editar" (clicked)="edit.emit(loan)" />
+                  }
+
+                  <app-button variant="outline-red" icon="delete" label="Eliminar" (clicked)="deleteLoan.emit(loan)" />
+                </div>
               </mat-menu>
             </td>
           </tr>

@@ -60,6 +60,14 @@ export class LoanResolver {
     return this.loanService.returnLoan(id);
   }
 
+  @Mutation(() => LoanType, { 
+    name: 'revertLoan',
+    description: 'Reverts a DELIVERED loan back to RESERVED or OVERDUE. Decreases stock again.',
+  })
+  async revertLoan(@Args('id', { type: () => ID }) id: string): Promise<Loan> {
+    return this.loanService.revertLoan(id);
+  }
+
   @Mutation(() => Int, { name: 'checkOverdueLoans' })
   async checkOverdueLoans(): Promise<number> {
     return this.loanService.checkOverdue();

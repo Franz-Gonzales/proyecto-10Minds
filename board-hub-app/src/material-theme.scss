@@ -1,26 +1,26 @@
 @use '@angular/material' as mat;
 @import './styles.css';
 
-// VARIABLE GLOBAL DE COLOR 
+// VARIABLE GLOBAL DE COLOR
 $color-btn-primary: #1d6ae5;
 $color-btn-primary-hover: #1b5cc8;
 
 // Variables para la tabla oscura (basadas en Tailwind slate)
-$table-bg: #1e293b;        
-$table-border: #334155;  
-$table-text: #cbd5e1;     
-$table-header: #94a3b8;   
+$table-bg: #1e293b;
+$table-border: #334155;
+$table-text: #cbd5e1;
+$table-header: #94a3b8;
 
 // --- Variables para los Chips ---
 // Estado Activo (Emerald)
-$chip-active-bg: rgba(16, 185, 129, 0.2); 
-$chip-active-text: #6ee7b7;            
-$chip-active-border: rgba(52, 211, 153, 0.3); 
+$chip-active-bg: rgba(16, 185, 129, 0.2);
+$chip-active-text: #6ee7b7;
+$chip-active-border: rgba(52, 211, 153, 0.3);
 
 // Estado Inactivo (Slate)
-$chip-inactive-bg: rgba(30, 41, 59, 0.4); 
-$chip-inactive-text: #cbd5e1;             
-$chip-inactive-border: rgba(71, 85, 105, 0.5); 
+$chip-inactive-bg: rgba(30, 41, 59, 0.4);
+$chip-inactive-text: #cbd5e1;
+$chip-inactive-border: rgba(71, 85, 105, 0.5);
 
 
 // ====== BOTONES PERSONALIZADOS (8 VARIANTES) ======
@@ -32,8 +32,8 @@ $btn-slate-bg: #1e293b;      // Slate/800
 $btn-slate-border: #334155;  // border/default
 $btn-slate-text: #cbd5e1;    // Texto claro para outline gris
 
-$btn-green: #16a34a;         // Green/600
-$btn-red: #ef4444;           // Red/500
+$btn-green: #16a34a;
+$btn-red: #ef4444;
 
 html {
   height: 100%;
@@ -61,13 +61,13 @@ html {
     @include mat.table-overrides((
       // Fondo general de la tabla
       background-color: $table-bg,
-      
+
       // Color del texto de la cabecera (th)
       header-headline-color: $table-header,
-      
+
       // Color del texto de las celdas de datos (td)
       row-item-label-text-color: $table-text,
-      
+
       // Color y grosor de las líneas divisorias entre filas
       row-item-outline-color: $table-border,
       row-item-outline-width: 1px,
@@ -81,9 +81,9 @@ html {
   // 1. Azul (Blue)
   .chip-blue {
     @include mat.chips-overrides((
-      elevated-container-color: rgba(59, 130, 246, 0.2), 
-      label-text-color: #93c5fd,                        
-      outline-color: rgba(96, 165, 250, 0.3),         
+      elevated-container-color: rgba(59, 130, 246, 0.2),
+      label-text-color: #93c5fd,
+      outline-color: rgba(96, 165, 250, 0.3),
       outline-width: 1px,
       container-shape-radius: 9999px,
     ));
@@ -92,9 +92,9 @@ html {
   // 2. Verde (Emerald)
   .chip-green {
     @include mat.chips-overrides((
-      elevated-container-color: rgba(16, 185, 129, 0.2), 
-      label-text-color: #6ee7b7,                       
-      outline-color: rgba(52, 211, 153, 0.3),           
+      elevated-container-color: rgba(16, 185, 129, 0.2),
+      label-text-color: #6ee7b7,
+      outline-color: rgba(52, 211, 153, 0.3),
       outline-width: 1px,
       container-shape-radius: 9999px,
     ));
@@ -103,9 +103,9 @@ html {
   // 3. Gris (Slate)
   .chip-gray {
     @include mat.chips-overrides((
-      elevated-container-color: rgba(30, 41, 59, 0.4), 
-      label-text-color: #cbd5e1,                         
-      outline-color: rgba(71, 85, 105, 0.5),            
+      elevated-container-color: rgba(30, 41, 59, 0.4),
+      label-text-color: #cbd5e1,
+      outline-color: rgba(71, 85, 105, 0.5),
       outline-width: 1px,
       container-shape-radius: 9999px,
     ));
@@ -114,9 +114,9 @@ html {
   // 4. Rojo (Red)
   .chip-red {
     @include mat.chips-overrides((
-      elevated-container-color: rgba(239, 68, 68, 0.2), 
-      label-text-color: #fca5a5,                      
-      outline-color: rgba(248, 113, 113, 0.3),        
+      elevated-container-color: rgba(239, 68, 68, 0.2),
+      label-text-color: #fca5a5,
+      outline-color: rgba(248, 113, 113, 0.3),
       outline-width: 1px,
       container-shape-radius: 9999px,
     ));
@@ -125,9 +125,9 @@ html {
   // 5. Índigo / Morado (Indigo)
   .chip-indigo {
     @include mat.chips-overrides((
-      elevated-container-color: rgba(99, 102, 241, 0.2), 
-      label-text-color: #a5b4fc,                        
-      outline-color: rgba(129, 140, 248, 0.3),          
+      elevated-container-color: rgba(99, 102, 241, 0.2),
+      label-text-color: #a5b4fc,
+      outline-color: rgba(129, 140, 248, 0.3),
       outline-width: 1px,
       container-shape-radius: 9999px,
     ));
@@ -136,9 +136,9 @@ html {
   // 6. Amarillo (Amber)
   .chip-yellow {
     @include mat.chips-overrides((
-      elevated-container-color: rgba(245, 158, 11, 0.2), 
-      label-text-color: #fcd34d,                         
-      outline-color: rgba(251, 191, 36, 0.3),            
+      elevated-container-color: rgba(245, 158, 11, 0.2),
+      label-text-color: #fcd34d,
+      outline-color: rgba(251, 191, 36, 0.3),
       outline-width: 1px,
       container-shape-radius: 9999px,
     ));
@@ -152,8 +152,8 @@ html {
     @include mat.fab-overrides((
       container-color: $bg-color,
       foreground-color: #ffffff,
-      extended-container-elevation-shadow: none, // Quita la sombra por defecto
-      extended-container-shape: 12px, // Bordes semi-redondos como en tu imagen
+      extended-container-elevation-shadow: none,
+      extended-container-shape: 12px,
       extended-container-height: 45px,
     ));
     box-shadow: none !important;
@@ -165,11 +165,14 @@ html {
       container-color: transparent,
       foreground-color: $text-color,
       extended-container-elevation-shadow: none,
-      extended-container-shape: 12px,
-      extended-container-height: 45px,
+      extended-container-shape: 10px,
+      extended-container-height: 35px,
     ));
     box-shadow: none !important;
     border: 1px solid $border-color;
+
+    padding: 0 12px !important;
+    min-width: auto !important;
   }
 
 

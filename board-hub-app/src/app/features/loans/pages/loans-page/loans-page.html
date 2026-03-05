@@ -36,6 +36,8 @@
   <app-list-loans
     [loans]="filteredLoans()"
     (returnLoan)="onReturnLoan($event)"
+    (revertLoan)="onRevertLoan($event)"
+    (edit)="openEditDialog($event)"
     (deleteLoan)="onDeleteLoan($event)"
   />
 }
