@@ -6,7 +6,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 import { Category, CreateCategoryInput, UpdateCategoryInput } from '../../models/category.model';
 import { extractGraphQLError } from '../../../../core/interceptors/error.interceptor';
 import { InputSearch } from "../../../../shared/components/input-search/input-search";
-import { CategoryFormDialogData, GategoryFormDialog } from '../../components/gategory-form-dialog/gategory-form-dialog';
+import { CategoryFormDialogData, CategoryFormDialog } from '../../components/category-form-dialog/category-form-dialog';
 import { EmptyState } from "../../../../shared/components/empty-state/empty-state";
 import { CategoryList } from "../../components/category-list/category-list";
 import { ConfirmDialog, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog';
@@ -62,7 +62,7 @@ export default class CategoryPage implements OnInit {
   }
 
   openCreateDialog(): void {
-    const dialogRef = this.dialog.open(GategoryFormDialog, {
+    const dialogRef = this.dialog.open(CategoryFormDialog, {
       width: '600px',
       maxHeight: '90vh',
       data: {} satisfies CategoryFormDialogData,
@@ -73,7 +73,7 @@ export default class CategoryPage implements OnInit {
 
       this.categoryService.create(result).subscribe({
         next: () => {
-          this.notification.success('Categoría registrado exitosamente');
+          this.notification.success('Categoría registrada exitosamente');
           this.loadCategories();
         },
         error: (err) => {
@@ -84,7 +84,7 @@ export default class CategoryPage implements OnInit {
   }
 
   openEditDialog(category: Category): void {
-    const dialogRef = this.dialog.open(GategoryFormDialog, {
+    const dialogRef = this.dialog.open(CategoryFormDialog, {
       width: '600px',
       maxHeight: '90vh',
       data: { category } satisfies CategoryFormDialogData,

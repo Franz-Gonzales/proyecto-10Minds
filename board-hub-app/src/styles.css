@@ -36,12 +36,12 @@
 
 
 @theme {
-  --font-display: "Satoshi", "sans-serif";
+  --font-display: "Satoshi", sans-serif;
   --breakpoint-3xl: 120rem;
   --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
   --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
 
-  --color-btn-primary:  rgba(29, 106, 229, 1)
+  --color-btn-primary:  rgba(29, 106, 229, 1);
   --color-btn-primary-hover: #1b5cc8;
 
   --color-container-bg: #334155;

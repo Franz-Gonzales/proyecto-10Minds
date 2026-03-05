@@ -24,7 +24,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/loans/pages/loans-page/loans-page'),
       },
       {
-        path: 'categorías',
+        path: 'categorias',
         loadComponent: () => import('./features/categories/pages/category-page/category-page'),
       },
     ],

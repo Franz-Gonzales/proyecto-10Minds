@@ -14,7 +14,7 @@ export interface CategoryFormDialogData {
 }
 
 @Component({
-  selector: 'app-gategory-form-dialog',
+  selector: 'app-category-form-dialog',
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -24,7 +24,7 @@ export interface CategoryFormDialogData {
     MatIconModule,
     MatDividerModule,
   ],
-  templateUrl: './gategory-form-dialog.html',
+  templateUrl: './category-form-dialog.html',
   styles: [`
     :host { display: block; }
 
@@ -37,10 +37,10 @@ export interface CategoryFormDialogData {
     }
   `],
 })
-export class GategoryFormDialog {
+export class CategoryFormDialog {
 
   private readonly fb = inject(FormBuilder);
-  readonly dialogRef = inject(MatDialogRef<GategoryFormDialog>);
+  readonly dialogRef = inject(MatDialogRef<CategoryFormDialog>);
   readonly data: CategoryFormDialogData = inject(MAT_DIALOG_DATA);
 
   form!: FormGroup;

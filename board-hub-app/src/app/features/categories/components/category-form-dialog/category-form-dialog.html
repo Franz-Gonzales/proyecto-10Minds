@@ -6,7 +6,7 @@
     </div>
     <div>
       <h2 class="text-lg font-bold text-base-content m-0">
-        {{ isEdit ? 'Editar categoría' : 'Nuevo categoría' }}
+        {{ isEdit ? 'Editar categoría' : 'Nueva categoría' }}
       </h2>
       <p class="text-xs text-base-content/50 m-0">
         {{ isEdit ? 'Modifica los datos del categoría' : 'Completa los datos para registrar un categoría' }}
@@ -37,7 +37,7 @@
           <!-- Icono -->
           <mat-form-field appearance="outline">
             <mat-label>Icono</mat-label>
-            <mat-icon matPrefix class="text-base-content/40 mr-1">icon</mat-icon>
+            <mat-icon matPrefix class="text-base-content/40 mr-1">emoji_symbols</mat-icon>
             <input matInput formControlName="icon" placeholder="Ej: gamepad" />
             @if (form.get('icon')?.hasError('required')) {
             <mat-error>El icono es obligatorio</mat-error>

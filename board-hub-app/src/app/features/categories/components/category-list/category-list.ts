@@ -30,6 +30,7 @@ export class CategoryList {
 
   readonly edit = output<Category>();
   readonly delete = output<Category>();
+  readonly activate = output<Category>();
 
   displayedColumns: string[] = ['index', 'category', 'description', 'status', 'createdAt', 'actions'];
 }

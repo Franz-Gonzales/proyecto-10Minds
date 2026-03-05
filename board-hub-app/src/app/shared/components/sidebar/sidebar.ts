@@ -24,6 +24,6 @@ export class Sidebar {
     { label: 'Préstamos', icon: Package, route: '/prestamos' },
     { label: 'Juegos', icon: Dices, route: '/juegos' },
     { label: 'Clientes', icon: Users, route: '/clientes' },
-    { label: 'Categorías', icon: Shapes, route: '/categorías' }
+    { label: 'Categorías', icon: Shapes, route: '/categorias' }
   ];
 }
