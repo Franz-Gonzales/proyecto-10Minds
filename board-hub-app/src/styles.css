@@ -1,4 +1,3 @@
-
 /* Import Tailwind v4 */
 @import "tailwindcss";
 
@@ -10,21 +9,21 @@
 /* Bloque para el tema custom (sintaxis oficial v5, con --color- prefix) */
 @plugin "daisyui/theme" {
   name: "boardhub-dark";
-  default: true;                 /* Fuerza como default */
-  prefersdark: true;             /* Preferencia dark */
+  default: true;
+  prefersdark: true;
   color-scheme: dark;
 
-  --color-base-100: #0F172A;     /* Fondo principal navy */
-  --color-base-200: #1e293b;     /* Tarjetas / sidebar */
-  --color-base-300: #334155;     /* Bordes / hover */
+  --color-base-100: #0f172a; 
+  --color-base-200: #1e293b; 
+  --color-base-300: #334155;
 
-  --color-base-content: #f1f5f9; /* Texto claro */
+  --color-base-content: #f1f5f9;
 
-  --color-primary: #3b82f6;      /* Azul botones +Nuevo */
+  --color-primary: #3b82f6;
   --color-primary-content: #ffffff;
 
-  --color-success: #22c55e;      /* Verde stock >0 */
-  --color-error: #ef4444;        /* Rojo agotado / vencido */
+  --color-success: #22c55e;
+  --color-error: #ef4444;
 
   --color-neutral: #475569;
   --color-neutral-content: #f1f5f9;
@@ -36,33 +35,17 @@
 
 
 
-/* Snackbar custom styles */
-.snack-success .mdc-snackbar__surface {
-  background-color: #166534 !important;
-}
+@theme {
+  --font-display: "Satoshi", sans-serif;
+  --breakpoint-3xl: 120rem;
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
 
-.snack-error .mdc-snackbar__surface {
-  background-color: #991b1b !important;
-}
+  --color-btn-primary:  rgba(29, 106, 229, 1);
+  --color-btn-primary-hover: #1b5cc8;
 
-.snack-warning .mdc-snackbar__surface {
-  background-color: #92400e !important;
-}
+  --color-container-bg: #334155;
 
-.snack-info .mdc-snackbar__surface {
-  background-color: #1e40af !important;
-}
-
-.snack-success .mdc-snackbar__label,
-.snack-error .mdc-snackbar__label,
-.snack-warning .mdc-snackbar__label,
-.snack-info .mdc-snackbar__label {
-  color: #f1f5f9 !important;
-}
-
-.snack-success .mat-mdc-button,
-.snack-error .mat-mdc-button,
-.snack-warning .mat-mdc-button,
-.snack-info .mat-mdc-button {
-  color: #f1f5f9 !important;
+  --color-base-100: #1A263B; 
+  --color-base-200: #334155; 
 }

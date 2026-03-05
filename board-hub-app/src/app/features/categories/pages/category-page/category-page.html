@@ -1,0 +1,38 @@
+<app-page-header
+  title="Categorías"
+  subtitle="Gestiona las categorías de tus productos"
+  actionLabel="Nueva categoría"
+  actionIcon="add"
+  (action)="openCreateDialog()"
+/>
+
+<app-input-search
+  searchPlaceholder= "Buscar por nombre.."
+  [searchTerm]="searchTerm()"
+  (searchChange)="onSearchChange($event)"
+/>
+
+@if (loading()) {
+  <div class="flex items-center justify-center py-20">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-sm text-base-content/50">Cargando categorías...</span>
+    </div>
+  </div>
+} @else if (filteredCategories().length === 0) {
+  <app-empty-state
+    [title]="searchTerm()
+      ? 'No hay resultados para &quot;' + searchTerm() + '&quot;'
+      : 'No hay categorías registradas'"
+    [subtitle]="searchTerm()
+      ? 'Intenta con otro término de búsqueda'
+      : 'Comienza agregando tu primera categoría'"
+    [icon]="searchTerm() ? 'search_off' : 'category'"
+  />
+} @else {
+  <app-category-list
+    [categories]="filteredCategories()"
+    (edit)="openEditDialog($event)"
+    (delete)="confirmDelete($event)"
+  />
+}
