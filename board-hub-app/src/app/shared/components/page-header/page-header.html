@@ -7,9 +7,10 @@
   </div>
 
   @if (actionLabel()) {
-  <button class="btn btn-primary gap-2 shadow-none border-none" (click)="action.emit()">
-    <mat-icon>{{ actionIcon() }}</mat-icon>
-    {{ actionLabel() }}
-  </button>
+    <app-button-dialog
+      actionLabel="{{ actionLabel() }}"
+      actionIcon="add"
+      (action)="openCreateDialog()"
+    />
   }
 </div>

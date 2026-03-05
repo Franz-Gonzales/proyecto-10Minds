@@ -23,6 +23,10 @@ export const routes: Routes = [
         path: 'prestamos',
         loadComponent: () => import('./features/loans/pages/loans-page/loans-page'),
       },
+      {
+        path: 'categorías',
+        loadComponent: () => import('./features/categories/pages/category-page/category-page'),
+      },
     ],
   },
   {

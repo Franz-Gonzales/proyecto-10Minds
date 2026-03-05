@@ -1,0 +1,9 @@
+<button
+  matFab
+  extended
+  class="btn-dialog"
+  (click)="action.emit()">
+
+  <mat-icon>{{ actionIcon() }}</mat-icon>
+  {{ actionLabel() }}
+</button>

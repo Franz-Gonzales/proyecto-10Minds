@@ -25,7 +25,8 @@
     <a [routerLink]="item.route" routerLinkActive="bg-primary text-primary-content"
       [routerLinkActiveOptions]="{ exact: false }" matRipple
       class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base-content/60 hover:bg-base-300 hover:text-base-content transition-colors cursor-pointer no-underline">
-      <mat-icon class="text-[20px]!">{{ item.icon }}</mat-icon>
+      <!-- Ícono de Lucide -->
+      <lucide-icon [img]="item.icon" class="w-5 h-5" [size]="20" />
 
       @if (!collapsed()) {
       <span class="text-sm font-medium">{{ item.label }}</span>
