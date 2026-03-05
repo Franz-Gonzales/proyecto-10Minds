@@ -2,18 +2,17 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { PageHeader } from '../../../../shared/components/page-header/page-header';
-
 import { GameFilters } from '../../components/game-filters/game-filters';
 import { GameCard } from '../../components/game-card/game-card';
 import { GameFormDialog, GameFormDialogData } from '../../components/game-form-dialog/game-form-dialog';
+import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
+import { ConfirmDialog, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 
 import { GameService } from '../../services/game.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { extractGraphQLError } from '../../../../core/interceptors/error.interceptor';
 
-import { Game, GameCategory, CreateGameInput, UpdateGameInput } from '../../models/game.model';
-import { EmptyState } from '../../../../shared/components/empty-state/empty-state';
-import { ConfirmDialog, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { Game, CreateGameInput, UpdateGameInput } from '../../models/game.model';
 
 @Component({
   selector: 'app-games-page',
@@ -27,7 +26,7 @@ export default class GamesPage implements OnInit {
 
   readonly games = signal<Game[]>([]);
   readonly loading = signal(false);
-  readonly activeCategory = signal<GameCategory | null>(null);
+  readonly activeCategoryId = signal<string | null>(null);
   readonly searchTerm = signal('');
 
   readonly filteredGames = computed(() => {
@@ -42,9 +41,9 @@ export default class GamesPage implements OnInit {
 
   loadGames(): void {
     this.loading.set(true);
-    const category = this.activeCategory() ?? undefined;
+    const categoryId = this.activeCategoryId() ?? undefined;
 
-    this.gameService.getAll(category).subscribe({
+    this.gameService.getAll(categoryId).subscribe({
       next: (games) => {
         this.games.set(games);
         this.loading.set(false);
@@ -56,8 +55,8 @@ export default class GamesPage implements OnInit {
     });
   }
 
-  onCategoryChange(category: GameCategory | null): void {
-    this.activeCategory.set(category);
+  onCategoryChange(categoryId: string | null): void {
+    this.activeCategoryId.set(categoryId);
     this.loadGames();
   }
 
@@ -76,8 +75,8 @@ export default class GamesPage implements OnInit {
       if (!result) return;
 
       this.gameService.create(result).subscribe({
-        next: (created) => {
-          this.notification.success('Game successfully created');
+        next: () => {
+          this.notification.success('Juego creado exitosamente');
           this.loadGames();
         },
         error: (err) => {
@@ -98,8 +97,8 @@ export default class GamesPage implements OnInit {
       if (!result) return;
 
       this.gameService.update(result).subscribe({
-        next: (updated) => {
-          this.notification.success('Game successfully updated');
+        next: () => {
+          this.notification.success('Juego actualizado exitosamente');
           this.loadGames();
         },
         error: (err) => {
@@ -113,9 +112,9 @@ export default class GamesPage implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialog, {
       width: '420px',
       data: {
-        title: 'Delete game',
-        message: `Are you sure you want to delete "${game.title}"? This action cannot be undone.`,
-        confirmLabel: 'Delete',
+        title: 'Eliminar juego',
+        message: `¿Estás seguro de eliminar "${game.title}"? Esta acción no se puede deshacer.`,
+        confirmLabel: 'Eliminar',
         confirmColor: 'warn',
       } satisfies ConfirmDialogData,
     });
@@ -125,7 +124,7 @@ export default class GamesPage implements OnInit {
 
       this.gameService.delete(game.id).subscribe({
         next: () => {
-          this.notification.success('Game successfully deleted');
+          this.notification.success('Juego eliminado exitosamente');
           this.loadGames();
         },
         error: (err) => {

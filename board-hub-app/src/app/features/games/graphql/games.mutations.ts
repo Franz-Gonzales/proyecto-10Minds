@@ -5,7 +5,7 @@ export const CREATE_GAME = gql`
     createGame(createGameInput: $createGameInput) {
       id
       title
-      category
+      categoryId
       description
       pricePerDay
       minPlayers
@@ -17,6 +17,12 @@ export const CREATE_GAME = gql`
       isDeleted
       createdAt
       updatedAt
+
+      category {
+        id
+        name
+        icon
+      }
     }
   }
 `;
@@ -26,7 +32,7 @@ export const UPDATE_GAME = gql`
     updateGame(updateGameInput: $updateGameInput) {
       id
       title
-      category
+      categoryId
       description
       pricePerDay
       minPlayers
@@ -38,6 +44,12 @@ export const UPDATE_GAME = gql`
       isDeleted
       createdAt
       updatedAt
+      
+      category {
+        id
+        name
+        icon
+      }
     }
   }
 `;

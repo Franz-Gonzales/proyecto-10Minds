@@ -1,16 +1,19 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
 
 import { GamesService } from '../../../application/services/games.service';
 import { GameType } from '../types/game.type';
 import { CreateGameInput } from '../inputs/create-game.input';
 import { UpdateGameInput } from '../inputs/update-game.input';
-import { GameCategory } from '../../../domain/enums/game-category.enum';
 import { Game } from '../../../domain/entities/game.entity';
+import { CategoryType } from '../../../../category/presentation/graphql/types/category.type';
+import { CategoryService } from '../../../../category/application/services/category.service';
+import { Category } from '../../../../category/domain/entities/category.entity';
 
 @Resolver(() => GameType)
 export class GamesResolver {
   constructor(
     private readonly gamesService: GamesService,
+    private readonly categoryService: CategoryService,
   ) { }
 
   @Mutation(() => GameType, { name: 'createGame' })
@@ -22,9 +25,9 @@ export class GamesResolver {
 
   @Query(() => [GameType], { name: 'games' })
   async findAll(
-    @Args('category', { type: () => GameCategory, nullable: true }) category?: GameCategory,
+    @Args('categoryId', { type: () => ID, nullable: true }) categoryId?: string,
   ): Promise<Game[]> {
-    return this.gamesService.findAll({ category });
+    return this.gamesService.findAll({ categoryId });
   }
 
   @Query(() => GameType, { name: 'game' })
@@ -47,5 +50,16 @@ export class GamesResolver {
     @Args('id', { type: () => ID }) id: string,
   ): Promise<boolean> {
     return this.gamesService.remove(id);
+  }
+
+  @ResolveField('category', () => CategoryType, { nullable: true })
+  async resolveCategory(@Parent() game: Game): Promise<Category | null> {
+    if (!game.categoryId) return null;
+
+    try {
+      return await this.categoryService.findOne(game.categoryId);
+    } catch {
+      return null;
+    }
   }
 }

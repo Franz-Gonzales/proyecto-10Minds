@@ -1,11 +1,13 @@
-import { Component, input, output, signal, computed } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { GameCategory, CATEGORY_LABELS } from '../../models/game.model';
+
+import { CategoryService } from '../../../categories/services/category.service';
 
 interface FilterTab {
   label: string;
-  value: GameCategory | null;
+  value: string | null;
+  icon?: string;
 }
 
 @Component({
@@ -13,26 +15,38 @@ interface FilterTab {
   imports: [MatIconModule, FormsModule],
   templateUrl: './game-filters.html',
 })
-export class GameFilters {
-  readonly activeCategory = input<GameCategory | null>(null);
+export class GameFilters implements OnInit {
+  private readonly categoryService = inject(CategoryService);
+
+  readonly activeCategoryId = input<string | null>(null);
   readonly searchTerm = input<string>('');
 
-  readonly categoryChange = output<GameCategory | null>();
+  readonly categoryChange = output<string | null>();
   readonly searchChange = output<string>();
 
-  readonly tabs: FilterTab[] = [
-    { label: 'Todos', value: null },
-    { label: CATEGORY_LABELS[GameCategory.ESTRATEGIA], value: GameCategory.ESTRATEGIA },
-    { label: CATEGORY_LABELS[GameCategory.FAMILIAR], value: GameCategory.FAMILIAR },
-    { label: CATEGORY_LABELS[GameCategory.COOPERATIVO], value: GameCategory.COOPERATIVO },
-    { label: CATEGORY_LABELS[GameCategory.PARTY], value: GameCategory.PARTY },
-    { label: CATEGORY_LABELS[GameCategory.ABSTRACTO], value: GameCategory.ABSTRACTO },
-    { label: CATEGORY_LABELS[GameCategory.RPG], value: GameCategory.RPG },
-  ];
+  readonly tabs = signal<FilterTab[]>([{ label: 'Todos', value: null }]);
 
-  readonly localSearch = signal('');
+  ngOnInit(): void {
+    this.loadCategories();
+  }
 
-  selectCategory(value: GameCategory | null): void {
+  private loadCategories(): void {
+    this.categoryService.getAll().subscribe({
+      next: (categories) => {
+        const categoryTabs: FilterTab[] = categories
+          .filter((c) => c.isActive)
+          .map((c) => ({
+            label: c.name,
+            value: c.id,
+            icon: c.icon,
+          }));
+
+        this.tabs.set([{ label: 'Todos', value: null }, ...categoryTabs]);
+      },
+    });
+  }
+
+  selectCategory(value: string | null): void {
     this.categoryChange.emit(value);
   }
 

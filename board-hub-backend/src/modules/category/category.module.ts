@@ -15,7 +15,7 @@ import { DeleteCategoryUseCase } from './application/use-cases/delete-category.u
 @Module({
 
   imports: [
-    TypeOrmModule.forFeature([CategoryOrmEntity])
+    TypeOrmModule.forFeature([CategoryOrmEntity]),
   ],
 
   providers: [

@@ -2,24 +2,26 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 
-import { GameCategory } from '../../../../domain/enums/game-category.enum';
 import { LoanOrmEntity } from '../../../../../loan/infrastructure/persistence/typeorm/entities/loan.orm-entity';
+import { CategoryOrmEntity } from '../../../../../category/infrastructure/persistence/typeorm/entities/category.orm-entity';
 
 @Entity('games')
 export class GameOrmEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ type: 'uuid', name: 'category_id' })
+    categoryId: string;
+
     @Column({ type: 'varchar', length: 255 })
     title: string;
-
-    @Column({ type: 'enum', enum: GameCategory })
-    category: GameCategory;
 
     @Column({ type: 'text', nullable: true })
     description: string | null;
@@ -57,4 +59,8 @@ export class GameOrmEntity {
     // Relations
     @OneToMany(() => LoanOrmEntity, (loan) => loan.game)
     loans: LoanOrmEntity[];
+
+    @ManyToOne(() => CategoryOrmEntity, (category) => category.games, { onDelete: 'RESTRICT' })
+    @JoinColumn({ name: 'category_id' })
+    category: CategoryOrmEntity;
 }

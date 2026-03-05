@@ -1,4 +1,14 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { 
+    Column, 
+    CreateDateColumn, 
+    DeleteDateColumn, 
+    Entity, 
+    OneToMany, 
+    PrimaryGeneratedColumn, 
+    UpdateDateColumn 
+} from "typeorm";
+
+import { GameOrmEntity } from '../../../../../game/infrastructure/persistence/typeorm/entities/game.orm-entity';
 
 @Entity('categories')
 export class CategoryOrmEntity {
@@ -25,4 +35,8 @@ export class CategoryOrmEntity {
 
     @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at' })
     deletedAt: Date | null;
+
+    // Relation
+    @OneToMany(() => GameOrmEntity, game => game.category)
+    games: GameOrmEntity;
 }

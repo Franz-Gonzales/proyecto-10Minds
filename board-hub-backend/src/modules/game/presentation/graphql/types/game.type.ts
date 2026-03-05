@@ -1,17 +1,17 @@
 import { ObjectType, Field, ID, Int, Float } from '@nestjs/graphql';
 
-import { GameCategory } from '../../../domain/enums/game-category.enum';
+import { CategoryType } from '../../../../category/presentation/graphql/types/category.type';
 
 @ObjectType('Game')
 export class GameType {
     @Field(() => ID)
     id: string;
 
+    @Field(() => ID)
+    categoryId: string;
+
     @Field(() => String)
     title: string;
-
-    @Field(() => GameCategory)
-    category: GameCategory;
 
     @Field(() => String, { nullable: true })
     description: string | null;
@@ -45,4 +45,7 @@ export class GameType {
 
     @Field(() => Date)
     updatedAt: Date;
+
+    @Field(() => CategoryType, { nullable: true })
+    category?: CategoryType;
 }

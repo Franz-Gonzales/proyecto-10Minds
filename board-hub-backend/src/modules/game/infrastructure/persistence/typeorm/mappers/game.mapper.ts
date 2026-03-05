@@ -2,17 +2,11 @@ import { Game } from '../../../../domain/entities/game.entity';
 import { GameOrmEntity } from '../entities/game.orm-entity';
 
 export class GameMapper {
-
-    /**
-     * toDomain (BD → Negocio): Cuando sacas datos de la base de datos, 
-     * el Mapper los transforma en una entidad de Dominio para que 
-     * tus Casos de Uso puedan trabajar con ellos.
-     * * */
     static toDomain(ormEntity: GameOrmEntity): Game {
         return new Game({
             id: ormEntity.id,
             title: ormEntity.title,
-            category: ormEntity.category,
+            categoryId: ormEntity.categoryId,
             description: ormEntity.description,
             pricePerDay: Number(ormEntity.pricePerDay),
             minPlayers: ormEntity.minPlayers,
@@ -27,17 +21,11 @@ export class GameMapper {
         });
     }
 
-    /**
-     * toOrm (Negocio → BD): Cuando quieres guardar algo, el Mapper 
-     * toma tu entidad de negocio y la convierte al 
-     * formato que TypeORM entiende.
-     * * */
-
     static toOrm(domain: Game): GameOrmEntity {
         const ormEntity = new GameOrmEntity();
         ormEntity.id = domain.id;
         ormEntity.title = domain.title;
-        ormEntity.category = domain.category;
+        ormEntity.categoryId = domain.categoryId;
         ormEntity.description = domain.description;
         ormEntity.pricePerDay = domain.pricePerDay;
         ormEntity.minPlayers = domain.minPlayers;

@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { GraphqlClientService } from '../../../core/graphql/graphql-client.service';
 import { GET_ALL_GAMES, GET_GAME_BY_ID } from '../graphql/games.queries';
 import { CREATE_GAME, DELETE_GAME, UPDATE_GAME } from '../graphql/games.mutations';
-import { CreateGameInput, Game, GameCategory, UpdateGameInput } from '../models/game.model';
+import { CreateGameInput, Game, UpdateGameInput } from '../models/game.model';
 
 interface GetAllGamesResponse {
   games: Game[];
@@ -30,10 +30,10 @@ interface DeleteGameResponse {
 export class GameService {
   private readonly graphql = inject(GraphqlClientService);
 
-  getAll(category?: GameCategory): Observable<Game[]> {
+  getAll(categoryId?: string): Observable<Game[]> {
     return this.graphql
       .query<GetAllGamesResponse>(GET_ALL_GAMES, {
-        category: category ?? null,
+        categoryId: categoryId ?? null,
       })
       .pipe(map((data) => data.games));
   }

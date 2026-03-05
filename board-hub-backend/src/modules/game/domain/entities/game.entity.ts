@@ -1,9 +1,7 @@
-import { GameCategory } from '../enums/game-category.enum';
-
 export class Game {
   readonly id: string;
   readonly title: string;
-  readonly category: GameCategory;
+  readonly categoryId: string;
   readonly description: string | null;
   readonly pricePerDay: number;
   readonly minPlayers: number;
@@ -19,7 +17,7 @@ export class Game {
   constructor(props: {
     id: string;
     title: string;
-    category: GameCategory;
+    categoryId: string;
     description?: string | null;
     pricePerDay: number;
     minPlayers: number;
@@ -34,7 +32,7 @@ export class Game {
   }) {
     this.id = props.id;
     this.title = props.title;
-    this.category = props.category;
+    this.categoryId = props.categoryId;
     this.description = props.description ?? null;
     this.pricePerDay = props.pricePerDay;
     this.minPlayers = props.minPlayers;

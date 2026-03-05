@@ -1,11 +1,11 @@
 import { gql } from 'apollo-angular';
 
 export const GET_ALL_GAMES = gql`
-  query GetAllGames($category: GameCategory) {
-    games(category: $category) {
+  query GetAllGames($categoryId: ID) {
+    games(categoryId: $categoryId) {
       id
       title
-      category
+      categoryId
       description
       pricePerDay
       minPlayers
@@ -17,6 +17,12 @@ export const GET_ALL_GAMES = gql`
       isDeleted
       createdAt
       updatedAt
+      
+      category {
+        id
+        name
+        icon
+      }
     }
   }
 `;
@@ -26,7 +32,7 @@ export const GET_GAME_BY_ID = gql`
     game(id: $id) {
       id
       title
-      category
+      categoryId
       description
       pricePerDay
       minPlayers
@@ -38,6 +44,12 @@ export const GET_GAME_BY_ID = gql`
       isDeleted
       createdAt
       updatedAt
+
+      category {
+        id
+        name
+        icon
+      }
     }
   }
 `;
