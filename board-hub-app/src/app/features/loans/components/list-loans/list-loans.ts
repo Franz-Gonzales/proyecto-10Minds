@@ -11,17 +11,20 @@ import {
   LOAN_STATUS_LABELS,
   LOAN_STATUS_COLORS,
 } from '../../models/loan.model';
+import { Button } from "../../../../shared/components/buttons/buttons";
 
 @Component({
   selector: 'app-list-loans',
-  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatTooltipModule, DatePipe],
+  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatTooltipModule, DatePipe, Button],
   templateUrl: './list-loans.html',
 })
 export class ListLoans {
   readonly loans = input.required<Loan[]>();
 
   readonly returnLoan = output<Loan>();
+  readonly revertLoan = output<Loan>();
   readonly deleteLoan = output<Loan>();
+  readonly edit = output<Loan>();
 
   readonly statusLabels = LOAN_STATUS_LABELS;
   readonly statusColors = LOAN_STATUS_COLORS;
@@ -74,5 +77,13 @@ export class ListLoans {
 
   canBeReturned(loan: Loan): boolean {
     return loan.status === LoanStatus.RESERVED || loan.status === LoanStatus.OVERDUE;
+  }
+
+  canBeReverted(loan: Loan): boolean {
+    return loan.status === LoanStatus.DELIVERED;
+  }
+
+  canBeEdited(loan: Loan): boolean {
+    return loan.status === LoanStatus.RESERVED;
   }
 }

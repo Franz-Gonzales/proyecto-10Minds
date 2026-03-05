@@ -130,6 +130,11 @@ type Mutation {
   removeClient(id: ID!): Boolean!
   removeLoan(id: ID!): Boolean!
   returnLoan(id: ID!): Loan!
+
+  """
+  Reverts a DELIVERED loan back to RESERVED or OVERDUE. Decreases stock again.
+  """
+  revertLoan(id: ID!): Loan!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateGame(updateGameInput: UpdateGameInput!): Game!

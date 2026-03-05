@@ -7,6 +7,7 @@ import { CreateLoanCommand, CreateLoanUseCase } from '../use-cases/create-loan.u
 import { UpdateLoanCommand, UpdateLoanUseCase } from '../use-cases/update-loan.use-case';
 import { Loan } from '../../domain/entities/loan.entity';
 import { ReturnLoanUseCase } from '../use-cases/return-loan.use-case';
+import { RevertLoanUseCase } from '../use-cases/revert-loan.use-case';
 import { CheckOverdueLoansUseCase } from '../use-cases/check-overdue-loans.use-case';
 import { FindAllLoansOptions } from '../../domain/interfaces/loan.repository.interface';
 import { CountActiveLoansByClientUseCase } from '../use-cases/count-active-loans-by-client.use-case';
@@ -23,6 +24,7 @@ export class LoanService {
     private readonly getLoanByIdUseCase: GetLoanByIdUseCase,
     private readonly deleteLoanUseCase: DeleteLoanUseCase,
     private readonly returnLoanUseCase: ReturnLoanUseCase,
+    private readonly revertLoanUseCase: RevertLoanUseCase,
     private readonly checkOverdueUseCase: CheckOverdueLoansUseCase,
     private readonly countActiveLoansByClientUseCase: CountActiveLoansByClientUseCase,
     private readonly countHistoricLoansByClientUseCase: CountHistoricLoansByClientUseCase,
@@ -50,6 +52,10 @@ export class LoanService {
 
   async returnLoan(id: string): Promise<Loan> {
     return this.returnLoanUseCase.execute({ id });
+  }
+
+  async revertLoan(id: string): Promise<Loan> {
+    return this.revertLoanUseCase.execute({ id });
   }
 
   async checkOverdue(): Promise<number> {

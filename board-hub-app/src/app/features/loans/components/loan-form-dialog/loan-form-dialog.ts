@@ -24,10 +24,10 @@ import { GameService } from '../../../games/services/game.service';
 import { ClientService } from '../../../clients/services/client.service';
 import { Game } from '../../../games/models/game.model';
 import { Client } from '../../../clients/models/client.model';
-import { CreateLoanInput } from '../../models/loan.model';
+import { CreateLoanInput, Loan, UpdateLoanInput } from '../../models/loan.model';
 
 export interface LoanFormDialogData {
-  // Empty for create, future use for edit
+  loan?: Loan;
 }
 
 @Component({
@@ -64,6 +64,7 @@ export class LoanFormDialog implements OnInit {
   readonly data: LoanFormDialogData = inject(MAT_DIALOG_DATA);
 
   form!: FormGroup;
+  readonly isEdit: boolean = !!this.data?.loan;
 
   readonly games = signal<Game[]>([]);
   readonly clients = signal<Client[]>([]);
@@ -80,16 +81,17 @@ export class LoanFormDialog implements OnInit {
   }
 
   private buildForm(): void {
+    const loan = this.data?.loan;
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     this.form = this.fb.group({
-      gameId: ['', [Validators.required]],
-      clientId: ['', [Validators.required]],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-      startDate: [this.today, [Validators.required]],
-      endDate: [tomorrow, [Validators.required]],
-      notes: [''],
+      gameId: [loan?.gameId ?? '', [Validators.required]],
+      clientId: [loan?.clientId ?? '', [Validators.required]],
+      quantity: [loan?.quantity ?? 1, [Validators.required, Validators.min(1)]],
+      startDate: [loan ? new Date(loan.startDate) : this.today, [Validators.required]],
+      endDate: [loan ? new Date(loan.endDate) : tomorrow, [Validators.required]],
+      notes: [loan?.notes ?? ''],
     });
   }
 
@@ -97,8 +99,20 @@ export class LoanFormDialog implements OnInit {
     this.loadingGames.set(true);
     this.gameService.getAll().subscribe({
       next: (games) => {
-        this.games.set(games.filter((g) => !g.isDeleted && g.stockAvailable > 0));
+        if (this.isEdit) {
+          // In edit mode, show all non-deleted games (current game might have 0 stock)
+          this.games.set(games.filter((g) => !g.isDeleted));
+        } else {
+          this.games.set(games.filter((g) => !g.isDeleted && g.stockAvailable > 0));
+        }
         this.loadingGames.set(false);
+
+        // Pre-select game in edit mode
+        if (this.data?.loan?.gameId) {
+          const game = games.find((g) => g.id === this.data.loan!.gameId) ?? null;
+          this.selectedGame.set(game);
+          this.updateQuantityValidators(game);
+        }
       },
       error: () => {
         this.notification.error('Error al cargar juegos');
@@ -124,20 +138,36 @@ export class LoanFormDialog implements OnInit {
   onGameChange(gameId: string): void {
     const game = this.games().find((g) => g.id === gameId) ?? null;
     this.selectedGame.set(game);
+    this.updateQuantityValidators(game);
+  }
 
-    if (game) {
-      const quantityControl = this.form.get('quantity');
-      quantityControl?.setValidators([
-        Validators.required,
-        Validators.min(1),
-        Validators.max(game.stockAvailable),
-      ]);
-      quantityControl?.updateValueAndValidity();
+  private updateQuantityValidators(game: Game | null): void {
+    if (!game) return;
+
+    const quantityControl = this.form.get('quantity');
+    // In edit mode, available stock = current stock + loan's current quantity
+    let maxQuantity = game.stockAvailable;
+    if (this.isEdit && this.data.loan && game.id === this.data.loan.gameId) {
+      maxQuantity += this.data.loan.quantity;
     }
+
+    quantityControl?.setValidators([
+      Validators.required,
+      Validators.min(1),
+      Validators.max(maxQuantity),
+    ]);
+    quantityControl?.updateValueAndValidity();
   }
 
   getMaxQuantity(): number {
-    return this.selectedGame()?.stockAvailable ?? 1;
+    const game = this.selectedGame();
+    if (!game) return 1;
+
+    let max = game.stockAvailable;
+    if (this.isEdit && this.data.loan && game.id === this.data.loan.gameId) {
+      max += this.data.loan.quantity;
+    }
+    return max;
   }
 
   onSubmit(): void {
@@ -157,15 +187,27 @@ export class LoanFormDialog implements OnInit {
       return;
     }
 
-    const result: CreateLoanInput = {
-      gameId: raw.gameId,
-      clientId: raw.clientId,
-      quantity: raw.quantity,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-      ...(raw.notes?.trim() ? { notes: raw.notes.trim() } : {}),
-    };
-
-    this.dialogRef.close(result);
+    if (this.isEdit) {
+      const result: UpdateLoanInput = {
+        id: this.data.loan!.id,
+        gameId: raw.gameId,
+        clientId: raw.clientId,
+        quantity: Number(raw.quantity),
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        ...(raw.notes?.trim() ? { notes: raw.notes.trim() } : { notes: null }),
+      };
+      this.dialogRef.close(result);
+    } else {
+      const result: CreateLoanInput = {
+        gameId: raw.gameId,
+        clientId: raw.clientId,
+        quantity: Number(raw.quantity),
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        ...(raw.notes?.trim() ? { notes: raw.notes.trim() } : {}),
+      };
+      this.dialogRef.close(result);
+    }
   }
 }

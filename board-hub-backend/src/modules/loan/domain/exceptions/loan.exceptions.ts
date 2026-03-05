@@ -5,6 +5,7 @@ import {
     InsufficientResourceException,
 } from '../../../../common/exceptions/domain.exception';
 
+
 export class LoanNotFoundException extends NotFoundException {
     constructor(id: string) {
         super(`Loan with id "${id}" not found`);
@@ -52,5 +53,12 @@ export class LoanAlreadyDeletedException extends InvalidDataException {
 export class LoanCannotBeReturnedException extends InvalidDataException {
     constructor(status: string) {
         super(`A loan with status "${status}" cannot be marked as returned`);
+    }
+}
+
+
+export class LoanCannotBeRevertedException extends InvalidDataException {
+    constructor(status: string) {
+        super(`Only DELIVERED loans can be reverted. Current status: "${status}"`);
     }
 }

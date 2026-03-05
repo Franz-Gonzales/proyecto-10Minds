@@ -19,7 +19,7 @@ import { LoanService } from '../../services/loan.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { extractGraphQLError } from '../../../../core/interceptors/error.interceptor';
 
-import { CreateLoanInput, Loan, LoanStatus } from '../../models/loan.model';
+import { CreateLoanInput, Loan, LoanStatus, UpdateLoanInput } from '../../models/loan.model';
 
 @Component({
   selector: 'app-loans-page',
@@ -76,6 +76,7 @@ export default class LoansPage implements OnInit {
     this.searchTerm.set(term);
   }
 
+  // ─── Create ───
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(LoanFormDialog, {
       width: '680px',
@@ -98,6 +99,30 @@ export default class LoansPage implements OnInit {
     });
   }
 
+  // ─── Edit ───
+  openEditDialog(loan: Loan): void {
+    const dialogRef = this.dialog.open(LoanFormDialog, {
+      width: '680px',
+      maxHeight: '90vh',
+      data: { loan } satisfies LoanFormDialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((result: UpdateLoanInput | undefined) => {
+      if (!result) return;
+
+      this.loanService.update(result).subscribe({
+        next: () => {
+          this.notification.success('Préstamo actualizado exitosamente');
+          this.loadLoans();
+        },
+        error: (err) => {
+          this.notification.error(extractGraphQLError(err));
+        },
+      });
+    });
+  }
+
+  // ─── Return (mark as delivered) ───
   onReturnLoan(loan: Loan): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
       width: '420px',
@@ -124,6 +149,34 @@ export default class LoansPage implements OnInit {
     });
   }
 
+  // ─── Revert (undo delivered → reserved/overdue) ───
+  onRevertLoan(loan: Loan): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '420px',
+      data: {
+        title: 'Restaurar préstamo',
+        message: `¿Restaurar el préstamo de "${loan.game?.title ?? 'juego'}"? El estado volverá a Reservado o Vencido según corresponda y el stock del juego se reducirá nuevamente.`,
+        confirmLabel: 'Restaurar',
+        cancelLabel: 'Cancelar',
+      } satisfies ConfirmDialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.loanService.revertLoan(loan.id).subscribe({
+        next: () => {
+          this.notification.success('Préstamo restaurado exitosamente');
+          this.loadLoans();
+        },
+        error: (err) => {
+          this.notification.error(extractGraphQLError(err));
+        },
+      });
+    });
+  }
+
+  // ─── Delete ───
   onDeleteLoan(loan: Loan): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
       width: '420px',

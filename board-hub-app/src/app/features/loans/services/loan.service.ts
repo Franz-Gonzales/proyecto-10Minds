@@ -3,8 +3,8 @@ import { map, Observable } from 'rxjs';
 
 import { GraphqlClientService } from '../../../core/graphql/graphql-client.service';
 import { GET_ALL_LOANS, GET_LOAN_BY_ID } from '../graphql/loans.queries';
-import { CREATE_LOAN, RETURN_LOAN, DELETE_LOAN } from '../graphql/loans.mutations';
-import { CreateLoanInput, Loan, LoanStatus } from '../models/loan.model';
+import { CREATE_LOAN, UPDATE_LOAN, RETURN_LOAN, REVERT_LOAN, DELETE_LOAN } from '../graphql/loans.mutations';
+import { CreateLoanInput, Loan, LoanStatus, UpdateLoanInput } from '../models/loan.model';
 
 interface GetAllLoansResponse {
   loans: Loan[];
@@ -18,8 +18,16 @@ interface CreateLoanResponse {
   createLoan: Loan;
 }
 
+interface UpdateLoanResponse {
+  updateLoan: Loan;
+}
+
 interface ReturnLoanResponse {
   returnLoan: Loan;
+}
+
+interface RevertLoanResponse {
+  revertLoan: Loan;
 }
 
 interface DeleteLoanResponse {
@@ -58,10 +66,22 @@ export class LoanService {
       .pipe(map((data) => data.createLoan));
   }
 
+  update(input: UpdateLoanInput): Observable<Loan> {
+    return this.graphql
+      .mutate<UpdateLoanResponse>(UPDATE_LOAN, { updateLoanInput: input })
+      .pipe(map((data) => data.updateLoan));
+  }
+
   returnLoan(id: string): Observable<Loan> {
     return this.graphql
       .mutate<ReturnLoanResponse>(RETURN_LOAN, { id })
       .pipe(map((data) => data.returnLoan));
+  }
+
+  revertLoan(id: string): Observable<Loan> {
+    return this.graphql
+      .mutate<RevertLoanResponse>(REVERT_LOAN, { id })
+      .pipe(map((data) => data.revertLoan));
   }
 
   delete(id: string): Observable<boolean> {

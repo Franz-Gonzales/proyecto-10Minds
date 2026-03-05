@@ -96,4 +96,21 @@ export class Loan {
         }
         this.status = LoanStatus.OVERDUE;
     }
+
+    /**
+     * Reverts a DELIVERED loan back to RESERVED or OVERDUE
+     * depending on whether the end date has already passed.
+     */
+    canBeReverted(): boolean {
+        return this.status === LoanStatus.DELIVERED;
+    }
+
+    revertReturn(): void {
+        if (!this.canBeReverted()) {
+            throw new Error(`Only loans with status DELIVERED can be reverted`);
+        }
+        const now = new Date();
+        this.status = this.endDate < now ? LoanStatus.OVERDUE : LoanStatus.RESERVED;
+        this.deliveryDate = null;
+    }
 }
