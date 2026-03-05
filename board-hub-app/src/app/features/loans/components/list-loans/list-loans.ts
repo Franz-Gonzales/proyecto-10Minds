@@ -60,6 +60,10 @@ export class ListLoans {
     return loan.game?.imageUrl ?? null;
   }
 
+  getGameCategory(loan: Loan): string {
+    return loan.game?.category?.name ?? '';
+  }
+
   formatCurrency(value: number): string {
     return `Bs. ${value.toFixed(2)}`;
   }
