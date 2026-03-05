@@ -38,5 +38,5 @@ export class CategoryOrmEntity {
 
     // Relation
     @OneToMany(() => GameOrmEntity, game => game.category)
-    games: GameOrmEntity;
+    games: GameOrmEntity[];
 }

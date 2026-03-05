@@ -47,7 +47,11 @@ export class UpdateGameUseCase {
         }
 
         // Validar categoría si se está actualizando
-        if (command.categoryId) {
+        if (command.categoryId !== undefined) {
+            if (!command.categoryId) {
+                throw new InvalidGameDataException('categoryId cannot be empty');
+            }
+
             const category = await this.categoryRepository.findById(command.categoryId);
             if (!category) {
                 throw new CategoryNotFoundException(command.categoryId);
