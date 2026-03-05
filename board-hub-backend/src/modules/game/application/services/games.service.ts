@@ -17,7 +17,6 @@ export class GamesService {
     private readonly deleteGameUseCase: DeleteGameUseCase,
   ) { }
 
-
   async create(command: CreateGameCommand): Promise<Game> {
     return this.createGameUseCase.execute(command);
   }

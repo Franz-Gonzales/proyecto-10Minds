@@ -19,8 +19,14 @@ import { GameRepositoryAdapter } from './infrastructure/persistence/typeorm/repo
 // Presentation
 import { GamesResolver } from './presentation/graphql/resolvers/games.resolver';
 
+// External modules
+import { CategoryModule } from '../category/category.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([GameOrmEntity])],
+  imports: [
+    TypeOrmModule.forFeature([GameOrmEntity]),
+    CategoryModule,
+  ],
   providers: [
     // Repository binding (Port → Adapter)
     {

@@ -2,15 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Game } from '../../domain/entities/game.entity';
-import { GameCategory } from '../../domain/enums/game-category.enum';
 import { GameAlreadyExistsException, InvalidGameDataException } from '../../domain/exceptions/game.exceptions';
 import { GAME_REPOSITORY } from '../../domain/interfaces/game.repository.interface';
 import type { IGameRepository } from '../../domain/interfaces/game.repository.interface';
-
+import { CATEGORY_REPOSITORY } from '../../../category/domain/interfaces/category.repository.interface';
+import type { ICategoryRepository } from '../../../category/domain/interfaces/category.repository.interface';
+import { CategoryNotFoundException, CategoryInactiveException } from '../../../category/domain/exceptions/category.exceptions';
 
 export interface CreateGameCommand {
     title: string;
-    category: GameCategory;
+    categoryId: string;
     description?: string | null;
     pricePerDay: number;
     minPlayers: number;
@@ -26,6 +27,8 @@ export class CreateGameUseCase {
     constructor(
         @Inject(GAME_REPOSITORY)
         private readonly gameRepository: IGameRepository,
+        @Inject(CATEGORY_REPOSITORY)
+        private readonly categoryRepository: ICategoryRepository,
     ) { }
 
     async execute(command: CreateGameCommand): Promise<Game> {
@@ -38,15 +41,25 @@ export class CreateGameUseCase {
             throw new InvalidGameDataException('stockTotal must be at least 1');
         }
 
-        const existingGames = await this.gameRepository.findByTitle(command.title);
-        if (existingGames) {
+        // Validar que la categoría existe y está activa
+        const category = await this.categoryRepository.findById(command.categoryId);
+        if (!category) {
+            throw new CategoryNotFoundException(command.categoryId);
+        }
+        if (!category.isActive) {
+            throw new CategoryInactiveException(command.categoryId);
+        }
+
+        // Validar título único
+        const existingGame = await this.gameRepository.findByTitle(command.title);
+        if (existingGame) {
             throw new GameAlreadyExistsException(command.title);
         }
 
         const game = new Game({
             id: uuidv4(),
             title: command.title,
-            category: command.category,
+            categoryId: command.categoryId,
             description: command.description ?? null,
             pricePerDay: command.pricePerDay,
             minPlayers: command.minPlayers,

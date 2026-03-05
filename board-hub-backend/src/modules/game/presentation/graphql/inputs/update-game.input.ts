@@ -1,8 +1,5 @@
 import { InputType, Field, ID, PartialType } from '@nestjs/graphql';
-import {
-    IsNotEmpty,
-    IsUUID,
-} from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 import { CreateGameInput } from './create-game.input';
 
@@ -12,5 +9,4 @@ export class UpdateGameInput extends PartialType(CreateGameInput) {
     @IsUUID()
     @IsNotEmpty()
     id: string;
-
 }

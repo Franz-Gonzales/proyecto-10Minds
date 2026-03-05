@@ -28,21 +28,24 @@
             <mat-icon matPrefix class="text-slate-500 mr-2">sports_esports</mat-icon>
             <input matInput formControlName="title" placeholder="Ej: Catán, Carcassonne..." class="text-slate-200" />
             @if (form.get('title')?.hasError('required')) {
-            <mat-error>El nombre es obligatorio</mat-error>
+              <mat-error>El nombre es obligatorio</mat-error>
             }
             @if (form.get('title')?.hasError('maxlength')) {
-            <mat-error>Máximo 255 caracteres</mat-error>
+              <mat-error>Máximo 255 caracteres</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-full">
             <mat-label class="text-slate-400">Categoría</mat-label>
             <mat-icon matPrefix class="text-slate-500 mr-2">category</mat-icon>
-            <mat-select formControlName="category" class="text-slate-200">
-              @for (cat of categories; track cat.value) {
-              <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+            <mat-select formControlName="categoryId" class="text-slate-200">
+              @for (cat of categories(); track cat.id) {
+                <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
               }
             </mat-select>
+            @if (form.get('categoryId')?.hasError('required')) {
+              <mat-error>Selecciona una categoría</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-full">
@@ -51,10 +54,10 @@
             <input title="Precio por día en bolivianos" matInput type="number" formControlName="pricePerDay" min="0.01"
               step="0.50" class="text-slate-200" />
             @if (form.get('pricePerDay')?.hasError('required')) {
-            <mat-error>El precio es obligatorio</mat-error>
+              <mat-error>El precio es obligatorio</mat-error>
             }
             @if (form.get('pricePerDay')?.hasError('min')) {
-            <mat-error>Mínimo Bs. 0.01</mat-error>
+              <mat-error>Mínimo Bs. 0.01</mat-error>
             }
           </mat-form-field>
         </div>
@@ -73,7 +76,7 @@
             <input title="Min de Jugadores" matInput type="number" formControlName="minPlayers" min="1"
               class="text-slate-200" />
             @if (form.get('minPlayers')?.hasError('min')) {
-            <mat-error>Mínimo 1</mat-error>
+              <mat-error>Mínimo 1</mat-error>
             }
           </mat-form-field>
 
@@ -83,7 +86,7 @@
             <input title="Max de Jugadores" matInput type="number" formControlName="maxPlayers" min="1"
               class="text-slate-200" />
             @if (form.get('maxPlayers')?.hasError('min')) {
-            <mat-error>Mínimo 1</mat-error>
+              <mat-error>Mínimo 1</mat-error>
             }
           </mat-form-field>
 
@@ -93,7 +96,7 @@
             <input title="Duración del juego en minutos" matInput type="number" formControlName="durationMinutes"
               min="1" class="text-slate-200" />
             @if (form.get('durationMinutes')?.hasError('min')) {
-            <mat-error>Mínimo 1 min</mat-error>
+              <mat-error>Mínimo 1 min</mat-error>
             }
           </mat-form-field>
         </div>
@@ -112,7 +115,7 @@
             <input title="Stock total del juego" matInput type="number" formControlName="stockTotal" min="1"
               class="text-slate-200" />
             @if (form.get('stockTotal')?.hasError('min')) {
-            <mat-error>Mínimo 1 unidad</mat-error>
+              <mat-error>Mínimo 1 unidad</mat-error>
             }
           </mat-form-field>
         </div>
@@ -126,33 +129,33 @@
 
         <div>
           @if (imagePreview()) {
-          <div
-            class="border border-slate-700 bg-[#1a2030] rounded-xl p-4 flex flex-col items-center gap-3 relative group">
-            <img [src]="imagePreview()" alt="Preview" class="max-h-[180px] object-contain rounded-lg" />
             <div
-              class="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex items-center justify-center">
-              <button mat-flat-button color="warn" type="button" (click)="removeImage()"
-                class="!rounded-lg !bg-red-600/90 hover:!bg-red-600">
-                <mat-icon class="mr-1">delete</mat-icon> Quitar imagen
-              </button>
+              class="border border-slate-700 bg-[#1a2030] rounded-xl p-4 flex flex-col items-center gap-3 relative group">
+              <img [src]="imagePreview()" alt="Preview" class="max-h-[180px] object-contain rounded-lg" />
+              <div
+                class="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex items-center justify-center">
+                <button mat-flat-button color="warn" type="button" (click)="removeImage()"
+                  class="!rounded-lg !bg-red-600/90 hover:!bg-red-600">
+                  <mat-icon class="mr-1">delete</mat-icon> Quitar imagen
+                </button>
+              </div>
+              <span class="text-xs text-slate-400">{{ imageFileName() }}</span>
             </div>
-            <span class="text-xs text-slate-400">{{ imageFileName() }}</span>
-          </div>
           } @else {
-          <label
-            class="border-2 border-dashed border-slate-600 hover:border-blue-500 bg-[#1a2030] hover:bg-blue-600/5 transition-colors duration-200 rounded-xl p-8 flex flex-col items-center gap-3 cursor-pointer group">
-            <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
-              (change)="onFileSelected($event)" />
-            <div
-              class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-800 group-hover:bg-blue-600/20 transition-colors">
-              <mat-icon
-                class="text-slate-400 group-hover:text-blue-500 !text-[32px] transition-colors">cloud_upload</mat-icon>
-            </div>
-            <div class="text-center">
-              <p class="text-sm font-medium text-slate-300 m-0">Haz clic para subir una imagen</p>
-              <p class="text-xs text-slate-500 m-0 mt-1">JPG, PNG, WebP o GIF · Máx. 2 MB</p>
-            </div>
-          </label>
+            <label
+              class="border-2 border-dashed border-slate-600 hover:border-blue-500 bg-[#1a2030] hover:bg-blue-600/5 transition-colors duration-200 rounded-xl p-8 flex flex-col items-center gap-3 cursor-pointer group">
+              <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden"
+                (change)="onFileSelected($event)" />
+              <div
+                class="flex items-center justify-center w-14 h-14 rounded-full bg-slate-800 group-hover:bg-blue-600/20 transition-colors">
+                <mat-icon
+                  class="text-slate-400 group-hover:text-blue-500 !text-[32px] transition-colors">cloud_upload</mat-icon>
+              </div>
+              <div class="text-center">
+                <p class="text-sm font-medium text-slate-300 m-0">Haz clic para subir una imagen</p>
+                <p class="text-xs text-slate-500 m-0 mt-1">JPG, PNG, WebP o GIF · Máx. 4 MB</p>
+              </div>
+            </label>
           }
         </div>
       </div>

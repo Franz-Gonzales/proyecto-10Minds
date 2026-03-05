@@ -9,7 +9,7 @@
     <!-- Categoría -->
     <span
       class="absolute top-4 left-4 text-base-content/70 text-sm font-medium drop-shadow-lg bg-black/70 px-4 py-2 rounded-full">
-      {{ categoryLabels[game().category] }}
+      {{ categoryName }}
     </span>
 
     <!-- Menú de 3 puntos verticales -->
@@ -34,7 +34,7 @@
 
   <!-- Contenido inferior -->
   <div class="p-6 flex flex-col flex-grow space-y-4">
-    <!-- Título + Precio (misma línea, como en la imagen) -->
+    <!-- Título + Precio -->
     <div class="flex items-start justify-between gap-3">
       <h3 class="text-base-content font-semibold text-lg line-clamp-2 flex-1">
         {{ game().title }}

@@ -1,15 +1,13 @@
-import { InputType, Field, Int, Float } from '@nestjs/graphql';
+import { InputType, Field, Int, Float, ID } from '@nestjs/graphql';
 import {
-    IsEnum,
     IsInt,
     IsNotEmpty,
     IsNumber,
     IsOptional,
     IsString,
+    IsUUID,
     Min,
 } from 'class-validator';
-
-import { GameCategory } from '../../../domain/enums/game-category.enum';
 
 @InputType()
 export class CreateGameInput {
@@ -18,9 +16,10 @@ export class CreateGameInput {
     @IsNotEmpty()
     title: string;
 
-    @Field(() => GameCategory)
-    @IsEnum(GameCategory)
-    category: GameCategory;
+    @Field(() => ID)
+    @IsUUID()
+    @IsNotEmpty()
+    categoryId: string;
 
     @Field(() => String, { nullable: true })
     @IsOptional()

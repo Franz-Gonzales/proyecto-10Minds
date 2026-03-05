@@ -27,8 +27,8 @@ export class GameRepositoryAdapter implements IGameRepository {
             qb.where('game.isDeleted = :isDeleted', { isDeleted: false });
         }
 
-        if (options.category) {
-            qb.andWhere('game.category = :category', { category: options.category });
+        if (options.categoryId) {
+            qb.andWhere('game.categoryId = :categoryId', { categoryId: options.categoryId });
         }
 
         qb.orderBy('game.createdAt', 'DESC');
@@ -55,6 +55,15 @@ export class GameRepositoryAdapter implements IGameRepository {
         if (!entity) return null;
 
         return GameMapper.toDomain(entity);
+    }
+
+    async findByCategoryId(categoryId: string): Promise<Game[]> {
+        const entities = await this.ormRepository.find({
+            where: { categoryId, isDeleted: false },
+            order: { createdAt: 'DESC' },
+        });
+
+        return entities.map(GameMapper.toDomain);
     }
 
     async update(id: string, partial: Partial<Game>): Promise<Game> {

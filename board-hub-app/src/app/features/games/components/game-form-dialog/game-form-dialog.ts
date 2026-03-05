@@ -8,8 +8,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
+
 import { NotificationService } from '../../../../core/services/notification.service';
-import { Game, GameCategory, CATEGORY_LABELS } from '../../models/game.model';
+import { CategoryService } from '../../../categories/services/category.service';
+import { Category } from '../../../categories/models/category.model';
+import { Game } from '../../models/game.model';
 
 export interface GameFormDialogData {
   game?: Game;
@@ -69,6 +72,7 @@ export interface GameFormDialogData {
 export class GameFormDialog implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly notification = inject(NotificationService);
+  private readonly categoryService = inject(CategoryService);
   readonly dialogRef = inject(MatDialogRef<GameFormDialog>);
   readonly data: GameFormDialogData = inject(MAT_DIALOG_DATA);
 
@@ -77,18 +81,20 @@ export class GameFormDialog implements OnInit {
 
   readonly imagePreview = signal<string | null>(null);
   readonly imageFileName = signal<string | null>(null);
-
-  readonly categories = Object.values(GameCategory).map((value) => ({
-    value,
-    label: CATEGORY_LABELS[value],
-  }));
+  readonly categories = signal<Category[]>([]);
+  readonly loadingCategories = signal(false);
 
   ngOnInit(): void {
+    this.buildForm();
+    this.loadCategories();
+  }
+
+  private buildForm(): void {
     const game = this.data?.game;
 
     this.form = this.fb.group({
       title: [game?.title ?? '', [Validators.required, Validators.maxLength(255)]],
-      category: [game?.category ?? GameCategory.ESTRATEGIA, [Validators.required]],
+      categoryId: [game?.categoryId ?? '', [Validators.required]],
       description: [game?.description ?? ''],
       pricePerDay: [game?.pricePerDay ?? 10, [Validators.required, Validators.min(0.01)]],
       minPlayers: [game?.minPlayers ?? 2, [Validators.required, Validators.min(1)]],
@@ -104,39 +110,50 @@ export class GameFormDialog implements OnInit {
     }
   }
 
+  private loadCategories(): void {
+    this.loadingCategories.set(true);
+    this.categoryService.getAll().subscribe({
+      next: (categories) => {
+        this.categories.set(categories.filter((c) => c.isActive));
+        this.loadingCategories.set(false);
+      },
+      error: () => {
+        this.notification.error('Error al cargar categorías');
+        this.loadingCategories.set(false);
+      },
+    });
+  }
+
   onFileSelected(event: Event): void {
-      const input = event.target as HTMLInputElement;
-      const file = input.files?.[0];
-      if (!file) return;
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
 
-      // Validar tipos permitidos
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        this.notification.warning('Tipo de archivo no permitido. Usa JPG, PNG, WebP o GIF.');
-        return;
-      }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      this.notification.warning('Tipo de archivo no permitido. Usa JPG, PNG, WebP o GIF.');
+      return;
+    }
 
-      // Validar tamaño (máximo 4 MB)
-      const maxSizeBytes = 4 * 1024 * 1024;
-      if (file.size > maxSizeBytes) {
-        this.notification.warning('La imagen excede el límite de 4 MB.');
-        return;
-      }
+    const maxSizeBytes = 4 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.notification.warning('La imagen excede el límite de 4 MB.');
+      return;
+    }
 
-      this.imageFileName.set(file.name);
+    this.imageFileName.set(file.name);
 
-      // Leer el archivo para vista previa y formulario
-      const reader = new FileReader();
-      reader.onerror = () => {
-        this.notification.warning('Error al leer el archivo. Inténtalo de nuevo.');
-        input.value = '';
-      };
-      reader.onload = () => {
-        const base64 = reader.result as string;
-        this.imagePreview.set(base64); // Actualiza la vista previa (Signal)
-        this.form.patchValue({ imageUrl: base64 }); // Actualiza el formulario
-      };
-      reader.readAsDataURL(file);
+    const reader = new FileReader();
+    reader.onerror = () => {
+      this.notification.warning('Error al leer el archivo. Inténtalo de nuevo.');
+      input.value = '';
+    };
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.imagePreview.set(base64);
+      this.form.patchValue({ imageUrl: base64 });
+    };
+    reader.readAsDataURL(file);
   }
 
   removeImage(): void {
@@ -153,14 +170,12 @@ export class GameFormDialog implements OnInit {
 
     const formValue = { ...this.form.getRawValue() };
 
-    // Asegurar tipos numéricos correctos
     formValue.pricePerDay = Number(formValue.pricePerDay);
     formValue.minPlayers = Number(formValue.minPlayers);
     formValue.maxPlayers = Number(formValue.maxPlayers);
     formValue.durationMinutes = Number(formValue.durationMinutes);
     formValue.stockTotal = Number(formValue.stockTotal);
 
-    // Limpiar strings vacíos a null
     if (!formValue.description?.trim()) formValue.description = null;
     if (!formValue.imageUrl?.trim()) formValue.imageUrl = null;
 
@@ -169,16 +184,5 @@ export class GameFormDialog implements OnInit {
     } else {
       this.dialogRef.close(formValue);
     }
-  }
-
-  private getFormErrors(): Record<string, unknown> {
-    const errors: Record<string, unknown> = {};
-    Object.keys(this.form.controls).forEach((key) => {
-      const control = this.form.get(key);
-      if (control?.errors) {
-        errors[key] = control.errors;
-      }
-    });
-    return errors;
   }
 }

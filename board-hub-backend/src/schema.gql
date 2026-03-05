@@ -48,7 +48,7 @@ input CreateClientInput {
 }
 
 input CreateGameInput {
-  category: GameCategory!
+  categoryId: ID!
   description: String
   durationMinutes: Int!
   imageUrl: String
@@ -74,7 +74,8 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Game {
-  category: GameCategory!
+  category: Category
+  categoryId: ID!
   createdAt: DateTime!
   description: String
   durationMinutes: Int!
@@ -88,16 +89,6 @@ type Game {
   stockTotal: Int!
   title: String!
   updatedAt: DateTime!
-}
-
-"""Categorías de juegos de mesa"""
-enum GameCategory {
-  ABSTRACTO
-  COOPERATIVO
-  ESTRATEGIA
-  FAMILIAR
-  PARTY
-  RPG
 }
 
 type Loan {
@@ -151,7 +142,7 @@ type Query {
   client(id: ID!): Client!
   clients: [Client!]!
   game(id: ID!): Game!
-  games(category: GameCategory): [Game!]!
+  games(categoryId: ID): [Game!]!
   loan(id: ID!): Loan!
 
   """Get all loans. Supports filters by status, client, and game."""
@@ -188,7 +179,7 @@ input UpdateClientInput {
 }
 
 input UpdateGameInput {
-  category: GameCategory
+  categoryId: ID
   description: String
   durationMinutes: Int
   id: ID!
