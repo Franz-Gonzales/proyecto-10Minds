@@ -2,22 +2,24 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateClientCommand, CreateClientUseCase } from '../use-cases/create-client.use-case';
 import { GetAllClientUseCase } from '../use-cases/get-all-clients.use-case';
+import { GetAllClientsPaginatedUseCase, GetAllClientsPaginatedQuery } from '../use-cases/get-all-clients-paginated.use-case';
 import { UpdateClientCommand, UpdateClientUseCase } from '../use-cases/update-client.use-case';
 import { DeleteClientUseCase } from '../use-cases/delete-client.use-case';
 import { GetClientByIdUseCase } from '../use-cases/get-client-by-id.use-case';
 import { Client } from '../../domain/entities/client.entity';
+import { PaginatedResult } from '../../../../common/dto/paginated-result';
 
 @Injectable()
 export class ClientService {
-
   constructor(
     private readonly createClientUseCase: CreateClientUseCase,
     private readonly getAllClientUseCase: GetAllClientUseCase,
+    private readonly getAllClientsPaginatedUseCase: GetAllClientsPaginatedUseCase,
     private readonly updateClientUseCase: UpdateClientUseCase,
     private readonly deleteClientUseCase: DeleteClientUseCase,
     private readonly getClientByIdUseCase: GetClientByIdUseCase,
-
   ) {}
+
   async create(command: CreateClientCommand): Promise<Client> {
     return this.createClientUseCase.execute(command);
   }
@@ -26,10 +28,13 @@ export class ClientService {
     return this.getAllClientUseCase.execute();
   }
 
+  async findAllPaginated(query: GetAllClientsPaginatedQuery): Promise<PaginatedResult<Client>> {
+    return this.getAllClientsPaginatedUseCase.execute(query);
+  }
+
   async findOne(id: string): Promise<Client> {
     return this.getClientByIdUseCase.execute(id);
   }
-  
 
   async update(id: string, command: UpdateClientCommand): Promise<Client> {
     return this.updateClientUseCase.execute(id, command);

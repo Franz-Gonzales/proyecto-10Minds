@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.client-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.165);
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  background-color: transparent !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.mat-mdc-cell {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+  font-size: 0.875rem !important;
+}
+
+.mat-mdc-paginator {
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  max-width: 360px;
+}
+
+.mat-mdc-no-data-row td {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+
+
+
+
+
+
+
+.btn-delete {
+  color: #D64545 !important;
+  margin-top: 5px !important;
+  background: transparent !important;
+  border-radius: 0.375rem !important;
+  border: 2px solid #D64545 !important;
+}
+
+.btn-delete:hover {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+.btn-edit {
+  color: #16A34A !important;
+  background: transparent !important;
+  border-radius: 0.375rem !important;
+  border: 2px solid #16A34A!important;
+}
+
+.btn-edit:hover {
+  background: rgba(24, 183, 83, 0.8);
+}
+
+.btn-menu {
+  background-color: #1f2937 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.text-edit {
+  color: #16A34A !important;
+}
+
+.text-delete {
+  color: #D64545 !important;
+}
+
+

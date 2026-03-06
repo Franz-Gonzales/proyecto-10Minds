@@ -14,6 +14,20 @@ export interface Client {
   totalHistoric: number;
 }
 
+export interface PageInfo {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  itemsPerPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface PaginatedClients {
+  items: Client[];
+  pageInfo: PageInfo;
+}
+
 export interface CreateClientInput {
   name: string;
   lastName: string;

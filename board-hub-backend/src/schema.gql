@@ -141,11 +141,59 @@ type Mutation {
   updateLoan(updateLoanInput: UpdateLoanInput!): Loan!
 }
 
+type PageInfo {
+  """Current page number (1-based)"""
+  currentPage: Int!
+
+  """Whether there is a next page"""
+  hasNextPage: Boolean!
+
+  """Whether there is a previous page"""
+  hasPreviousPage: Boolean!
+
+  """Items per page"""
+  itemsPerPage: Int!
+
+  """Total number of items"""
+  totalItems: Int!
+
+  """Total number of pages"""
+  totalPages: Int!
+}
+
+type PaginatedClients {
+  """List of clients for the current page"""
+  items: [Client!]!
+
+  """Pagination metadata"""
+  pageInfo: PageInfo!
+}
+
 type Query {
   categories: [Category!]!
   category(id: ID!): Category!
   client(id: ID!): Client!
+
+  """Get all clients (no pagination)"""
   clients: [Client!]!
+
+  """Get clients with pagination, search, and sorting"""
+  clientsPaginated(
+    """Items per page"""
+    limit: Int! = 10
+
+    """Page number (1-based)"""
+    page: Int! = 1
+
+    """Search term"""
+    search: String
+
+    """Sort field"""
+    sortBy: String! = "createdAt"
+
+    """Sort direction: ASC or DESC"""
+    sortOrder: String! = "DESC"
+  ): PaginatedClients!
   game(id: ID!): Game!
   games(categoryId: ID): [Game!]!
   loan(id: ID!): Loan!

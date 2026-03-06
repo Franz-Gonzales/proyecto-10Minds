@@ -6,32 +6,28 @@
   (action)="openCreateDialog()"
 />
 
-<app-client-filter
-  [searchTerm]="searchTerm()"
-  (searchChange)="onSearchChange($event)"
-/>
-
-@if (loading()) {
+@if (loading() && clients().length === 0) {
   <div class="flex items-center justify-center py-20">
     <div class="flex flex-col items-center gap-3">
       <div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
       <span class="text-sm text-base-content/50">Cargando clientes...</span>
     </div>
   </div>
-} @else if (filteredClients().length === 0) {
+} @else if (isEmptyState()) {
   <app-empty-state
-    [title]="searchTerm()
-      ? 'No hay resultados para &quot;' + searchTerm() + '&quot;'
-      : 'No hay clientes registrados'"
-    [subtitle]="searchTerm()
-      ? 'Intenta con otro término de búsqueda'
-      : 'Comienza agregando tu primer cliente'"
-    [icon]="searchTerm() ? 'search_off' : 'person_add'"
+    title="No hay clientes registrados"
+    subtitle="Comienza agregando tu primer cliente"
+    icon="person_add"
   />
 } @else {
   <app-client-list
-    [clients]="filteredClients()"
+    [clients]="clients()"
+    [pageInfo]="pageInfo()"
+    [loading]="loading()"
     (edit)="openEditDialog($event)"
     (delete)="confirmDelete($event)"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+    (searchChange)="onSearchChange($event)"
   />
 }
