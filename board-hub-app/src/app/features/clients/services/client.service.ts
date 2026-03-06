@@ -2,12 +2,16 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { GraphqlClientService } from '../../../core/graphql/graphql-client.service';
-import { GET_ALL_CLIENTS, GET_CLIENT_BY_ID } from '../graphql/client.queries';
+import { GET_ALL_CLIENTS, GET_CLIENTS_PAGINATED, GET_CLIENT_BY_ID } from '../graphql/client.queries';
 import { CREATE_CLIENT, UPDATE_CLIENT, DELETE_CLIENT } from '../graphql/client.mutations';
-import { Client, CreateClientInput, UpdateClientInput } from '../models/client.model';
+import { Client, CreateClientInput, PaginatedClients, UpdateClientInput } from '../models/client.model';
 
 interface GetAllClientsResponse {
   clients: Client[];
+}
+
+interface GetClientsPaginatedResponse {
+  clientsPaginated: PaginatedClients;
 }
 
 interface GetClientByIdResponse {
@@ -34,6 +38,24 @@ export class ClientService {
     return this.graphql
       .query<GetAllClientsResponse>(GET_ALL_CLIENTS)
       .pipe(map((res) => res.clients));
+  }
+
+  getAllPaginated(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }): Observable<PaginatedClients> {
+    return this.graphql
+      .query<GetClientsPaginatedResponse>(GET_CLIENTS_PAGINATED, {
+        page: params.page,
+        limit: params.limit,
+        search: params.search ?? null,
+        sortBy: params.sortBy ?? 'createdAt',
+        sortOrder: params.sortOrder ?? 'DESC',
+      })
+      .pipe(map((res) => res.clientsPaginated));
   }
 
   getById(id: string): Observable<Client> {

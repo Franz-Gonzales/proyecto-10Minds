@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 
 // Definimos los 8 tipos exactos basados en tu imagen
-export type ButtonVariant = 
+export type ButtonVariant =
   | 'solid-blue' | 'solid-slate' | 'solid-green' | 'solid-red'
   | 'outline-blue' | 'outline-slate' | 'outline-green' | 'outline-red';
 
@@ -13,6 +13,7 @@ export type ButtonVariant =
   standalone: true,
   imports: [MatButtonModule, MatIconModule, CommonModule],
   templateUrl: './buttons.html',
+  styleUrl: './buttons.scss',
 })
 export class Button {
   // Datos que recibe el componente

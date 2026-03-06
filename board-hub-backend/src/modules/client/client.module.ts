@@ -7,6 +7,7 @@ import { ClientService } from './application/services/client.service';
 import { CreateClientUseCase } from './application/use-cases/create-client.use-case';
 import { GetClientByIdUseCase } from './application/use-cases/get-client-by-id.use-case';
 import { GetAllClientUseCase } from './application/use-cases/get-all-clients.use-case';
+import { GetAllClientsPaginatedUseCase } from './application/use-cases/get-all-clients-paginated.use-case';
 import { UpdateClientUseCase } from './application/use-cases/update-client.use-case';
 import { DeleteClientUseCase } from './application/use-cases/delete-client.use-case';
 
@@ -32,6 +33,7 @@ import { LoanModule } from '../loan/loan.module';
 
     CreateClientUseCase,
     GetAllClientUseCase,
+    GetAllClientsPaginatedUseCase,
     GetClientByIdUseCase,
     UpdateClientUseCase,
     DeleteClientUseCase,
