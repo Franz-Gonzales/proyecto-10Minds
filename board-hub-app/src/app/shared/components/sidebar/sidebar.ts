@@ -1,9 +1,9 @@
 import { Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-// import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { LucideAngularModule, Users, Package, ReceiptText, Dices, Shapes } from 'lucide-angular';
+import { LucideAngularModule, Users, Package, Dices, Shapes } from 'lucide-angular';
 
 interface NavItem {
   label: string;
@@ -13,7 +13,7 @@ interface NavItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, MatRippleModule, LucideAngularModule],
+  imports: [RouterLink, RouterLinkActive, MatRippleModule, LucideAngularModule, MatTooltipModule],
   templateUrl: './sidebar.html',
   standalone: true,
 })

@@ -122,7 +122,8 @@ export default class ClientPage implements OnInit, OnDestroy {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(ClientFormDialog, {
-      width: '600px',
+      width: '95vw',
+      maxWidth: '600px',
       maxHeight: '90vh',
       data: {} satisfies ClientFormDialogData,
     });
@@ -144,7 +145,8 @@ export default class ClientPage implements OnInit, OnDestroy {
 
   openEditDialog(client: Client): void {
     const dialogRef = this.dialog.open(ClientFormDialog, {
-      width: '600px',
+      width: '95vw',
+      maxWidth: '600px',
       maxHeight: '90vh',
       data: { client } satisfies ClientFormDialogData,
     });
@@ -166,7 +168,8 @@ export default class ClientPage implements OnInit, OnDestroy {
 
   confirmDelete(client: Client): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      width: '420px',
+      width: '90vw',
+      maxWidth: '420px',
       data: {
         title: 'Eliminar cliente',
         message: `¿Estás seguro de eliminar a "${client.name} ${client.lastName}"? Esta acción no se puede deshacer.`,

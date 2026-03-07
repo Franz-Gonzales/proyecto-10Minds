@@ -1,55 +1,52 @@
 <div class="w-full rounded-xl overflow-hidden shadow-lg border border-slate-600/60">
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto -webkit-overflow-scrolling-touch">
 
-    <table mat-table [dataSource]="categories()" class="custom-dark-table w-full">
+    <table mat-table [dataSource]="categories()" class="custom-dark-table w-full min-w-[500px]">
 
       <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef> N </th>
+        <th mat-header-cell *matHeaderCellDef class="!w-10"> N </th>
         <td mat-cell *matCellDef="let element; let i = index">
           {{ i + 1 }}
         </td>
-
       </ng-container>
 
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef> Categoría </th>
         <td mat-cell *matCellDef="let element">
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 sm:gap-3">
             <div
-              class="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-500/20 border border-blue-400/30 text-blue-300 shadow-sm">
-              <mat-icon class="!text-[20px] !w-[20px] !h-[20px]">{{ element.icon }}</mat-icon>
+              class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-blue-500/20 border border-blue-400/30 text-blue-300 shadow-sm shrink-0">
+              <mat-icon class="!text-[18px] sm:!text-[20px] !w-[18px] sm:!w-[20px] !h-[18px] sm:!h-[20px]">{{ element.icon }}</mat-icon>
             </div>
-            <span class="font-medium text-white">{{ element.name }}</span>
+            <span class="font-medium text-white text-sm sm:text-base truncate">{{ element.name }}</span>
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Descripción </th>
-        <td mat-cell *matCellDef="let element" [matTooltip]="element.description || null">
-          {{ element.description || 'Sin descripción' }}
+        <th mat-header-cell *matHeaderCellDef class="hidden sm:table-cell"> Descripción </th>
+        <td mat-cell *matCellDef="let element" class="hidden sm:table-cell" [matTooltip]="element.description || null">
+          <span class="truncate block max-w-[200px] lg:max-w-none">{{ element.description || 'Sin descripción' }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef> Estado </th>
         <td mat-cell *matCellDef="let element">
-
           <mat-chip-set aria-label="Estado de categoría">
             @if (element.isActive) {
-            <app-chip variant="green" label="Activa" />
+              <app-chip variant="green" label="Activa" />
             } @else {
-            <app-chip variant="red" label="Inactiva" />
+              <app-chip variant="red" label="Inactiva" />
             }
           </mat-chip-set>
-
         </td>
       </ng-container>
 
       <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
-        <td mat-cell *matCellDef="let element">
-          <div class="flex items-center gap-2">
+        <th mat-header-cell *matHeaderCellDef class="hidden md:table-cell"> Creación </th>
+        <td mat-cell *matCellDef="let element" class="hidden md:table-cell">
+          <div class="flex items-center gap-2 text-sm">
             <mat-icon class="!text-[16px] !w-[16px] !h-[16px]">calendar_today</mat-icon>
             {{ element.createdAt | date:'dd MMM yyyy' }}
           </div>
@@ -57,14 +54,14 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <th mat-header-cell *matHeaderCellDef class="!text-center"> Acciones </th>
         <td mat-cell *matCellDef="let element">
-          <div class="flex items-center justify-center gap-2">
+          <div class="flex items-center justify-center gap-1 sm:gap-2">
             @if(element.isActive) {
-            <app-button variant="outline-green" label="Editar" (clicked)="edit.emit(element)" />
-            <app-button variant="outline-red" label="Eliminar" (clicked)="delete.emit(element)" />
+              <app-button variant="outline-green" label="Editar" (clicked)="edit.emit(element)" />
+              <app-button variant="outline-red" label="Eliminar" (clicked)="delete.emit(element)" />
             } @else {
-            <app-button variant="outline-blue" label="Activar" (clicked)="activate.emit(element)"/>
+              <app-button variant="outline-blue" label="Activar" (clicked)="activate.emit(element)"/>
             }
           </div>
         </td>
@@ -79,11 +76,10 @@
           <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
             <mat-icon class="!text-[48px] !w-[48px] !h-[48px] opacity-30 mb-2">category</mat-icon>
             <p class="text-base font-medium m-0 text-slate-200">No hay categorías registradas</p>
-            <p class="text-sm m-0">Haz clic en "Nueva categoría" para empezar a organizar.</p>
+            <p class="text-sm m-0">Haz clic en "Nueva categoría" para empezar.</p>
           </div>
         </td>
       </tr>
-
     </table>
   </div>
 </div>

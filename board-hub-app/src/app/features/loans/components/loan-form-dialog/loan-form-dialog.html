@@ -1,14 +1,14 @@
 <div class="relative">
   <!-- Header -->
-  <div class="flex items-center gap-3 px-6 pt-6 pb-4">
-    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/15">
-      <mat-icon class="text-primary">{{ isEdit ? 'edit' : 'receipt_long' }}</mat-icon>
+  <div class="flex items-center gap-3 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
+    <div class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/15 shrink-0">
+      <mat-icon class="text-primary text-[20px]! sm:text-[24px]!">{{ isEdit ? 'edit' : 'receipt_long' }}</mat-icon>
     </div>
-    <div>
-      <h2 class="text-lg font-bold text-base-content m-0">
+    <div class="min-w-0">
+      <h2 class="text-base sm:text-lg font-bold text-base-content m-0 truncate">
         {{ isEdit ? 'Editar préstamo' : 'Nuevo préstamo' }}
       </h2>
-      <p class="text-xs text-base-content/50 m-0">
+      <p class="text-[11px] sm:text-xs text-base-content/50 m-0 truncate">
         {{ isEdit ? 'Modifica los datos del préstamo' : 'Completa los datos para registrar un nuevo préstamo' }}
       </p>
     </div>
@@ -16,8 +16,8 @@
 
   <mat-divider />
 
-  <mat-dialog-content class="!max-h-[68vh] !px-6 !py-4">
-    <form [formGroup]="form" class="flex flex-col gap-5">
+  <mat-dialog-content class="!max-h-[68vh] !px-4 sm:!px-6 !py-3 sm:!py-4">
+    <form [formGroup]="form" class="flex flex-col gap-4 sm:gap-5">
 
       <!-- ═══════ Sección: Juego y Cliente ═══════ -->
       <div>
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <!-- ═══════ Sección: Detalles del préstamo ═══════ -->
+      <!-- ═══════ Sección: Detalles ═══════ -->
       <div>
         <span class="section-title">Detalles del préstamo</span>
 
@@ -82,7 +82,7 @@
               <mat-error>Mínimo 1</mat-error>
             }
             @if (form.get('quantity')?.hasError('max')) {
-              <mat-error>Máx. {{ getMaxQuantity() }} disponibles</mat-error>
+              <mat-error>Máx. {{ getMaxQuantity() }}</mat-error>
             }
           </mat-form-field>
 
@@ -109,14 +109,14 @@
           </mat-form-field>
         </div>
 
-        <!-- Info del juego seleccionado -->
+        <!-- Info del juego -->
         @if (selectedGame()) {
-          <div class="mt-2 p-3 rounded-lg bg-primary/5 border border-primary/20 text-sm">
+          <div class="mt-2 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs sm:text-sm">
             <div class="flex items-center gap-2 text-base-content/70">
-              <mat-icon class="text-primary text-[18px]!">info</mat-icon>
+              <mat-icon class="text-primary text-[16px]! sm:text-[18px]!">info</mat-icon>
               <span>
-                Precio por día: <strong class="text-base-content">Bs. {{ selectedGame()!.pricePerDay.toFixed(2) }}</strong>
-                · Stock disponible: <strong class="text-base-content">{{ getMaxQuantity() }}</strong>
+                Precio: <strong class="text-base-content">Bs. {{ selectedGame()!.pricePerDay.toFixed(2) }}</strong>/día
+                · Stock: <strong class="text-base-content">{{ getMaxQuantity() }}</strong>
               </span>
             </div>
           </div>
@@ -134,8 +134,8 @@
             <textarea
               matInput
               formControlName="notes"
-              rows="3"
-              placeholder="Observaciones sobre el préstamo..."
+              rows="2"
+              placeholder="Observaciones..."
             ></textarea>
           </mat-form-field>
         </div>
@@ -146,7 +146,7 @@
   <mat-divider />
 
   <!-- Footer -->
-  <mat-dialog-actions class="!px-6 !py-4 flex justify-end gap-2">
+  <mat-dialog-actions class="!px-4 sm:!px-6 !py-3 sm:!py-4 flex justify-end gap-2">
     <button mat-button (click)="dialogRef.close()" class="!text-base-content/60">
       Cancelar
     </button>
@@ -155,10 +155,10 @@
       color="primary"
       (click)="onSubmit()"
       [disabled]="form.invalid"
-      class="!rounded-lg !px-6"
+      class="!rounded-lg !px-4 sm:!px-6"
     >
       <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'add_circle' }}</mat-icon>
-      {{ isEdit ? 'Guardar cambios' : 'Registrar préstamo' }}
+      {{ isEdit ? 'Guardar' : 'Registrar' }}
     </button>
   </mat-dialog-actions>
 </div>

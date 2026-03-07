@@ -1,5 +1,5 @@
 <span
-  class="inline-flex items-center gap-3 px-5 py-3 text-base font-medium rounded-full shadow-md border border-opacity-40 min-w-[140px] justify-center"
+  class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-2 sm:py-3 text-sm sm:text-base font-medium rounded-full shadow-md border border-opacity-40 min-w-[100px] sm:min-w-[140px] justify-center"
   [class]="
     isAvailable()
       ? 'text-success border-success/40 bg-success/15'
@@ -7,7 +7,7 @@
   "
 >
   <span
-    class="w-3.5 h-3.5 rounded-full flex-shrink-0"
+    class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full flex-shrink-0"
     [class]="isAvailable() ? 'bg-success' : 'bg-error'"
   ></span>
   {{ label() }}

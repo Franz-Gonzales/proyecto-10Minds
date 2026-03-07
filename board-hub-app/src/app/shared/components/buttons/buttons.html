@@ -1,13 +1,13 @@
 <button
   matFab
   extended
-  class="{{btnClass()}}"
+  [class]="tailwindClasses()"
   [disabled]="disabled()"
   (click)="clicked.emit()">
 
   @if (icon()) {
-    <mat-icon>{{ icon() }}</mat-icon>
+    <mat-icon class="!mr-2">{{ icon() }}</mat-icon>
   }
 
-  {{ label() }}
+  <span class="font-medium tracking-wide">{{ label() }}</span>
 </button>

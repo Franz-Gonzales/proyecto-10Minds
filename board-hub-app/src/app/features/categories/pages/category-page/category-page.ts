@@ -63,7 +63,8 @@ export default class CategoryPage implements OnInit {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(CategoryFormDialog, {
-      width: '600px',
+      width: '95vw',
+      maxWidth: '600px',
       maxHeight: '90vh',
       data: {} satisfies CategoryFormDialogData,
     });
@@ -85,7 +86,8 @@ export default class CategoryPage implements OnInit {
 
   openEditDialog(category: Category): void {
     const dialogRef = this.dialog.open(CategoryFormDialog, {
-      width: '600px',
+      width: '95vw',
+      maxWidth: '600px',
       maxHeight: '90vh',
       data: { category } satisfies CategoryFormDialogData,
     });
@@ -107,7 +109,8 @@ export default class CategoryPage implements OnInit {
 
   confirmDelete(category: Category): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      width: '420px',
+      width: '90vw',
+      maxWidth: '420px',
       data: {
         title: 'Eliminar Categoría',
         message: `¿Estás seguro de eliminar la categoría "${category.name}"? Esta acción no se puede deshacer.`,

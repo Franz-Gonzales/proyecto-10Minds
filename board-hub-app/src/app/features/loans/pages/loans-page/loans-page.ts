@@ -79,7 +79,8 @@ export default class LoansPage implements OnInit {
   // ─── Create ───
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(LoanFormDialog, {
-      width: '680px',
+      width: '95vw',
+      maxWidth: '680px',
       maxHeight: '90vh',
       data: {} satisfies LoanFormDialogData,
     });
@@ -102,7 +103,8 @@ export default class LoansPage implements OnInit {
   // ─── Edit ───
   openEditDialog(loan: Loan): void {
     const dialogRef = this.dialog.open(LoanFormDialog, {
-      width: '680px',
+      width: '95vw',
+      maxWidth: '680px',
       maxHeight: '90vh',
       data: { loan } satisfies LoanFormDialogData,
     });
@@ -125,7 +127,8 @@ export default class LoansPage implements OnInit {
   // ─── Return (mark as delivered) ───
   onReturnLoan(loan: Loan): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      width: '420px',
+      width: '90vw',
+      maxWidth: '420px',
       data: {
         title: 'Confirmar devolución',
         message: `¿Marcar como entregado el préstamo de "${loan.game?.title ?? 'juego'}" para ${loan.client?.name ?? 'cliente'} ${loan.client?.lastName ?? ''}?`,
@@ -152,7 +155,8 @@ export default class LoansPage implements OnInit {
   // ─── Revert (undo delivered → reserved/overdue) ───
   onRevertLoan(loan: Loan): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      width: '420px',
+      width: '90vw',
+      maxWidth: '420px',
       data: {
         title: 'Restaurar préstamo',
         message: `¿Restaurar el préstamo de "${loan.game?.title ?? 'juego'}"? El estado volverá a Reservado o Vencido según corresponda y el stock del juego se reducirá nuevamente.`,
@@ -179,7 +183,8 @@ export default class LoansPage implements OnInit {
   // ─── Delete ───
   onDeleteLoan(loan: Loan): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      width: '420px',
+      width: '90vw',
+      maxWidth: '420px',
       data: {
         title: 'Eliminar préstamo',
         message: `¿Estás seguro de eliminar el préstamo de "${loan.game?.title ?? 'juego'}"? Esta acción no se puede deshacer.`,

@@ -24,7 +24,7 @@
     subtitle="No se encontraron juegos. Crea uno nuevo para empezar."
   />
 } @else {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-5">
     @for (game of filteredGames(); track game.id) {
       <app-game-card
         [game]="game"

@@ -1,18 +1,18 @@
 <div class="w-full bg-base-200 border border-base-300 rounded-xl overflow-hidden shadow-lg">
 
   <!-- Search filter -->
-  <div class="px-6 pt-5 pb-2">
+  <div class="px-4 sm:px-6 pt-4 sm:pt-5 pb-2">
     <mat-form-field appearance="outline" class="w-full sm:max-w-[360px]">
       <mat-label>Buscar cliente</mat-label>
       <mat-icon matPrefix class="text-base-content/40 mr-1">search</mat-icon>
       <input
         matInput
         (keyup)="applyFilter($event)"
-        placeholder="Buscar por nombre, CI, teléfono o correo..."
+        placeholder="Nombre, CI, teléfono o correo..."
         #searchInput
       />
       @if (searchInput.value) {
-        <button matSuffix mat-icon-button (click)="searchInput.value = ''; applyFilter($event)">
+        <button matSuffix mat-icon-button (click)="clearSearch(searchInput)">
           <mat-icon class="text-base-content/40 text-[18px]!">close</mat-icon>
         </button>
       }
@@ -30,8 +30,8 @@
     >
       <!-- Index Column -->
       <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef class="!w-14 !pl-6"> # </th>
-        <td mat-cell *matCellDef="let row; let i = index" class="!pl-6 text-base-content/40 text-xs">
+        <th mat-header-cell *matHeaderCellDef class="!w-12 !pl-4 sm:!pl-6"> # </th>
+        <td mat-cell *matCellDef="let row; let i = index" class="!pl-4 sm:!pl-6 text-base-content/40 text-xs">
           {{ getRowIndex(i) }}
         </td>
       </ng-container>
@@ -40,18 +40,18 @@
       <ng-container matColumnDef="client">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Cliente </th>
         <td mat-cell *matCellDef="let row">
-          <div class="flex items-center gap-3 py-2">
+          <div class="flex items-center gap-2 sm:gap-3 py-1.5 sm:py-2">
             <div
-              class="w-10 h-10 rounded-full flex items-center justify-center border text-sm font-semibold shrink-0"
+              class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border text-xs sm:text-sm font-semibold shrink-0"
               [class]="getAvatarColor(row.name)"
             >
               {{ getInitials(row.name, row.lastName) }}
             </div>
             <div class="flex flex-col min-w-0">
-              <span class="font-medium text-base-content truncate">
+              <span class="font-medium text-base-content text-sm sm:text-base truncate">
                 {{ row.name }} {{ row.lastName }}
               </span>
-              <span class="text-xs text-base-content/40 mt-0.5">
+              <span class="text-[11px] sm:text-xs text-base-content/40 mt-0.5">
                 CI: {{ row.ci }}
               </span>
             </div>
@@ -62,31 +62,31 @@
       <!-- Phone Column -->
       <ng-container matColumnDef="phoneNumber">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="phoneNumber"> Celular </th>
-        <td mat-cell *matCellDef="let row" class="text-base-content/60">
+        <td mat-cell *matCellDef="let row" class="text-base-content/60 text-sm">
           {{ row.phoneNumber }}
         </td>
       </ng-container>
 
       <!-- Email Column -->
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> Correo Electrónico </th>
-        <td mat-cell *matCellDef="let row" class="text-base-content/60">
-          {{ row.email }}
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> Correo </th>
+        <td mat-cell *matCellDef="let row" class="text-base-content/60 text-sm">
+          <span class="truncate block max-w-[200px]">{{ row.email }}</span>
         </td>
       </ng-container>
 
       <!-- Active Loans Column -->
       <ng-container matColumnDef="activeLoans">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Préstamos Activos </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Activos </th>
         <td mat-cell *matCellDef="let row">
           @if (row.activeLoans > 0) {
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-blue-600/10 text-blue-400 border border-blue-600/30">
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-blue-600/10 text-blue-400 border border-blue-600/30">
               <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-              {{ row.activeLoans }} {{ row.activeLoans === 1 ? 'Activo' : 'Activos' }}
+              {{ row.activeLoans }}
             </span>
           } @else {
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-base-300/50 text-base-content/40 border border-base-300">
-              Sin préstamos
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-base-300/50 text-base-content/40 border border-base-300">
+              0
             </span>
           }
         </td>
@@ -94,15 +94,15 @@
 
       <!-- Total Historic Column -->
       <ng-container matColumnDef="totalHistoric">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Total Histórico </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Histórico </th>
         <td mat-cell *matCellDef="let row">
-          <span class="text-base-content font-medium">{{ row.totalHistoric }}</span>
+          <span class="text-base-content font-medium text-sm">{{ row.totalHistoric }}</span>
         </td>
       </ng-container>
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="!text-center !w-20"> Acciones </th>
+        <th mat-header-cell *matHeaderCellDef class="!text-center !w-16"> </th>
         <td mat-cell *matCellDef="let row" class="!text-center">
           <button
             mat-icon-button
@@ -113,15 +113,20 @@
             <mat-icon class="text-[20px]!">more_vert</mat-icon>
           </button>
 
-          <mat-menu class="btn-menu" #menu="matMenu">
-            <button class="btn-edit" mat-menu-item (click)="edit.emit(row)">
-              <mat-icon class="text-edit">edit</mat-icon>
-              <span>Editar</span>
+          <mat-menu #menu="matMenu" class="!bg-[#1e293b] !rounded-xl !border !border-slate-700/60 mt-1 shadow-2xl min-w-[160px]">
+      
+            <button mat-menu-item (click)="edit.emit(row)" class="hover:!bg-blue-500/10 transition-colors duration-200 group">
+              <mat-icon class="!text-slate-400 group-hover:!text-blue-400 transition-colors">edit</mat-icon>
+              <span class="!text-slate-200 group-hover:!text-blue-400 font-medium transition-colors">Editar</span>
             </button>
-            <button class="btn-delete" mat-menu-item (click)="delete.emit(row)">
-              <mat-icon class="text-delete">delete</mat-icon>
-              <span>Eliminar</span>
+
+            <div class="h-[1px] bg-slate-700/60 w-full my-0.5"></div>
+
+            <button mat-menu-item (click)="delete.emit(row)" class="hover:!bg-red-500/10 transition-colors duration-200 group">
+              <mat-icon class="!text-slate-400 group-hover:!text-red-400 transition-colors">delete_outline</mat-icon>
+              <span class="!text-slate-200 group-hover:!text-red-400 font-medium transition-colors">Eliminar</span>
             </button>
+            
           </mat-menu>
         </td>
       </ng-container>
@@ -132,9 +137,9 @@
       <!-- No data row -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-          <div class="flex flex-col items-center justify-center py-10 gap-2">
-            <mat-icon class="text-base-content/30 text-[40px]!">search_off</mat-icon>
-            <span class="text-base-content/40 text-sm">
+          <div class="flex flex-col items-center justify-center py-8 sm:py-10 gap-2">
+            <mat-icon class="text-base-content/30 text-[36px]! sm:text-[40px]!">search_off</mat-icon>
+            <span class="text-base-content/40 text-xs sm:text-sm">
               No se encontraron clientes
             </span>
           </div>
@@ -148,9 +153,9 @@
     [length]="pageInfo().totalItems"
     [pageSize]="pageInfo().itemsPerPage"
     [pageIndex]="pageInfo().currentPage - 1"
-    [pageSizeOptions]="[5, 10, 25, 50]"
+    [pageSizeOptions]="isMobile() ? [5, 10] : [5, 10, 25, 50]"
     (page)="onPageChange($event)"
-    showFirstLastButtons
+    [showFirstLastButtons]="!isMobile()"
     aria-label="Seleccionar página de clientes"
   />
 </div>

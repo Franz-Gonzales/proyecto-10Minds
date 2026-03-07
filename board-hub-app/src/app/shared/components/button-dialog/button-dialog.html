@@ -1,9 +1,13 @@
 <button
   matFab
   extended
-  class="btn-dialog"
+  class="!bg-[#1d6ae5] hover:!bg-[#1b5cc8] !text-white !shadow-none !rounded-xl transition-colors duration-200 w-full sm:w-auto !h-12 sm:!h-12 px-4 sm:px-6"
   (click)="action.emit()">
 
-  <mat-icon>{{ actionIcon() }}</mat-icon>
-  {{ actionLabel() }}
+  @if (actionIcon()) {
+    <mat-icon class="!mr-2 !text-[24px] sm:!text-[20px]">{{ actionIcon() }}</mat-icon>
+  }
+  
+  <span class="text-base sm:text-sm font-medium tracking-wide">{{ actionLabel() }}</span>
+  
 </button>

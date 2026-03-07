@@ -5,7 +5,7 @@
 $color-btn-primary: #1d6ae5;
 $color-btn-primary-hover: #1b5cc8;
 
-// Variables para la tabla oscura (basadas en Tailwind slate)
+// Variables para la tabla oscura
 $table-bg: #1e293b;
 $table-border: #334155;
 $table-text: #cbd5e1;
@@ -28,9 +28,9 @@ $chip-inactive-border: rgba(71, 85, 105, 0.5);
 $btn-blue-bg: #2563eb;       // Blue/600
 $btn-blue-outline: #3b82f6;  // Blue/500
 
-$btn-slate-bg: #1e293b;      // Slate/800
-$btn-slate-border: #334155;  // border/default
-$btn-slate-text: #cbd5e1;    // Texto claro para outline gris
+$btn-slate-bg: #1e293b;
+$btn-slate-border: #334155;
+$btn-slate-text: #cbd5e1;
 
 $btn-green: #16a34a;
 $btn-red: #ef4444;
@@ -144,49 +144,6 @@ html {
     ));
   }
 
-
-
-
-  // Mixin auxiliar para botones SÓLIDOS
-  @mixin solid-button($bg-color) {
-    @include mat.fab-overrides((
-      container-color: $bg-color,
-      foreground-color: #ffffff,
-      extended-container-elevation-shadow: none,
-      extended-container-shape: 12px,
-      extended-container-height: 45px,
-    ));
-    box-shadow: none !important;
-  }
-
-  // Mixin auxiliar para botones OUTLINE (con borde)
-  @mixin outline-button($text-color, $border-color) {
-    @include mat.fab-overrides((
-      container-color: transparent,
-      foreground-color: $text-color,
-      extended-container-elevation-shadow: none,
-      extended-container-shape: 10px,
-      extended-container-height: 35px,
-    ));
-    box-shadow: none !important;
-    border: 1px solid $border-color;
-
-    padding: 0 12px !important;
-    min-width: auto !important;
-  }
-
-
-  // Fila 1: Solid
-  .btn-solid-blue  { @include solid-button($btn-blue-bg); }
-  .btn-solid-slate { @include solid-button($btn-slate-bg); }
-  .btn-solid-green { @include solid-button($btn-green); }
-  .btn-solid-red   { @include solid-button($btn-red); }
-
-  // Fila 2: Outline
-  .btn-outline-blue  { @include outline-button($btn-blue-outline, $btn-blue-outline); }
-  .btn-outline-slate { @include outline-button($btn-slate-text, $btn-slate-border); }
-  .btn-outline-green { @include outline-button($btn-green, $btn-green); }
-  .btn-outline-red   { @include outline-button($btn-red, $btn-red); }
 }
 
 body {

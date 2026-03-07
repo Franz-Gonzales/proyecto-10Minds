@@ -1,14 +1,14 @@
 <div class="relative">
   <!-- Header -->
-  <div class="flex items-center gap-3 px-6 pt-6 pb-4">
-    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/15">
-      <mat-icon class="text-primary">{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+  <div class="flex items-center gap-3 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
+    <div class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/15 shrink-0">
+      <mat-icon class="text-primary text-[20px]! sm:text-[24px]!">{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
     </div>
-    <div>
-      <h2 class="text-lg font-bold text-base-content m-0">
+    <div class="min-w-0">
+      <h2 class="text-base sm:text-lg font-bold text-base-content m-0 truncate">
         {{ isEdit ? 'Editar cliente' : 'Nuevo cliente' }}
       </h2>
-      <p class="text-xs text-base-content/50 m-0">
+      <p class="text-[11px] sm:text-xs text-base-content/50 m-0 truncate">
         {{ isEdit ? 'Modifica los datos del cliente' : 'Completa los datos para registrar un cliente' }}
       </p>
     </div>
@@ -16,8 +16,8 @@
 
   <mat-divider />
 
-  <mat-dialog-content class="!max-h-[68vh] !px-6 !py-4">
-    <form [formGroup]="form" class="flex flex-col gap-5">
+  <mat-dialog-content class="!max-h-[68vh] !px-4 sm:!px-6 !py-3 sm:!py-4">
+    <form [formGroup]="form" class="flex flex-col gap-4 sm:gap-5">
 
       <!-- ═══════ Sección: Datos personales ═══════ -->
       <div>
@@ -45,7 +45,7 @@
           </mat-form-field>
 
           <!-- CI -->
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="sm:col-span-1">
             <mat-label>Cédula de Identidad</mat-label>
             <mat-icon matPrefix class="text-base-content/40 mr-1">badge</mat-icon>
             <input matInput formControlName="ci" placeholder="Ej: 12345678" />
@@ -105,14 +105,14 @@
   <mat-divider />
 
   <!-- Footer -->
-  <mat-dialog-actions class="!px-6 !py-4 flex justify-end gap-2">
+  <mat-dialog-actions class="!px-4 sm:!px-6 !py-3 sm:!py-4 flex justify-end gap-2">
     <button mat-button (click)="dialogRef.close()" class="!text-base-content/60">
       Cancelar
     </button>
     <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="form.invalid"
-      class="!rounded-lg !px-6">
+      class="!rounded-lg !px-4 sm:!px-6">
       <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'person_add' }}</mat-icon>
-      {{ isEdit ? 'Guardar cambios' : 'Registrar cliente' }}
+      {{ isEdit ? 'Guardar' : 'Registrar' }}
     </button>
   </mat-dialog-actions>
 </div>

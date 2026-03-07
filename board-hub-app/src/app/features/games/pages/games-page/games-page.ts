@@ -66,7 +66,8 @@ export default class GamesPage implements OnInit {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(GameFormDialog, {
-      width: '640px',
+      width: '95vw',
+      maxWidth: '640px',
       maxHeight: '90vh',
       data: {} satisfies GameFormDialogData,
     });
@@ -88,7 +89,8 @@ export default class GamesPage implements OnInit {
 
   openEditDialog(game: Game): void {
     const dialogRef = this.dialog.open(GameFormDialog, {
-      width: '640px',
+      width: '95vw',
+      maxWidth: '640px',
       maxHeight: '90vh',
       data: { game } satisfies GameFormDialogData,
     });
@@ -110,7 +112,8 @@ export default class GamesPage implements OnInit {
 
   confirmDelete(game: Game): void {
     const dialogRef = this.dialog.open(ConfirmDialog, {
-      width: '420px',
+      width: '90vw',
+      maxWidth: '420px',
       data: {
         title: 'Eliminar juego',
         message: `¿Estás seguro de eliminar "${game.title}"? Esta acción no se puede deshacer.`,

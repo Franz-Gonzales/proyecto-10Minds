@@ -1,37 +1,48 @@
-<aside class="flex flex-col bg-base-200 border-r border-base-300 transition-all duration-300 h-full"
-  [class.w-56]="!collapsed()" [class.w-16]="collapsed()">
+<aside
+  class="flex flex-col bg-base-200 border-r border-base-300 transition-all duration-300 h-full"
+  [class.w-56]="!collapsed()"
+  [class.w-16]="collapsed()"
+>
   <!-- Logo -->
-  <div class="flex items-center gap-3 px-4 py-5 border-b border-base-300">
-    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-      <img title="logo 10Minds" class="w-12 h-12"
+  <div class="flex items-center gap-3 px-3 py-4 border-b border-base-300" [class.justify-center]="collapsed()">
+    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary flex items-center justify-center overflow-hidden">
+      <img
+        title="logo 10Minds"
+        class="w-10 h-10 object-cover"
         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-rlTT6ta27jbWzjL3dpyoH7eHgnWNSMxRag&s"
-        alt="Logo 10Minds" />
+        alt="Logo 10Minds"
+      />
     </div>
     @if (!collapsed()) {
-
-    <div class="w-24 justify-center"><span
-        class="text-text-primary text-lg font-semibold leading-7">10Minds<br /></span><span
-        class="text-text-secondary text-base font-normal font-['Inter'] leading-6">BoardHub</span></div>
+      <div class="flex flex-col leading-tight min-w-0">
+        <span class="text-base-content text-base font-semibold truncate">10Minds</span>
+        <span class="text-base-content/50 text-sm truncate">BoardHub</span>
+      </div>
     }
   </div>
 
   <!-- Navigation -->
   <nav class="flex-1 px-2 py-4 space-y-1">
     @if (!collapsed()) {
-    <div class="self-stretch justify-center text-blue-600 text-sm font-semibold leading-5">Menú Principal</div>
+      <div class="text-blue-600 text-xs font-semibold leading-5 px-3 mb-1">Menú Principal</div>
     }
 
     @for (item of navItems; track item.route) {
-    <a [routerLink]="item.route" routerLinkActive="bg-primary text-primary-content"
-      [routerLinkActiveOptions]="{ exact: false }" matRipple
-      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base-content/60 hover:bg-base-300 hover:text-base-content transition-colors cursor-pointer no-underline">
-      <!-- Ícono de Lucide -->
-      <lucide-icon [img]="item.icon" class="w-5 h-5" [size]="20" />
-
-      @if (!collapsed()) {
-      <span class="text-sm font-medium">{{ item.label }}</span>
-      }
-    </a>
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bg-primary text-primary-content"
+        [routerLinkActiveOptions]="{ exact: false }"
+        matRipple
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base-content/60 hover:bg-base-300 hover:text-base-content transition-colors cursor-pointer no-underline"
+        [class.justify-center]="collapsed()"
+        [matTooltip]="collapsed() ? item.label : ''"
+        matTooltipPosition="right"
+      >
+        <lucide-icon [img]="item.icon" class="w-5 h-5 shrink-0" [size]="20" />
+        @if (!collapsed()) {
+          <span class="text-sm font-medium truncate">{{ item.label }}</span>
+        }
+      </a>
     }
   </nav>
 </aside>

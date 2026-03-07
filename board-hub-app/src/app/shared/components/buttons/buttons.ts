@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 
-// Definimos los 8 tipos exactos basados en tu imagen
 export type ButtonVariant =
   | 'solid-blue' | 'solid-slate' | 'solid-green' | 'solid-red'
   | 'outline-blue' | 'outline-slate' | 'outline-green' | 'outline-red';
@@ -13,18 +12,38 @@ export type ButtonVariant =
   standalone: true,
   imports: [MatButtonModule, MatIconModule, CommonModule],
   templateUrl: './buttons.html',
-  styleUrl: './buttons.scss',
 })
 export class Button {
-  // Datos que recibe el componente
   readonly label = input.required<string>();
-  readonly icon = input<string>(); // Opcional
-  readonly variant = input<ButtonVariant>('solid-blue'); // Azul por defecto
+  readonly icon = input<string>(); 
+  readonly variant = input<ButtonVariant>('solid-blue'); 
   readonly disabled = input<boolean>(false);
 
-  // Evento de salida
   readonly clicked = output<void>();
 
-  // Calcula la clase dinámica (ej: 'btn-outline-red')
-  readonly btnClass = computed(() => `btn-${this.variant()}`);
+  readonly tailwindClasses = computed(() => {
+    
+    // 1. Clases base para los botones SÓLIDOS 
+    const solidBase = '!shadow-none !rounded-xl !h-[45px] !px-5 transition-colors duration-200 !text-white ';
+    
+    // 2. Clases base para los botones OUTLINE 
+    const outlineBase = '!shadow-none !rounded-[10px] !h-[45px] !px-4 !min-w-0 !bg-transparent !border transition-colors duration-200 ';
+
+    // 3. Diccionario con los 8 tipos 
+    const variantMap: Record<ButtonVariant, string> = {
+      // Sólidos
+      'solid-blue':  solidBase + '!bg-blue-600 hover:!bg-blue-700',
+      'solid-slate': solidBase + '!bg-slate-800 hover:!bg-slate-900',
+      'solid-green': solidBase + '!bg-green-600 hover:!bg-green-700',
+      'solid-red':   solidBase + '!bg-red-500 hover:!bg-red-600',
+      
+      // Outlines
+      'outline-blue':  outlineBase + '!border-blue-500 !text-blue-500 hover:!bg-blue-500/10',
+      'outline-slate': outlineBase + '!border-slate-700 !text-slate-300 hover:!bg-slate-800 hover:!text-white',
+      'outline-green': outlineBase + '!border-green-600 !text-green-600 hover:!bg-green-600/10',
+      'outline-red':   outlineBase + '!border-red-500 !text-red-500 hover:!bg-red-500/10',
+    };
+
+    return variantMap[this.variant()];
+  });
 }
