@@ -39,13 +39,11 @@ El proyecto sigue los principios de **Arquitectura Hexagonal (Puertos y Adaptado
 ## **Configuración e Instalación**
 
 ### 1. Clonar y preparar el entorno
-```bash
-# Instalar dependencias
-$ npm install
 
-# Configurar variables de entorno
-$ cp .env.example .env
-```
+**Requisitos previos:**
+- Node.js (versión LTS recomendada)
+- PostgreSQL instalado y corriendo
+
 
 ### 2. Base de Datos
 Asegúrate de tener una instancia de **PostgreSQL** corriendo y configura las siguientes variables en tu `.env`:
