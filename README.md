@@ -6,17 +6,17 @@ Este repositorio contiene tanto el cliente (Frontend) como el servidor (Backend)
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del Sistema
 
 El proyecto está dividido en dos grandes bloques:
 
-### 🖥️ Frontend ([board-hub-app](./board-hub-app))
+### Frontend ([board-hub-app](./board-hub-app))
 Una SPA moderna construida con **Angular** que prioriza la experiencia de usuario y el rendimiento.
 - **Estado y Datos:** Apollo GraphQL.
 - **UI:** Tailwind CSS + DaisyUI + Angular Material.
 - **Componentes:** Standalone components y Signals para una reactividad eficiente.
 
-### ⚙️ Backend ([board-hub-backend](./board-hub-backend))
+### Backend ([board-hub-backend](./board-hub-backend))
 Una API robusta construida con **NestJS** siguiendo principios de **Clean Architecture** y **Arquitectura Hexagonal**.
 - **Capa de Datos:** PostgreSQL con TypeORM.
 - **Interfaz de API:** GraphQL (Apollo Server).
@@ -24,7 +24,7 @@ Una API robusta construida con **NestJS** siguiendo principios de **Clean Archit
 
 ---
 
-## ✨ Características Principales
+## Características Principales
 
 -   **Gestión de Juegos**: Catálogo completo con filtros avanzados.
 -   **Control de Préstamos**: Seguimiento detallado de fechas, estados de mora y disponibilidad.
@@ -34,7 +34,7 @@ Una API robusta construida con **NestJS** siguiendo principios de **Clean Archit
 
 ---
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 Para ejecutar el proyecto completo localmente, sigue estos pasos:
 
@@ -61,7 +61,7 @@ npm run start
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 | Componente | Tecnologías |
 | :--- | :--- |
@@ -71,7 +71,7 @@ npm run start
 
 ---
 
-## 📂 Estructura del Repositorio
+## Estructura del Repositorio
 
 -   `board-hub-app/`: Código fuente del cliente Angular.
 -   `board-hub-backend/`: Código fuente de la API NestJS.
