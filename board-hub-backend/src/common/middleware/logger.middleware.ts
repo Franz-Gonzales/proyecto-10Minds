@@ -6,7 +6,8 @@ export class LoggerMiddleware implements NestMiddleware {
     private readonly logger = new Logger('HTTP');
 
     use(req: Request, res: Response, next: NextFunction): void {
-        const { method, originalUrl, ip } = req;
+        const { method, ip } = req;
+        const url = req.path; // Logs pathname only, excludes query string
         const userAgent = req.get('user-agent') || '-';
         const startTime = Date.now();
 
@@ -15,7 +16,7 @@ export class LoggerMiddleware implements NestMiddleware {
             const contentLength = res.get('content-length') || '0';
             const duration = Date.now() - startTime;
 
-            const logMessage = `${method} ${originalUrl} ${statusCode} ${contentLength}b - ${duration}ms - ${ip} - ${userAgent}`;
+            const logMessage = `${method} ${url} ${statusCode} ${contentLength}b - ${duration}ms - ${ip} - ${userAgent}`;
 
             if (statusCode >= 500) {
                 this.logger.error(logMessage);

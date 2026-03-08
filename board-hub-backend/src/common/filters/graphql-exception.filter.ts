@@ -57,7 +57,11 @@ export class GraphqlExceptionFilter implements GqlExceptionFilter {
             });
         }
 
-        this.logger.error('Unknown error', JSON.stringify(exception));
+        try {
+            this.logger.error('Unknown error', JSON.stringify(exception));
+        } catch {
+            this.logger.error('Unknown error (not serializable)', String(exception));
+        }
         return new GraphQLError('Internal server error', {
             extensions: { code: 'INTERNAL_SERVER_ERROR', status: 500 },
         });
