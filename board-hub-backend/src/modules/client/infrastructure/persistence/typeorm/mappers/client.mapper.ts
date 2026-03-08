@@ -31,4 +31,17 @@ export class ClientMapper {
         ormEntity.isActive = domain.isActive;
         return ormEntity;
     }
+
+    static toOrmPartial(partial: Partial<Client>): Partial<ClientOrmEntity> {
+        const ormPartial: Partial<ClientOrmEntity> = {};
+        if (partial.name !== undefined) ormPartial.name = partial.name;
+        if (partial.lastName !== undefined) ormPartial.lastName = partial.lastName;
+        if (partial.ci !== undefined) ormPartial.ci = partial.ci;
+        if (partial.phoneNumber !== undefined) ormPartial.phoneNumber = partial.phoneNumber;
+        if (partial.email !== undefined) ormPartial.email = partial.email;
+        if (partial.direction !== undefined) ormPartial.direction = partial.direction;
+        if (partial.isActive !== undefined) ormPartial.isActive = partial.isActive;
+        if (partial.deletedAt !== undefined) ormPartial.deletedAt = partial.deletedAt;
+        return ormPartial;
+    }
 }

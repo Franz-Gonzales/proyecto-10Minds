@@ -41,7 +41,7 @@ export class CreateGameUseCase {
             throw new InvalidGameDataException('stockTotal must be at least 1');
         }
 
-        // Validar que la categoría existe y está activa
+        // Validate that the category exists and is active
         const category = await this.categoryRepository.findById(command.categoryId);
         if (!category) {
             throw new CategoryNotFoundException(command.categoryId);
@@ -50,7 +50,7 @@ export class CreateGameUseCase {
             throw new CategoryInactiveException(command.categoryId);
         }
 
-        // Validar título único
+        // Validate unique title
         const existingGame = await this.gameRepository.findByTitle(command.title);
         if (existingGame) {
             throw new GameAlreadyExistsException(command.title);

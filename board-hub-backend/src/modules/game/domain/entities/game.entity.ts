@@ -1,3 +1,5 @@
+import { InvalidDataException, InsufficientResourceException } from '../../../../common/exceptions/domain.exception';
+
 export class Game {
   readonly id: string;
   readonly title: string;
@@ -48,10 +50,12 @@ export class Game {
 
   decreaseStock(quantity: number): void {
     if (quantity <= 0) {
-      throw new Error('Quantity must be a positive number');
+      throw new InvalidDataException('Quantity must be a positive number');
     }
     if (!this.hasStock(quantity)) {
-      throw new Error(`Insufficient stock. Available: ${this.stockAvailable}`);
+      throw new InsufficientResourceException(
+        `Insufficient stock. Available: ${this.stockAvailable}`,
+      );
     }
     this.stockAvailable -= quantity;
   }
@@ -62,10 +66,12 @@ export class Game {
 
   increaseStock(quantity: number): void {
     if (quantity <= 0) {
-      throw new Error('Quantity must be a positive number');
+      throw new InvalidDataException('Quantity must be a positive number');
     }
     if (this.stockAvailable + quantity > this.stockTotal) {
-      throw new Error(`Cannot increase stock beyond total. Available: ${this.stockAvailable}, Total: ${this.stockTotal}`);
+      throw new InvalidDataException(
+        `Cannot increase stock beyond total. Available: ${this.stockAvailable}, Total: ${this.stockTotal}`,
+      );
     }
     this.stockAvailable += quantity;
   }

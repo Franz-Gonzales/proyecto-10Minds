@@ -67,18 +67,16 @@ export class GameRepositoryAdapter implements IGameRepository {
     }
 
     async update(id: string, partial: Partial<Game>): Promise<Game> {
-        await this.ormRepository.update(id, {
-            ...partial,
-            updatedAt: new Date(),
-        } as any);
+        const entity = await this.ormRepository.findOne({ where: { id } });
 
-        const updated = await this.ormRepository.findOneBy({ id });
-
-        if (!updated) {
-            throw new Error(`Game with id ${id} not found after update`);
+        if (!entity) {
+            throw new Error(`Game with id "${id}" not found in database`);
         }
 
-        return GameMapper.toDomain(updated);
+        const mappedPartial = GameMapper.toOrmPartial(partial);
+        const updatedEntity = this.ormRepository.merge(entity, mappedPartial);
+        const saved = await this.ormRepository.save(updatedEntity);
+        return GameMapper.toDomain(saved);
     }
 
     async delete(id: string): Promise<void> {

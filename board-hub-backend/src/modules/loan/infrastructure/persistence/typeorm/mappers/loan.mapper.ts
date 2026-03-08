@@ -45,4 +45,21 @@ export class LoanMapper {
         ormEntity.isDeleted = domain.isDeleted;
         return ormEntity;
     }
+
+    static toOrmPartial(partial: Partial<Loan>): Partial<LoanOrmEntity> {
+        const ormPartial: Partial<LoanOrmEntity> = {};
+        if (partial.gameId !== undefined) ormPartial.gameId = partial.gameId;
+        if (partial.clientId !== undefined) ormPartial.clientId = partial.clientId;
+        if (partial.quantity !== undefined) ormPartial.quantity = partial.quantity;
+        if (partial.startDate !== undefined) ormPartial.startDate = partial.startDate;
+        if (partial.endDate !== undefined) ormPartial.endDate = partial.endDate;
+        if (partial.deliveryDate !== undefined) ormPartial.deliveryDate = partial.deliveryDate;
+        if (partial.status !== undefined) ormPartial.status = partial.status;
+        if (partial.pricePerDay !== undefined) ormPartial.pricePerDay = partial.pricePerDay;
+        if (partial.totalPrice !== undefined) ormPartial.totalPrice = partial.totalPrice;
+        if (partial.notes !== undefined) ormPartial.notes = partial.notes;
+        if (partial.isDeleted !== undefined) ormPartial.isDeleted = partial.isDeleted;
+        if (partial.deletedAt !== undefined) ormPartial.deletedAt = partial.deletedAt;
+        return ormPartial;
+    }
 }

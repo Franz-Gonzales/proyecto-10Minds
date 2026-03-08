@@ -1,5 +1,5 @@
 import { InputType, Int, Field, ID } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 
 @InputType()
 export class CreateLoanInput {
@@ -14,7 +14,8 @@ export class CreateLoanInput {
   clientId: string;
 
   @Field(() => Int)
-  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
   quantity: number;
 
   @Field(() => Date)

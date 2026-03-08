@@ -29,7 +29,7 @@ export class ReturnLoanUseCase {
             throw new LoanNotFoundException(command.id);
         }
 
-        // 2. Validar que se puede devolver
+        // Validate it can be returned
         if (loan.status === LoanStatus.DELIVERED) {
             throw new LoanAlreadyReturnedException(command.id);
         }

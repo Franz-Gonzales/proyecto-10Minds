@@ -76,33 +76,30 @@ export class LoanRepositoryAdapter implements ILoanRepository {
     }
 
     async update(id: string, partial: Partial<Loan>): Promise<Loan> {
-        await this.ormRepository.update(id, {
-            ...partial,
-            updatedAt: new Date(),
-        } as any);
-
-        const updated = await this.ormRepository.findOne({
+        const entity = await this.ormRepository.findOne({
             where: { id },
             relations: ['game', 'client'],
         });
 
-        if (!updated) {
-            throw new Error(`Loan with id "${id}" not found after update`);
+        if (!entity) {
+            throw new Error(`Loan with id "${id}" not found in database`);
         }
 
-        return LoanMapper.toDomain(updated);
+        const mappedPartial = LoanMapper.toOrmPartial(partial);
+        const updatedEntity = this.ormRepository.merge(entity, mappedPartial);
+        const saved = await this.ormRepository.save(updatedEntity);
+        return LoanMapper.toDomain(saved);
     }
 
     async delete(id: string): Promise<void> {
         await this.ormRepository.update(id, {
             isDeleted: true,
             deletedAt: new Date(),
-        } as any);
+        });
     }
 
     async findOverdue(): Promise<Loan[]> {
         const now = new Date();
-        // now.setHours(0, 0, 0, 0);
 
         const entities = await this.ormRepository.find({
             where: {
