@@ -1,4 +1,5 @@
 import { LoanStatus } from "../enums/loan-status.enum";
+import { LoanCannotBeReturnedException, LoanCannotBeRevertedException, InvalidLoanDataException } from "../exceptions/loan.exceptions";
 import type { Game } from "../../../game/domain/entities/game.entity";
 import type { Client } from '../../../client/domain/entities/client.entity';
 
@@ -20,7 +21,6 @@ export class Loan {
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 
-    // Optional relations (loaded when joined)
     readonly game?: Game;
     readonly client?: Client;
 
@@ -84,7 +84,7 @@ export class Loan {
 
     markAsReturned(): void {
         if (!this.canBeReturned()) {
-            throw new Error(`Loan with status ${this.status} cannot be marked as returned`);
+            throw new LoanCannotBeReturnedException(this.status);
         }
         this.status = LoanStatus.DELIVERED;
         this.deliveryDate = new Date();
@@ -92,7 +92,9 @@ export class Loan {
 
     markAsOverdue(): void {
         if (this.status !== LoanStatus.RESERVED) {
-            throw new Error(`Only loans with status RESERVED can be marked as overdue`);
+            throw new InvalidLoanDataException(
+                'Only loans with status RESERVED can be marked as overdue',
+            );
         }
         this.status = LoanStatus.OVERDUE;
     }
@@ -107,7 +109,7 @@ export class Loan {
 
     revertReturn(): void {
         if (!this.canBeReverted()) {
-            throw new Error(`Only loans with status DELIVERED can be reverted`);
+            throw new LoanCannotBeRevertedException(this.status);
         }
         const now = new Date();
         this.status = this.endDate < now ? LoanStatus.OVERDUE : LoanStatus.RESERVED;

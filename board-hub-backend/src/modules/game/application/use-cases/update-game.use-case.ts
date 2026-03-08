@@ -46,7 +46,7 @@ export class UpdateGameUseCase {
             }
         }
 
-        // Validar categoría si se está actualizando
+        // Validate category if updating
         if (command.categoryId !== undefined) {
             if (!command.categoryId) {
                 throw new InvalidGameDataException('categoryId cannot be empty');
@@ -61,7 +61,7 @@ export class UpdateGameUseCase {
             }
         }
 
-        // Validaciones de jugadores
+        // Player count validations
         const minPlayers = command.minPlayers ?? existGame.minPlayers;
         const maxPlayers = command.maxPlayers ?? existGame.maxPlayers;
 
@@ -69,7 +69,7 @@ export class UpdateGameUseCase {
             throw new InvalidGameDataException('minPlayers cannot be greater than maxPlayers');
         }
 
-        // Lógica de Stock
+        // Stock logic
         let newStockAvailable = existGame.stockAvailable;
 
         if (command.stockTotal !== undefined && command.stockTotal !== existGame.stockTotal) {

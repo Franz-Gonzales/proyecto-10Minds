@@ -1,13 +1,13 @@
 
 export class Category {
-  public id: string;
-  public name: string;
-  public description: string;
-  public icon: string;
-  public isActive: boolean;
-  public createdAt: Date;
-  public updatedAt: Date;
-  public deletedAt: Date | null;
+  readonly id: string;
+  readonly name: string;
+  readonly description: string;
+  readonly icon: string;
+  readonly isActive: boolean;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly deletedAt: Date | null;
 
   constructor(props: {
     id: string;

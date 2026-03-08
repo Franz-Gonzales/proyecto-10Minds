@@ -45,7 +45,7 @@ export class ClientResolver {
     });
 
     return {
-      items: result.items as any,
+      items: result.items as unknown as ClientType[],
       pageInfo: {
         totalItems: result.totalItems,
         totalPages: result.totalPages,

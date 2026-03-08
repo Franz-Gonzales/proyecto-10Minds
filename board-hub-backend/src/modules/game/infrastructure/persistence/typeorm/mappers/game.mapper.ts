@@ -37,4 +37,20 @@ export class GameMapper {
         ormEntity.isDeleted = domain.isDeleted;
         return ormEntity;
     }
+
+    static toOrmPartial(partial: Partial<Game>): Partial<GameOrmEntity> {
+        const ormPartial: Partial<GameOrmEntity> = {};
+        if (partial.title !== undefined) ormPartial.title = partial.title;
+        if (partial.categoryId !== undefined) ormPartial.categoryId = partial.categoryId;
+        if (partial.description !== undefined) ormPartial.description = partial.description;
+        if (partial.pricePerDay !== undefined) ormPartial.pricePerDay = partial.pricePerDay;
+        if (partial.minPlayers !== undefined) ormPartial.minPlayers = partial.minPlayers;
+        if (partial.maxPlayers !== undefined) ormPartial.maxPlayers = partial.maxPlayers;
+        if (partial.durationMinutes !== undefined) ormPartial.durationMinutes = partial.durationMinutes;
+        if (partial.stockTotal !== undefined) ormPartial.stockTotal = partial.stockTotal;
+        if (partial.stockAvailable !== undefined) ormPartial.stockAvailable = partial.stockAvailable;
+        if (partial.imageUrl !== undefined) ormPartial.imageUrl = partial.imageUrl;
+        if (partial.isDeleted !== undefined) ormPartial.isDeleted = partial.isDeleted;
+        return ormPartial;
+    }
 }

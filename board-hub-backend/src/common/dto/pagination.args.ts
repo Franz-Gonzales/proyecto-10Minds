@@ -1,12 +1,6 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
-import { IsOptional, IsPositive, Min, Max, IsString } from 'class-validator';
+import { IsOptional, IsPositive, Min, Max, IsString, IsIn } from 'class-validator';
 
-
-// page = 1        → Qué página quiero (base 1)
-// limit = 10      → Cuántos items por página
-// search           → Texto libre para buscar
-// sortBy           → Por qué campo ordenar (name, email, createdAt...)
-// sortOrder        → ASC o DESC
 @ArgsType()
 export class PaginationArgs {
     @Field(() => Int, { defaultValue: 1, description: 'Page number (1-based)' })
@@ -34,6 +28,6 @@ export class PaginationArgs {
 
     @Field(() => String, { defaultValue: 'DESC', description: 'Sort direction: ASC or DESC' })
     @IsOptional()
-    @IsString()
-    sortOrder: string = 'DESC';
+    @IsIn(['ASC', 'DESC'])
+    sortOrder: 'ASC' | 'DESC' = 'DESC';
 }

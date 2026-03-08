@@ -1,20 +1,29 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { join } from 'path';
+import { Request, Response } from 'express';
 
 import { appConfig, appValidationSchema } from './config/app.config';
-import { databaseConfig, databaseValidationSchema } from './config/database.config';
+import {
+  databaseConfig,
+  databaseValidationSchema,
+} from './config/database.config';
 import { graphqlConfig } from './config/graphql.config';
-import { GamesModule } from './modules/game/games.module';
+
 import { GraphqlExceptionFilter } from './common/filters/graphql-exception.filter';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { GqlThrottlerGuard } from './common/guards/gql-throttler.guard';
+
+import { CategoryModule } from './modules/category/category.module';
+import { GamesModule } from './modules/game/games.module';
 import { ClientModule } from './modules/client/client.module';
 import { LoanModule } from './modules/loan/loan.module';
-import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -39,34 +48,49 @@ import { CategoryModule } from './modules/category/category.module';
       useFactory: (configService: ConfigService) => ({
         ...configService.get('graphql'),
         plugins: [ApolloServerPluginLandingPageLocalDefault()],
+        context: ({ req, res }: { req: Request; res: Response }) => ({ req, res }),
       }),
       inject: [ConfigService],
     }),
 
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    //   sortSchema: true,
-    //   playground: false,
-    //   plugins:[
-    //     ApolloServerPluginLandingPageLocalDefault(),
-    //   ]
-    // }),
-
-    GamesModule,
-
-    ClientModule,
-
-    LoanModule,
+    // Rate Limiting
+    ThrottlerModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        throttlers: [
+          {
+            ttl: configService.get<number>('app.throttleTtl', 60000),
+            limit: configService.get<number>('app.throttleLimit', 100),
+          },
+        ],
+      }),
+      inject: [ConfigService],
+    }),
 
     CategoryModule,
+    GamesModule,
+    ClientModule,
+    LoanModule,
   ],
-  controllers: [],
   providers: [
+    // Global exception filter
     {
       provide: APP_FILTER,
       useClass: GraphqlExceptionFilter,
     },
+    // Global rate limiting guard (adapted for GraphQL)
+    {
+      provide: APP_GUARD,
+      useClass: GqlThrottlerGuard,
+    },
+    // Global timeout interceptor (15s)
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => new TimeoutInterceptor(15000),
+    },
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

@@ -125,24 +125,22 @@ export class ClientRepositoryAdapter implements IClientRepository {
     }
 
     async update(id: string, partial: Partial<Client>): Promise<Client> {
-        await this.ormRepository.update(id, {
-            ...partial,
-            updatedAt: new Date(),
-        } as any);
+        const entity = await this.ormRepository.findOne({ where: { id } });
 
-        const updated = await this.ormRepository.findOneBy({ id });
-
-        if (!updated) {
-            throw new Error(`Client with id "${id}" not found after update`);
+        if (!entity) {
+            throw new Error(`Client with id "${id}" not found in database`);
         }
 
-        return ClientMapper.toDomain(updated);
+        const mappedPartial = ClientMapper.toOrmPartial(partial);
+        const updatedEntity = this.ormRepository.merge(entity, mappedPartial);
+        const saved = await this.ormRepository.save(updatedEntity);
+        return ClientMapper.toDomain(saved);
     }
 
     async delete(id: string): Promise<void> {
         await this.ormRepository.update(id, {
             isActive: false,
             deletedAt: new Date(),
-        } as any);
+        });
     }
 }

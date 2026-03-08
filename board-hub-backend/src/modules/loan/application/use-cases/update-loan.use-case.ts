@@ -100,11 +100,14 @@ export class UpdateLoanUseCase {
 
         // Recalculate total price
         const game = await this.gameRepository.findById(targetGameId);
+        if (!game) {
+            throw new GameNotFoundException(targetGameId);
+        }
         const totalPrice = Loan.calculateTotalPrice(
             startDate,
             endDate,
             newQuantity,
-            game!.pricePerDay,
+            game.pricePerDay,
         );
 
         const updateData: Partial<Loan> = {
@@ -112,7 +115,7 @@ export class UpdateLoanUseCase {
             startDate,
             endDate,
             quantity: newQuantity,
-            pricePerDay: game!.pricePerDay,
+            pricePerDay: game.pricePerDay,
             totalPrice,
         };
 
