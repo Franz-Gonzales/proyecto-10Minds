@@ -1,8 +1,8 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 
 import {
@@ -11,35 +11,76 @@ import {
   LOAN_STATUS_LABELS,
   LOAN_STATUS_COLORS,
 } from '../../models/loan.model';
-import { Button } from "../../../../shared/components/buttons/buttons";
+
+/** One row in the general list = one client with their most recent loan */
+export interface ClientLoanSummary {
+  clientId: string;
+  clientName: string;
+  clientLastName: string;
+  clientPhone: string;
+  latestLoan: Loan;
+  totalLoans: number;
+}
 
 @Component({
   selector: 'app-list-loans',
-  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatTooltipModule, DatePipe, Button],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatTableModule, DatePipe],
   templateUrl: './list-loans.html',
 })
 export class ListLoans {
   readonly loans = input.required<Loan[]>();
+  readonly viewClientLoans = output<ClientLoanSummary>();
 
-  readonly returnLoan = output<Loan>();
-  readonly revertLoan = output<Loan>();
-  readonly deleteLoan = output<Loan>();
-  readonly edit = output<Loan>();
+  readonly displayedColumns = ['index', 'client', 'latestGame', 'period', 'totalLoans', 'status', 'total', 'actions'];
 
   readonly statusLabels = LOAN_STATUS_LABELS;
   readonly statusColors = LOAN_STATUS_COLORS;
-  readonly LoanStatus = LoanStatus;
 
-  getClientFullName(loan: Loan): string {
-    if (!loan.client) return 'Cliente desconocido';
-    return `${loan.client.name} ${loan.client.lastName}`;
+  /** Group loans by client, keep only the most recent per client */
+  readonly clientSummaries = computed<ClientLoanSummary[]>(() => {
+    const loans = this.loans();
+    const map = new Map<string, { loans: Loan[] }>();
+
+    for (const loan of loans) {
+      const cid = loan.clientId;
+      if (!map.has(cid)) {
+        map.set(cid, { loans: [] });
+      }
+      map.get(cid)!.loans.push(loan);
+    }
+
+    const summaries: ClientLoanSummary[] = [];
+    for (const [clientId, data] of map) {
+      // Sort by createdAt descending to get the most recent
+      data.loans.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const latest = data.loans[0];
+
+      summaries.push({
+        clientId,
+        clientName: latest.client?.name ?? 'Desconocido',
+        clientLastName: latest.client?.lastName ?? '',
+        clientPhone: latest.client?.phoneNumber ?? '',
+        latestLoan: latest,
+        totalLoans: data.loans.length,
+      });
+    }
+
+    // Sort summaries by most recent loan first
+    summaries.sort((a, b) =>
+      new Date(b.latestLoan.createdAt).getTime() - new Date(a.latestLoan.createdAt).getTime()
+    );
+
+    return summaries;
+  });
+
+  getFullName(s: ClientLoanSummary): string {
+    return `${s.clientName} ${s.clientLastName}`;
   }
 
-  getClientInitials(loan: Loan): string {
-    if (!loan.client) return '??';
-    const first = loan.client.name?.charAt(0) ?? '';
-    const last = loan.client.lastName?.charAt(0) ?? '';
-    return `${first}${last}`.toUpperCase();
+  getInitials(s: ClientLoanSummary): string {
+    const first = s.clientName.charAt(0).toUpperCase();
+    const last = s.clientLastName.charAt(0).toUpperCase();
+    return `${first}${last}`;
   }
 
   getAvatarColor(name: string): string {
@@ -75,15 +116,16 @@ export class ListLoans {
     return loan.status === LoanStatus.OVERDUE;
   }
 
-  canBeReturned(loan: Loan): boolean {
-    return loan.status === LoanStatus.RESERVED || loan.status === LoanStatus.OVERDUE;
+  getStatusClasses(row: ClientLoanSummary): string {
+    const c = this.statusColors[row.latestLoan.status];
+    return `${c.bg} ${c.text} ${c.border}`;
   }
 
-  canBeReverted(loan: Loan): boolean {
-    return loan.status === LoanStatus.DELIVERED;
+  getStatusDot(row: ClientLoanSummary): string {
+    return this.statusColors[row.latestLoan.status].dot;
   }
 
-  canBeEdited(loan: Loan): boolean {
-    return loan.status === LoanStatus.RESERVED;
+  getStatusLabel(row: ClientLoanSummary): string {
+    return this.statusLabels[row.latestLoan.status];
   }
 }

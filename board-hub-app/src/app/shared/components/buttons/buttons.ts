@@ -18,30 +18,32 @@ export type ButtonVariant =
   }
 })
 export class Button {
-  // Inputs usando la nueva API de Signals
   readonly label = input.required<string>();
   readonly icon = input<string>();
   readonly variant = input<ButtonVariant>('solid-blue');
   readonly disabled = input<boolean>(false);
-
-
-  // Nuevas propiedades para diseño adaptable
   readonly fullWidth = input<boolean>(false);
   readonly justify = input<'center' | 'start'>('center');
 
-  // Evento de salida
   readonly clicked = output<void>();
 
-  // Generador dinámico de clases de Tailwind 4
+  readonly labelClasses = computed(() => {
+    if (this.icon()) {
+      return 'font-medium tracking-wide text-sm hidden sm:inline';
+    }
+    return 'font-medium tracking-wide text-xs sm:text-sm';
+  });
+
   readonly tailwindClasses = computed(() => {
     const widthClass = this.fullWidth() ? '!w-full' : 'w-full sm:w-auto';
-    const justifyClass = this.justify() === 'start' ? 'justify-start' : 'justify-center';
+    const justifyClass = this.justify() === 'start'
+      ? (this.icon() ? 'justify-center sm:justify-start' : 'justify-start')
+      : 'justify-center';
 
-    // Usar widthClass y justifyClass en vez de hardcodear
     const baseClasses = `${widthClass} flex ${justifyClass} items-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed `;
 
     const solidBase = baseClasses + '!shadow-none !rounded-xl !h-12 sm:!h-[45px] !px-4 sm:!px-6 !text-white !border-transparent ';
-    const outlineBase = baseClasses + '!shadow-none !rounded-[10px] !h-12 sm:!h-[35px] !px-4 sm:!px-5 !bg-transparent !border ';
+    const outlineBase = baseClasses + '!shadow-none !rounded-[10px] !h-10 sm:!h-[35px] !px-3 sm:!px-5 !bg-transparent !border ';
 
     const variantMap: Record<ButtonVariant, string> = {
       'solid-blue':  solidBase + '!bg-[#1D6AE5] hover:brightness-90',

@@ -1,1 +1,187 @@
-<p>loans-client works!</p>
+<!-- Header with back button -->
+<div class="flex items-center gap-3 mb-4 sm:mb-6">
+  <button
+    mat-icon-button
+    (click)="back.emit()"
+    class="!bg-base-300/50 hover:!bg-base-300"
+    matTooltip="Volver a lista general"
+  >
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <div class="min-w-0">
+    <h2 class="text-lg sm:text-xl font-bold text-base-content m-0 truncate">
+      Préstamos de {{ clientName() }}
+    </h2>
+    <p class="text-[11px] sm:text-xs text-base-content/50 m-0">
+      {{ loans().length }} préstamo(s) · Total: {{ formatCurrency(getTotalSum()) }}
+    </p>
+  </div>
+</div>
+
+<div class="w-full rounded-xl overflow-hidden shadow-lg border border-base-300">
+  <div class="overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+
+    <table mat-table [dataSource]="loans()" class="custom-dark-table w-full min-w-[600px]">
+
+      <!-- Index -->
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef class="!w-10"> # </th>
+        <td mat-cell *matCellDef="let row; let i = index">
+          {{ i + 1 }}
+        </td>
+      </ng-container>
+
+      <!-- Juego -->
+      <ng-container matColumnDef="game">
+        <th mat-header-cell *matHeaderCellDef> Juego </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="flex items-center gap-2 sm:gap-3 py-1">
+            @if (getGameImage(row)) {
+              <img
+                title="games"
+                [title]="getGameTitle(row)"
+                [src]="getGameImage(row)"
+                [alt]="getGameTitle(row)"
+                class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-cover border border-base-300 shrink-0"
+              />
+            } @else {
+              <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                <mat-icon class="text-primary text-[16px]!">sports_esports</mat-icon>
+              </div>
+            }
+            <div class="flex flex-col min-w-0">
+              <span class="font-medium text-base-content text-xs sm:text-sm truncate max-w-[140px] sm:max-w-none">{{ getGameTitle(row) }}</span>
+              <span class="text-[10px] sm:text-xs text-base-content/40">{{ getGameCategory(row) }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Período -->
+      <ng-container matColumnDef="period">
+        <th mat-header-cell *matHeaderCellDef> Período </th>
+        <td mat-cell *matCellDef="let row">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex items-center gap-1 text-base-content/70">
+              <mat-icon class="text-[12px]! text-base-content/40">calendar_today</mat-icon>
+              <span class="text-[10px] sm:text-xs">{{ row.startDate | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="flex items-center gap-1" [class]="isDateOverdue(row) ? 'text-red-400' : 'text-base-content/70'">
+              <mat-icon class="text-[12px]!" [class]="isDateOverdue(row) ? 'text-red-400' : 'text-base-content/40'">event</mat-icon>
+              <span class="text-[10px] sm:text-xs font-medium">{{ row.endDate | date:'dd MMM yyyy' }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Cantidad -->
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef> Cant. </th>
+        <td mat-cell *matCellDef="let row" class="text-base-content/70 text-center">
+          {{ row.quantity }}
+        </td>
+      </ng-container>
+
+      <!-- Estado -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Estado </th>
+        <td mat-cell *matCellDef="let row">
+          <span
+            class="inline-flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-[13px] font-medium border"
+            [class]="getStatusClasses(row)"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full"
+              [class]="getStatusDot(row)"
+            ></span>
+            {{ getStatusLabel(row) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Total -->
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef> Total </th>
+        <td mat-cell *matCellDef="let row" class="font-medium text-base-content text-xs sm:text-sm">
+          {{ formatCurrency(row.totalPrice) }}
+        </td>
+      </ng-container>
+
+      <!-- Acciones -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="!text-center"> Acciones </th>
+        <td mat-cell *matCellDef="let row" class="!text-center">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="loanMenu"
+            class="!w-8 !h-8 text-base-content/40 hover:text-base-content"
+            matTooltip="Opciones"
+          >
+            <mat-icon class="text-[20px]!">more_vert</mat-icon>
+          </button>
+
+          <mat-menu #loanMenu="matMenu" class="!bg-base-200 !rounded-xl !border !border-base-300 mt-1 shadow-2xl min-w-[200px]">
+            <div class="p-2 flex flex-col gap-2">
+
+              @if (canBeReturned(row)) {
+                <app-button
+                  variant="outline-blue"
+                  icon="assignment_return"
+                  label="Marcar entregado"
+                  [fullWidth]="true"
+                  justify="start"
+                  (clicked)="returnLoan.emit(row)"
+                />
+              }
+
+              @if (canBeReverted(row)) {
+                <app-button
+                  variant="outline-slate"
+                  icon="undo"
+                  label="Restaurar"
+                  [fullWidth]="true"
+                  justify="start"
+                  (clicked)="revertLoan.emit(row)"
+                />
+              }
+
+              @if (canBeEdited(row)) {
+                <app-button
+                  variant="outline-green"
+                  icon="edit"
+                  label="Editar"
+                  [fullWidth]="true"
+                  justify="start"
+                  (clicked)="edit.emit(row)"
+                />
+              }
+
+              <app-button
+                variant="outline-red"
+                icon="delete_outline"
+                label="Eliminar"
+                [fullWidth]="true"
+                justify="start"
+                (clicked)="deleteLoan.emit(row)"
+              />
+
+            </div>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        class="hover:bg-base-300/30 transition-colors duration-200"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell px-6 py-12 text-center border-b-0" [attr.colspan]="displayedColumns.length">
+          <div class="flex flex-col items-center justify-center gap-2 text-base-content/40">
+            <mat-icon class="text-[40px]! opacity-30 mb-1">receipt_long</mat-icon>
+            <p class="text-sm font-medium m-0 text-base-content/60">No hay préstamos para este cliente</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
