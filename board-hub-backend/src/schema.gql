@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input BulkLoanItemInput {
+  gameId: ID!
+  quantity: Int!
+}
+
 type Category {
   createdAt: DateTime!
   deletedAt: DateTime
@@ -30,6 +35,14 @@ type Client {
   """Total historic loans count"""
   totalHistoric: Int
   updatedAt: DateTime!
+}
+
+input CreateBulkLoansInput {
+  clientId: ID!
+  endDate: DateTime!
+  items: [BulkLoanItemInput!]!
+  notes: String
+  startDate: DateTime!
 }
 
 input CreateCategoryInput {
@@ -121,6 +134,9 @@ enum LoanStatus {
 
 type Mutation {
   checkOverdueLoans: Int!
+
+  """Create multiple loans for a single client at once."""
+  createBulkLoans(createBulkLoansInput: CreateBulkLoansInput!): [Loan!]!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   createClient(createClientInput: CreateClientInput!): Client!
   createGame(createGameInput: CreateGameInput!): Game!

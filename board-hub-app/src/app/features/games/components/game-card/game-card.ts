@@ -6,10 +6,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Game } from '../../models/game.model';
 import { StockBadge } from '../../../../shared/components/stock-badge/stock-badge';
 import { CurrencyBsPipe } from '../../../../shared/pipes/currency-bs-pipe';
+import { Button } from "../../../../shared/components/buttons/buttons";
 
 @Component({
   selector: 'app-game-card',
-  imports: [MatIconModule, MatButtonModule, MatMenuModule, StockBadge, CurrencyBsPipe],
+  imports: [MatIconModule, MatButtonModule, MatMenuModule, StockBadge, CurrencyBsPipe, Button],
   templateUrl: './game-card.html',
 })
 export class GameCard {

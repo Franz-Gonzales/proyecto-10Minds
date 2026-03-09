@@ -20,20 +20,19 @@
       </button>
     </div>
 
-    <mat-menu #cardMenu="matMenu" class="!bg-[#1e293b] !rounded-xl !border !border-slate-700/60 mt-1 shadow-2xl min-w-[160px]">
-      
-      <button mat-menu-item (click)="edit.emit(game())" class="hover:!bg-blue-500/10 transition-colors duration-200 group">
-        <mat-icon class="!text-slate-400 group-hover:!text-blue-400 transition-colors">edit</mat-icon>
-        <span class="!text-slate-200 group-hover:!text-blue-400 font-medium transition-colors">Editar</span>
-      </button>
+    <mat-menu #cardMenu="matMenu"
+      class="!bg-base-200 !rounded-xl !border !border-base-300 mt-1 shadow-2xl min-w-[100px]">
 
-      <div class="h-[1px] bg-slate-700/60 w-full my-0.5"></div>
+      <div class="p-2 flex flex-col gap-2">
 
-      <button mat-menu-item (click)="delete.emit(game())" class="hover:!bg-red-500/10 transition-colors duration-200 group">
-        <mat-icon class="!text-slate-400 group-hover:!text-red-400 transition-colors">delete_outline</mat-icon>
-        <span class="!text-slate-200 group-hover:!text-red-400 font-medium transition-colors">Eliminar</span>
-      </button>
-      
+        <app-button matMenuClose label="Editar" icon="edit" variant="outline-green" [fullWidth]="true" justify="start"
+          (clicked)="edit.emit(game())" />
+
+        <app-button matMenuClose label="Eliminar" icon="delete_outline" variant="outline-red" [fullWidth]="true" justify="start"
+          (clicked)="delete.emit(game())" />
+
+      </div>
+
     </mat-menu>
   </div>
 
@@ -44,7 +43,8 @@
       <h3 class="text-base-content font-semibold text-base sm:text-lg line-clamp-2 flex-1">
         {{ game().title }}
       </h3>
-      <span class="shrink-0 px-2 sm:px-3 py-1 sm:py-1.5 bg-yellow-400 text-gray-900 font-bold text-xs sm:text-sm rounded-md whitespace-nowrap">
+      <span
+        class="shrink-0 px-2 sm:px-3 py-1 sm:py-1.5 bg-yellow-400 text-gray-900 font-bold text-xs sm:text-sm rounded-md whitespace-nowrap">
         {{ game().pricePerDay | currencyBs }}/día
       </span>
     </div>

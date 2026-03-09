@@ -12,36 +12,49 @@ export type ButtonVariant =
   standalone: true,
   imports: [MatButtonModule, MatIconModule, CommonModule],
   templateUrl: './buttons.html',
+  host: {
+    '[class.block]': 'fullWidth()',
+    '[class.w-full]': 'fullWidth()'
+  }
 })
 export class Button {
   readonly label = input.required<string>();
-  readonly icon = input<string>(); 
-  readonly variant = input<ButtonVariant>('solid-blue'); 
+  readonly icon = input<string>();
+  readonly variant = input<ButtonVariant>('solid-blue');
   readonly disabled = input<boolean>(false);
+  readonly fullWidth = input<boolean>(false);
+  readonly justify = input<'center' | 'start'>('center');
 
   readonly clicked = output<void>();
 
-  readonly tailwindClasses = computed(() => {
-    
-    // 1. Clases base para los botones SÓLIDOS 
-    const solidBase = '!shadow-none !rounded-xl !h-[45px] !px-5 transition-colors duration-200 !text-white ';
-    
-    // 2. Clases base para los botones OUTLINE 
-    const outlineBase = '!shadow-none !rounded-[10px] !h-[45px] !px-4 !min-w-0 !bg-transparent !border transition-colors duration-200 ';
+  readonly labelClasses = computed(() => {
+    if (this.icon()) {
+      return 'font-medium tracking-wide text-sm hidden sm:inline';
+    }
+    return 'font-medium tracking-wide text-xs sm:text-sm';
+  });
 
-    // 3. Diccionario con los 8 tipos 
+  readonly tailwindClasses = computed(() => {
+    const widthClass = this.fullWidth() ? '!w-full' : 'w-full sm:w-auto';
+    const justifyClass = this.justify() === 'start'
+      ? (this.icon() ? 'justify-center sm:justify-start' : 'justify-start')
+      : 'justify-center';
+
+    const baseClasses = `${widthClass} flex ${justifyClass} items-center transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed `;
+
+    const solidBase = baseClasses + '!shadow-none !rounded-xl !h-12 sm:!h-[45px] !px-4 sm:!px-6 !text-white !border-transparent ';
+    const outlineBase = baseClasses + '!shadow-none !rounded-[10px] !h-10 sm:!h-[35px] !px-3 sm:!px-5 !bg-transparent !border ';
+
     const variantMap: Record<ButtonVariant, string> = {
-      // Sólidos
-      'solid-blue':  solidBase + '!bg-blue-600 hover:!bg-blue-700',
-      'solid-slate': solidBase + '!bg-slate-800 hover:!bg-slate-900',
-      'solid-green': solidBase + '!bg-green-600 hover:!bg-green-700',
-      'solid-red':   solidBase + '!bg-red-500 hover:!bg-red-600',
-      
-      // Outlines
-      'outline-blue':  outlineBase + '!border-blue-500 !text-blue-500 hover:!bg-blue-500/10',
-      'outline-slate': outlineBase + '!border-slate-700 !text-slate-300 hover:!bg-slate-800 hover:!text-white',
-      'outline-green': outlineBase + '!border-green-600 !text-green-600 hover:!bg-green-600/10',
-      'outline-red':   outlineBase + '!border-red-500 !text-red-500 hover:!bg-red-500/10',
+      'solid-blue':  solidBase + '!bg-[#1D6AE5] hover:brightness-90',
+      'solid-slate': solidBase + '!bg-[#1B273B] hover:brightness-125',
+      'solid-green': solidBase + '!bg-[#16A34A] hover:brightness-90',
+      'solid-red':   solidBase + '!bg-[#D64545] hover:brightness-90',
+
+      'outline-blue':  outlineBase + '!border-[#1D6AE5] !text-[#1D6AE5] hover:!bg-[#1D6AE5]/10',
+      'outline-slate': outlineBase + '!border-[#94A3B8] !text-[#94A3B8] hover:!bg-[#94A3B8]/10',
+      'outline-green': outlineBase + '!border-[#16A34A] !text-[#16A34A] hover:!bg-[#16A34A]/10',
+      'outline-red':   outlineBase + '!border-[#D64545] !text-[#D64545] hover:!bg-[#D64545]/10',
     };
 
     return variantMap[this.variant()];

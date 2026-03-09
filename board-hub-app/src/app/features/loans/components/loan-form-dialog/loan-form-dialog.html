@@ -9,7 +9,7 @@
         {{ isEdit ? 'Editar préstamo' : 'Nuevo préstamo' }}
       </h2>
       <p class="text-[11px] sm:text-xs text-base-content/50 m-0 truncate">
-        {{ isEdit ? 'Modifica los datos del préstamo' : 'Completa los datos para registrar un nuevo préstamo' }}
+        {{ isEdit ? 'Modifica los datos del préstamo' : 'Selecciona varios juegos para un cliente' }}
       </p>
     </div>
   </div>
@@ -19,27 +19,11 @@
   <mat-dialog-content class="!max-h-[68vh] !px-4 sm:!px-6 !py-3 sm:!py-4">
     <form [formGroup]="form" class="flex flex-col gap-4 sm:gap-5">
 
-      <!-- ═══════ Sección: Juego y Cliente ═══════ -->
+            <!-- ═══════ Sección: Cliente y Fechas (shared) ═══════ -->
       <div>
-        <span class="section-title">Juego y Cliente</span>
+        <span class="section-title">Cliente y período</span>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-2">
-          <!-- Juego -->
-          <mat-form-field appearance="outline">
-            <mat-label>Juego</mat-label>
-            <mat-icon matPrefix class="text-base-content/40 mr-1">sports_esports</mat-icon>
-            <mat-select formControlName="gameId" (selectionChange)="onGameChange($event.value)">
-              @for (game of games(); track game.id) {
-                <mat-option [value]="game.id">
-                  {{ game.title }} ({{ game.stockAvailable }} disp.)
-                </mat-option>
-              }
-            </mat-select>
-            @if (form.get('gameId')?.hasError('required')) {
-              <mat-error>Selecciona un juego</mat-error>
-            }
-          </mat-form-field>
-
           <!-- Cliente -->
           <mat-form-field appearance="outline">
             <mat-label>Cliente</mat-label>
@@ -55,91 +39,233 @@
               <mat-error>Selecciona un cliente</mat-error>
             }
           </mat-form-field>
+
+          <!-- Date Range Picker -->
+          <mat-form-field appearance="outline">
+            <mat-label>Período</mat-label>
+            <mat-date-range-input [formGroup]="dateRangeGroup" [rangePicker]="rangePicker">
+              <input matStartDate formControlName="start" placeholder="Inicio" />
+              <input matEndDate formControlName="end" placeholder="Fin" />
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="rangePicker" />
+            <mat-date-range-picker #rangePicker />
+            @if (dateRangeGroup.controls['start'].hasError('matStartDateInvalid')) {
+              <mat-error>Fecha inicio inválida</mat-error>
+            }
+            @if (dateRangeGroup.controls['end'].hasError('matEndDateInvalid')) {
+              <mat-error>Fecha fin inválida</mat-error>
+            }
+            @if (dateRangeGroup.controls['start'].hasError('required') || dateRangeGroup.controls['end'].hasError('required')) {
+              <mat-error>Selecciona ambas fechas</mat-error>
+            }
+          </mat-form-field>
         </div>
       </div>
 
-      <!-- ═══════ Sección: Detalles ═══════ -->
-      <div>
-        <span class="section-title">Detalles del préstamo</span>
+      <!-- ═══════ EDIT MODE: Single game (same as before) ═══════ -->
+      @if (isEdit) {
+        <div>
+          <span class="section-title">Juego y cantidad</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-2">
+            <!-- Juego -->
+            <mat-form-field appearance="outline">
+              <mat-label>Juego</mat-label>
+              <mat-icon matPrefix class="text-base-content/40 mr-1">sports_esports</mat-icon>
+              <mat-select formControlName="gameId" (selectionChange)="onGameChange($event.value)">
+                @for (game of games(); track game.id) {
+                  
+                  <mat-option [value]="game.id">
+                    {{ game.title }} ({{ game.stockAvailable }} disp.)
+                  </mat-option>
+                }
+              </mat-select>
+              @if (form.get('gameId')?.hasError('required')) {
+                <mat-error>Selecciona un juego</mat-error>
+              }
+            </mat-form-field>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1 mt-2">
-          <!-- Cantidad -->
-          <mat-form-field appearance="outline">
-            <mat-label>Cantidad</mat-label>
-            <mat-icon matPrefix class="text-base-content/40 mr-1">inventory_2</mat-icon>
-            <input
-              matInput
-              type="number"
-              formControlName="quantity"
-              [min]="1"
-              [max]="getMaxQuantity()"
-              placeholder="1"
-            />
-            @if (form.get('quantity')?.hasError('required')) {
-              <mat-error>Requerido</mat-error>
-            }
-            @if (form.get('quantity')?.hasError('min')) {
-              <mat-error>Mínimo 1</mat-error>
-            }
-            @if (form.get('quantity')?.hasError('max')) {
-              <mat-error>Máx. {{ getMaxQuantity() }}</mat-error>
-            }
-          </mat-form-field>
-
-          <!-- Fecha inicio -->
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha inicio</mat-label>
-            <input title="Start Date" matInput [matDatepicker]="startPicker" formControlName="startDate" />
-            <mat-datepicker-toggle matSuffix [for]="startPicker" />
-            <mat-datepicker #startPicker />
-            @if (form.get('startDate')?.hasError('required')) {
-              <mat-error>Requerida</mat-error>
-            }
-          </mat-form-field>
-
-          <!-- Fecha fin -->
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha fin</mat-label>
-            <input title="End Date" matInput [matDatepicker]="endPicker" formControlName="endDate" />
-            <mat-datepicker-toggle matSuffix [for]="endPicker" />
-            <mat-datepicker #endPicker />
-            @if (form.get('endDate')?.hasError('required')) {
-              <mat-error>Requerida</mat-error>
-            }
-          </mat-form-field>
-        </div>
-
-        <!-- Info del juego -->
-        @if (selectedGame()) {
-          <div class="mt-2 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs sm:text-sm">
-            <div class="flex items-center gap-2 text-base-content/70">
-              <mat-icon class="text-primary text-[16px]! sm:text-[18px]!">info</mat-icon>
-              <span>
-                Precio: <strong class="text-base-content">Bs. {{ selectedGame()!.pricePerDay.toFixed(2) }}</strong>/día
-                · Stock: <strong class="text-base-content">{{ getMaxQuantity() }}</strong>
-              </span>
-            </div>
+            <!-- Cantidad -->
+            <mat-form-field appearance="outline">
+              <mat-label>Cantidad</mat-label>
+              <mat-icon matPrefix class="text-base-content/40 mr-1">inventory_2</mat-icon>
+              <input
+                matInput
+                type="number"
+                formControlName="quantity"
+                [min]="1"
+                [max]="getMaxQuantity()"
+                placeholder="1"
+              />
+              @if (form.get('quantity')?.hasError('required')) {
+                <mat-error>Requerido</mat-error>
+              }
+              @if (form.get('quantity')?.hasError('min')) {
+                <mat-error>Mínimo 1</mat-error>
+              }
+              @if (form.get('quantity')?.hasError('max')) {
+                <mat-error>Máx. {{ getMaxQuantity() }}</mat-error>
+              }
+            </mat-form-field>
           </div>
-        }
-      </div>
 
-      <!-- ═══════ Sección: Notas ═══════ -->
-      <div>
-        <span class="section-title">Notas (opcional)</span>
-
-        <div class="mt-2">
-          <mat-form-field class="w-full" appearance="outline">
-            <mat-label>Notas adicionales</mat-label>
-            <mat-icon matPrefix class="text-base-content/40 mr-1">notes</mat-icon>
-            <textarea
-              matInput
-              formControlName="notes"
-              rows="2"
-              placeholder="Observaciones..."
-            ></textarea>
-          </mat-form-field>
+          @if (selectedGame()) {
+            <div class="mt-1 p-2.5 rounded-lg bg-primary/5 border border-primary/20 text-xs sm:text-sm">
+              <div class="flex items-center gap-2 text-base-content/70">
+                <mat-icon class="text-primary text-[16px]!">info</mat-icon>
+                <span>
+                  Precio: <strong class="text-base-content">Bs. {{ selectedGame()!.pricePerDay.toFixed(2) }}</strong>/día
+                  · Stock: <strong class="text-base-content">{{ getMaxQuantity() }}</strong>
+                </span>
+              </div>
+            </div>
+          }
         </div>
+      }
+
+      <!-- ═══════ CREATE MODE: Multi-game picker ═══════ -->
+      @if (!isEdit) {
+        <div>
+          <span class="section-title">Agregar juegos</span>
+
+          <!-- Game picker row -->
+          <div class="flex items-start gap-2 mt-2" [formGroup]="gamePickerForm">
+            <!-- Game select -->
+            <mat-form-field appearance="outline" class="flex-1">
+              <mat-label>Juego</mat-label>
+              <mat-icon matPrefix class="text-base-content/40 mr-1">sports_esports</mat-icon>
+              <mat-select formControlName="gameId" (selectionChange)="onPickerGameChange($event.value)">
+                @for (game of availableGames(); track game.id) {
+                  <mat-option [value]="game.id">
+                    {{ game.title }} ({{ game.stockAvailable }} disp.)
+                  </mat-option>
+                }
+              </mat-select>
+              @if (gamePickerForm.get('gameId')?.hasError('required') && gamePickerForm.get('gameId')?.touched) {
+                <mat-error>Selecciona un juego</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Quantity -->
+            <mat-form-field appearance="outline" class="w-24">
+              <mat-label>Cant.</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="quantity"
+                [min]="1"
+                [max]="getPickerMaxQuantity()"
+                placeholder="1"
+              />
+              @if (gamePickerForm.get('quantity')?.hasError('max')) {
+                <mat-error>Máx. {{ getPickerMaxQuantity() }}</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Add button -->
+            <button
+              mat-icon-button
+              type="button"
+              (click)="addGame()"
+              class="!mt-1 !bg-primary/15 !text-primary hover:!bg-primary/25"
+              matTooltip="Agregar juego"
+              [disabled]="!pickerSelectedGame()"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <!-- Price hint for selected game in picker -->
+          @if (pickerSelectedGame()) {
+            <div class="mb-2 px-1 text-[11px] text-base-content/50">
+              Precio: <strong class="text-base-content/70">Bs. {{ pickerSelectedGame()!.pricePerDay.toFixed(2) }}</strong>/día
+              · Stock disponible: <strong class="text-base-content/70">{{ pickerSelectedGame()!.stockAvailable }}</strong>
+            </div>
+          }
+
+          <!-- Selected games list -->
+          @if (selectedGames().length > 0) {
+            <div class="flex flex-col gap-2 mt-1">
+              <span class="section-title">Juegos seleccionados ({{ selectedGames().length }})</span>
+
+              @for (item of selectedGames(); track item.game.id; let i = $index) {
+                <div class="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg bg-base-300/40 border border-base-300">
+                  <!-- Game image or icon -->
+                  @if (item.game.imageUrl) {
+                    <img
+                      title="images"
+                      [src]="item.game.imageUrl"
+                      [alt]="item.game.title"
+                      class="w-9 h-9 rounded-lg object-cover border border-base-300 shrink-0"
+                    />
+                  } @else {
+                    <div class="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                      <mat-icon class="text-primary text-[18px]!">sports_esports</mat-icon>
+                    </div>
+                  }
+
+                  <!-- Game info -->
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium text-sm text-base-content truncate">{{ item.game.title }}</div>
+                    <div class="text-[11px] text-base-content/50">
+                      {{ item.quantity }} × Bs. {{ item.game.pricePerDay.toFixed(2) }}/día
+                    </div>
+                  </div>
+
+                  <!-- Quantity badge -->
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                    × {{ item.quantity }}
+                  </span>
+
+                  <!-- Remove button -->
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="removeGame(i)"
+                    class="!w-8 !h-8 !text-red-400 hover:!bg-red-500/10"
+                    matTooltip="Quitar juego"
+                  >
+                    <mat-icon class="text-[18px]!">close</mat-icon>
+                  </button>
+                </div>
+              }
+
+              <!-- Grand total -->
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-primary/5 border border-primary/20 mt-1">
+                <span class="text-xs sm:text-sm text-base-content/70 font-medium">
+                  Total estimado por día:
+                </span>
+                <span class="text-sm sm:text-base font-bold text-primary">
+                  Bs. {{ grandTotal().toFixed(2) }}
+                </span>
+              </div>
+            </div>
+          }
+
+          <!-- Empty state -->
+          @if (selectedGames().length === 0) {
+            <div class="flex flex-col items-center justify-center py-6 text-base-content/30">
+              <mat-icon class="text-[32px]! mb-1">playlist_add</mat-icon>
+              <span class="text-xs">Agrega juegos usando el selector de arriba</span>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ═══════ Notas (shared) ═══════ -->
+      <div>
+        <span class="section-title">Notas</span>
+        <mat-form-field appearance="outline" class="w-full mt-2">
+          <mat-label>Notas (opcional)</mat-label>
+          <mat-icon matPrefix class="text-base-content/40 mr-1">notes</mat-icon>
+          <textarea
+            matInput
+            formControlName="notes"
+            rows="2"
+            placeholder="Observaciones adicionales..."
+          ></textarea>
+        </mat-form-field>
       </div>
+
     </form>
   </mat-dialog-content>
 
@@ -154,11 +280,10 @@
       mat-flat-button
       color="primary"
       (click)="onSubmit()"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || (!isEdit && selectedGames().length === 0)"
       class="!rounded-lg !px-4 sm:!px-6"
     >
-      <mat-icon class="mr-1 text-[18px]!">{{ isEdit ? 'save' : 'add_circle' }}</mat-icon>
-      {{ isEdit ? 'Guardar' : 'Registrar' }}
+      {{ isEdit ? 'Guardar cambios' : 'Registrar ' + selectedGames().length + ' préstamo(s)' }}
     </button>
   </mat-dialog-actions>
 </div>

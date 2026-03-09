@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 import { Client, PageInfo } from '../../models/client.model';
+import { Button } from "../../../../shared/components/buttons/buttons";
 
 @Component({
   selector: 'app-client-list',
@@ -23,7 +24,8 @@ import { Client, PageInfo } from '../../models/client.model';
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-  ],
+    Button
+],
   templateUrl: './client-list.html',
   styleUrl: './client-list.css',
 })

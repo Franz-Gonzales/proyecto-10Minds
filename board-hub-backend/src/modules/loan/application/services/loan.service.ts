@@ -12,6 +12,7 @@ import { CheckOverdueLoansUseCase } from '../use-cases/check-overdue-loans.use-c
 import { FindAllLoansOptions } from '../../domain/interfaces/loan.repository.interface';
 import { CountActiveLoansByClientUseCase } from '../use-cases/count-active-loans-by-client.use-case';
 import { CountHistoricLoansByClientUseCase } from '../use-cases/count-historic-loans-by-client.use-case';
+import { CreateBulkLoansCommand, CreateBulkLoansUseCase } from '../use-cases/create-bulk-loans.use-case';
 
 
 @Injectable()
@@ -28,6 +29,7 @@ export class LoanService {
     private readonly checkOverdueUseCase: CheckOverdueLoansUseCase,
     private readonly countActiveLoansByClientUseCase: CountActiveLoansByClientUseCase,
     private readonly countHistoricLoansByClientUseCase: CountHistoricLoansByClientUseCase,
+    private readonly createBulkLoansUseCase: CreateBulkLoansUseCase,
   ) { }
 
   async create(command: CreateLoanCommand): Promise<Loan> {
@@ -68,5 +70,9 @@ export class LoanService {
 
   async countHistoricByClient(clientId: string): Promise<number> {
     return this.countHistoricLoansByClientUseCase.execute(clientId);
+  }
+
+  async createBulk(command: CreateBulkLoansCommand): Promise<Loan[]> {
+    return this.createBulkLoansUseCase.execute(command);
   }
 }

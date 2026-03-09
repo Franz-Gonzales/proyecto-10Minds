@@ -9,7 +9,8 @@ import {
 } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 
 import { LoanFilters } from '../../components/loan-filters/loan-filters';
-import { ListLoans } from '../../components/list-loans/list-loans';
+import { ListLoans, ClientLoanSummary } from '../../components/list-loans/list-loans';
+import { LoansClient } from '../../components/loans-client/loans-client';
 import {
   LoanFormDialog,
   LoanFormDialogData,
@@ -19,11 +20,11 @@ import { LoanService } from '../../services/loan.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { extractGraphQLError } from '../../../../core/interceptors/error.interceptor';
 
-import { CreateLoanInput, Loan, LoanStatus, UpdateLoanInput } from '../../models/loan.model';
+import { CreateBulkLoansInput, Loan, LoanStatus, UpdateLoanInput } from '../../models/loan.model';
 
 @Component({
   selector: 'app-loans-page',
-  imports: [PageHeader, LoanFilters, EmptyState, ListLoans],
+  imports: [PageHeader, LoanFilters, EmptyState, ListLoans, LoansClient],
   templateUrl: './loans-page.html',
 })
 export default class LoansPage implements OnInit {
@@ -36,15 +37,44 @@ export default class LoansPage implements OnInit {
   readonly activeStatus = signal<LoanStatus | null>(null);
   readonly searchTerm = signal('');
 
+  /** When set, we show the client detail view */
+  readonly selectedClient = signal<ClientLoanSummary | null>(null);
+
+  /** Filtered loans for the general view (status + search) */
   readonly filteredLoans = computed(() => {
     const search = this.searchTerm().toLowerCase().trim();
-    if (!search) return this.loans();
+    let result = this.loans();
 
-    return this.loans().filter((loan) => {
-      const gameTitle = loan.game?.title?.toLowerCase() ?? '';
-      const clientName = `${loan.client?.name ?? ''} ${loan.client?.lastName ?? ''}`.toLowerCase();
-      return gameTitle.includes(search) || clientName.includes(search);
-    });
+    if (search) {
+      result = result.filter((loan) => {
+        const gameTitle = loan.game?.title?.toLowerCase() ?? '';
+        const clientName = `${loan.client?.name ?? ''} ${loan.client?.lastName ?? ''}`.toLowerCase();
+        return gameTitle.includes(search) || clientName.includes(search);
+      });
+    }
+
+    return result;
+  });
+
+  /** Loans for the selected client, filtered by status */
+  readonly clientLoans = computed(() => {
+    const client = this.selectedClient();
+    if (!client) return [];
+
+    let result = this.loans().filter(l => l.clientId === client.clientId);
+
+    const search = this.searchTerm().toLowerCase().trim();
+    if (search) {
+      result = result.filter(l => {
+        const gameTitle = l.game?.title?.toLowerCase() ?? '';
+        return gameTitle.includes(search);
+      });
+    }
+
+    // Sort by most recent first
+    return result.sort((a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   });
 
   ngOnInit(): void {
@@ -76,21 +106,32 @@ export default class LoansPage implements OnInit {
     this.searchTerm.set(term);
   }
 
+  // ─── Client detail navigation ───
+  onViewClientLoans(summary: ClientLoanSummary): void {
+    this.searchTerm.set('');
+    this.selectedClient.set(summary);
+  }
+
+  onBackToGeneral(): void {
+    this.searchTerm.set('');
+    this.selectedClient.set(null);
+  }
+
   // ─── Create ───
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(LoanFormDialog, {
       width: '95vw',
-      maxWidth: '680px',
+      maxWidth: '720px',
       maxHeight: '90vh',
       data: {} satisfies LoanFormDialogData,
     });
 
-    dialogRef.afterClosed().subscribe((result: CreateLoanInput | undefined) => {
+    dialogRef.afterClosed().subscribe((result: CreateBulkLoansInput | undefined) => {
       if (!result) return;
 
-      this.loanService.create(result).subscribe({
-        next: () => {
-          this.notification.success('Préstamo registrado exitosamente');
+      this.loanService.createBulk(result).subscribe({
+        next: (loans) => {
+          this.notification.success(`${loans.length} préstamo(s) registrado(s) exitosamente`);
           this.loadLoans();
         },
         error: (err) => {

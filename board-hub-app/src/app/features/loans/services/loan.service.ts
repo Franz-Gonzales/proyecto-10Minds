@@ -3,8 +3,8 @@ import { map, Observable } from 'rxjs';
 
 import { GraphqlClientService } from '../../../core/graphql/graphql-client.service';
 import { GET_ALL_LOANS, GET_LOAN_BY_ID } from '../graphql/loans.queries';
-import { CREATE_LOAN, UPDATE_LOAN, RETURN_LOAN, REVERT_LOAN, DELETE_LOAN } from '../graphql/loans.mutations';
-import { CreateLoanInput, Loan, LoanStatus, UpdateLoanInput } from '../models/loan.model';
+import { CREATE_LOAN, UPDATE_LOAN, RETURN_LOAN, REVERT_LOAN, DELETE_LOAN, CREATE_BULK_LOANS } from '../graphql/loans.mutations';
+import { CreateBulkLoansInput, CreateLoanInput, Loan, LoanStatus, UpdateLoanInput } from '../models/loan.model';
 
 interface GetAllLoansResponse {
   loans: Loan[];
@@ -33,6 +33,11 @@ interface RevertLoanResponse {
 interface DeleteLoanResponse {
   removeLoan: boolean;
 }
+
+interface CreateBulkLoansResponse {
+  createBulkLoans: Loan[];
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class LoanService {
@@ -64,6 +69,12 @@ export class LoanService {
     return this.graphql
       .mutate<CreateLoanResponse>(CREATE_LOAN, { createLoanInput: input })
       .pipe(map((data) => data.createLoan));
+  }
+
+  createBulk(input: CreateBulkLoansInput): Observable<Loan[]> {
+    return this.graphql
+      .mutate<CreateBulkLoansResponse>(CREATE_BULK_LOANS, { createBulkLoansInput: input })
+      .pipe(map((data) => data.createBulkLoans));
   }
 
   update(input: UpdateLoanInput): Observable<Loan> {

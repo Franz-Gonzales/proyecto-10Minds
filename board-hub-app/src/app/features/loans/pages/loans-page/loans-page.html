@@ -20,24 +20,47 @@
       <span class="text-sm text-base-content/50">Cargando préstamos...</span>
     </div>
   </div>
-} @else if (filteredLoans().length === 0) {
-  <app-empty-state
-    [title]="searchTerm()
-      ? 'No hay resultados para &quot;' + searchTerm() + '&quot;'
-      : activeStatus()
-        ? 'No hay préstamos con este estado'
-        : 'No hay préstamos registrados'"
-    [subtitle]="searchTerm()
-      ? 'Intenta con otro término de búsqueda'
-      : 'Comienza creando un nuevo préstamo'"
-    [icon]="searchTerm() ? 'search_off' : 'receipt_long'"
-  />
+} @else if (!selectedClient()) {
+  <!-- ═══════ GENERAL VIEW: One row per client ═══════ -->
+  @if (filteredLoans().length === 0) {
+    <app-empty-state
+      [title]="searchTerm()
+        ? 'No hay resultados para &quot;' + searchTerm() + '&quot;'
+        : activeStatus()
+          ? 'No hay préstamos con este estado'
+          : 'No hay préstamos registrados'"
+      [subtitle]="searchTerm()
+        ? 'Intenta con otro término de búsqueda'
+        : 'Comienza creando un nuevo préstamo'"
+      [icon]="searchTerm() ? 'search_off' : 'receipt_long'"
+    />
+  } @else {
+    <app-list-loans
+      [loans]="filteredLoans()"
+      (viewClientLoans)="onViewClientLoans($event)"
+    />
+  }
 } @else {
-  <app-list-loans
-    [loans]="filteredLoans()"
-    (returnLoan)="onReturnLoan($event)"
-    (revertLoan)="onRevertLoan($event)"
-    (edit)="openEditDialog($event)"
-    (deleteLoan)="onDeleteLoan($event)"
-  />
+  <!-- ═══════ CLIENT DETAIL VIEW: All loans for one client ═══════ -->
+  @if (clientLoans().length === 0) {
+    <app-loans-client
+      [loans]="[]"
+      [clientName]="selectedClient()!.clientName + ' ' + selectedClient()!.clientLastName"
+      (back)="onBackToGeneral()"
+      (edit)="openEditDialog($event)"
+      (deleteLoan)="onDeleteLoan($event)"
+      (returnLoan)="onReturnLoan($event)"
+      (revertLoan)="onRevertLoan($event)"
+    />
+  } @else {
+    <app-loans-client
+      [loans]="clientLoans()"
+      [clientName]="selectedClient()!.clientName + ' ' + selectedClient()!.clientLastName"
+      (back)="onBackToGeneral()"
+      (edit)="openEditDialog($event)"
+      (deleteLoan)="onDeleteLoan($event)"
+      (returnLoan)="onReturnLoan($event)"
+      (revertLoan)="onRevertLoan($event)"
+    />
+  }
 }

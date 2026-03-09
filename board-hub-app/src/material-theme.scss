@@ -46,16 +46,6 @@ html {
     density: 0,
   ));
 
-  // Botón personalizado usando variable Sass
-  .btn-dialog {
-    @include mat.fab-overrides((
-      container-color: $color-btn-primary,
-      foreground-color: #ffffff,
-      extended-container-height: 48px,
-      touch-target-display: none,
-    ));
-  }
-
 
   .custom-dark-table {
     @include mat.table-overrides((

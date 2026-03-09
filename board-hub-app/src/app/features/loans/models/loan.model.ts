@@ -48,6 +48,19 @@ export interface UpdateLoanInput {
   notes?: string;
 }
 
+export interface BulkLoanItem {
+  gameId: string;
+  quantity: number;
+}
+
+export interface CreateBulkLoansInput {
+  clientId: string;
+  items: BulkLoanItem[];
+  startDate: string;
+  endDate: string;
+  notes?: string;
+}
+
 export const LOAN_STATUS_LABELS: Record<LoanStatus, string> = {
   [LoanStatus.RESERVED]: 'Reservado',
   [LoanStatus.LOANED]: 'Prestado',

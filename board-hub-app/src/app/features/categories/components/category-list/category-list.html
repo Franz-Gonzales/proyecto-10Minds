@@ -55,15 +55,50 @@
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="!text-center"> Acciones </th>
-        <td mat-cell *matCellDef="let element">
-          <div class="flex items-center justify-center gap-1 sm:gap-2">
-            @if(element.isActive) {
-              <app-button variant="outline-green" label="Editar" (clicked)="edit.emit(element)" />
-              <app-button variant="outline-red" label="Eliminar" (clicked)="delete.emit(element)" />
-            } @else {
-              <app-button variant="outline-blue" label="Activar" (clicked)="activate.emit(element)"/>
-            }
-          </div>
+        <td mat-cell *matCellDef="let element" class="!text-center">
+
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            class="!w-8 !h-8 text-base-content/40 hover:text-base-content"
+            matTooltip="Opciones"
+          >
+            <mat-icon class="text-[20px]!">more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="!bg-base-200 !rounded-xl !border !border-base-300 mt-1 shadow-2xl min-w-[100px] sm:min-w-[100px]">
+            <div class="p-2 flex flex-col gap-2">
+
+              @if(element.isActive) {
+                <app-button
+                  label="Editar"
+                  icon="edit"
+                  variant="outline-green"
+                  [fullWidth]="true"
+                  justify="start"
+                  (clicked)="edit.emit(element)"
+                />
+
+                <app-button
+                  label="Eliminar"
+                  icon="delete_outline"
+                  variant="outline-red"
+                  [fullWidth]="true"
+                  justify="start"
+                  (clicked)="delete.emit(element)"
+                />
+              } @else{
+                <app-button
+                  label="Activar"
+                  icon="check_circle_outline"
+                  variant="outline-blue"
+                  [fullWidth]="true"
+                  justify="start"
+                  (clicked)="activate.emit(element)"
+                />
+              }
+
+            </div>
+          </mat-menu>
         </td>
       </ng-container>
 
