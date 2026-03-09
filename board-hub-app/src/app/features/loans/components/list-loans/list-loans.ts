@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 
 import {
   Loan,
@@ -24,7 +24,7 @@ export interface ClientLoanSummary {
 
 @Component({
   selector: 'app-list-loans',
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatTableModule, DatePipe],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatTableModule, DatePipe, NgClass],
   templateUrl: './list-loans.html',
 })
 export class ListLoans {

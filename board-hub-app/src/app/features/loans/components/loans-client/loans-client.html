@@ -38,13 +38,11 @@
           <div class="flex items-center gap-2 sm:gap-3 py-1">
             @if (getGameImage(row)) {
               <img
-                title="games"
-                [title]="getGameTitle(row)"
+                title="{{getGameTitle(row)}}"
                 [src]="getGameImage(row)"
                 [alt]="getGameTitle(row)"
                 class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg object-cover border border-base-300 shrink-0"
               />
-            } @else {
               <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                 <mat-icon class="text-primary text-[16px]!">sports_esports</mat-icon>
               </div>
