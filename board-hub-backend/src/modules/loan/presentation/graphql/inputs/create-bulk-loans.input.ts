@@ -8,6 +8,7 @@ import {
     IsString,
     ValidateNested,
     ArrayMinSize,
+    IsDate,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -39,10 +40,12 @@ export class CreateBulkLoansInput {
 
     @Field(() => Date)
     @IsNotEmpty()
+    @IsDate()
     startDate: Date;
 
     @Field(() => Date)
     @IsNotEmpty()
+    @IsDate()
     endDate: Date;
 
     @Field(() => String, { nullable: true })

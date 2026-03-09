@@ -21,14 +21,14 @@
     </div>
 
     <mat-menu #cardMenu="matMenu"
-      class="!bg-base-200 !rounded-xl !border !border-base-300 mt-1 shadow-2xl min-w-[100px] sm:min-w-[100px]">
+      class="!bg-base-200 !rounded-xl !border !border-base-300 mt-1 shadow-2xl min-w-[100px]">
 
       <div class="p-2 flex flex-col gap-2">
 
-        <app-button label="Editar" icon="edit" variant="outline-green" [fullWidth]="true" justify="start"
+        <app-button matMenuClose label="Editar" icon="edit" variant="outline-green" [fullWidth]="true" justify="start"
           (clicked)="edit.emit(game())" />
 
-        <app-button label="Eliminar" icon="delete_outline" variant="outline-red" [fullWidth]="true" justify="start"
+        <app-button matMenuClose label="Eliminar" icon="delete_outline" variant="outline-red" [fullWidth]="true" justify="start"
           (clicked)="delete.emit(game())" />
 
       </div>
