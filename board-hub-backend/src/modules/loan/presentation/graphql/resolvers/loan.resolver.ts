@@ -6,11 +6,13 @@ import { UpdateLoanInput } from '../inputs/update-loan.input';
 import { LoanType } from '../types/loan.type';
 import { LoanStatus } from '../../../domain/enums/loan-status.enum';
 import { Loan } from '../../../domain/entities/loan.entity';
+import { CreateBulkLoansInput } from '../inputs/create-bulk-loans.input';
+
 
 
 @Resolver(() => LoanType)
 export class LoanResolver {
-  constructor(private readonly loanService: LoanService) {}
+  constructor(private readonly loanService: LoanService) { }
 
   @Mutation(() => LoanType, { name: 'createLoan' })
   async createLoan(
@@ -19,7 +21,7 @@ export class LoanResolver {
     return this.loanService.create(createLoanInput);
   }
 
-  @Query(() => [LoanType], { 
+  @Query(() => [LoanType], {
     name: 'loans',
     description: 'Get all loans. Supports filters by status, client, and game.'
   })
@@ -60,7 +62,7 @@ export class LoanResolver {
     return this.loanService.returnLoan(id);
   }
 
-  @Mutation(() => LoanType, { 
+  @Mutation(() => LoanType, {
     name: 'revertLoan',
     description: 'Reverts a DELIVERED loan back to RESERVED or OVERDUE. Decreases stock again.',
   })
@@ -71,5 +73,16 @@ export class LoanResolver {
   @Mutation(() => Int, { name: 'checkOverdueLoans' })
   async checkOverdueLoans(): Promise<number> {
     return this.loanService.checkOverdue();
+  }
+
+
+  @Mutation(() => [LoanType], {
+    name: 'createBulkLoans',
+    description: 'Create multiple loans for a single client at once.',
+  })
+  async createBulkLoans(
+    @Args('createBulkLoansInput') createBulkLoansInput: CreateBulkLoansInput,
+  ): Promise<Loan[]> {
+    return this.loanService.createBulk(createBulkLoansInput);
   }
 }

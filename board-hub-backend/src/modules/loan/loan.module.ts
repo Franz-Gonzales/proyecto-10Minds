@@ -16,6 +16,7 @@ import { RevertLoanUseCase } from './application/use-cases/revert-loan.use-case'
 import { CheckOverdueLoansUseCase } from './application/use-cases/check-overdue-loans.use-case';
 import { CountActiveLoansByClientUseCase } from './application/use-cases/count-active-loans-by-client.use-case';
 import { CountHistoricLoansByClientUseCase } from './application/use-cases/count-historic-loans-by-client.use-case';
+import { CreateBulkLoansUseCase } from './application/use-cases/create-bulk-loans.use-case';
 
 // Infrastructure
 import { LoanOrmEntity } from './infrastructure/persistence/typeorm/entities/loan.orm-entity';
@@ -52,6 +53,7 @@ import { ClientModule } from '../client/client.module';
         CheckOverdueLoansUseCase,
         CountActiveLoansByClientUseCase,
         CountHistoricLoansByClientUseCase,
+        CreateBulkLoansUseCase,
 
         // Service (Facade)
         LoanService,

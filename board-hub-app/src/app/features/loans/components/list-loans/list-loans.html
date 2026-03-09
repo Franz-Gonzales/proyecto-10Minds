@@ -12,6 +12,7 @@
           <th class="px-3 sm:px-6 py-3 sm:py-4 font-medium">Cant.</th>
           <th class="px-3 sm:px-6 py-3 sm:py-4 font-medium">Estado</th>
           <th class="px-3 sm:px-6 py-3 sm:py-4 font-medium">Total</th>
+          <th class="px-3 sm:px-6 py-3 sm:py-4 font-medium">Acciones</th>
           <th class="px-3 sm:px-6 py-3 sm:py-4 font-medium text-center w-16"></th>
         </tr>
       </thead>
@@ -119,6 +120,8 @@
                       variant="outline-blue"
                       icon="assignment_return"
                       label="Marcar entregado"
+                      [fullWidth]="true"
+                      justify="start"
                       (clicked)="returnLoan.emit(loan)" />
                   }
 
@@ -127,6 +130,8 @@
                       variant="outline-slate"
                       icon="undo"
                       label="Restaurar"
+                      [fullWidth]="true"
+                      justify="start"
                       (clicked)="revertLoan.emit(loan)" />
                   }
 
@@ -135,6 +140,8 @@
                       variant="outline-green"
                       icon="edit"
                       label="Editar"
+                      [fullWidth]="true"
+                      justify="start"
                       (clicked)="edit.emit(loan)" />
                   }
 
@@ -142,6 +149,8 @@
                     variant="outline-red"
                     icon="delete_outline"
                     label="Eliminar"
+                    [fullWidth]="true"
+                      justify="start"
                     (clicked)="deleteLoan.emit(loan)" />
 
                 </div>

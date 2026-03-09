@@ -19,8 +19,7 @@ import { LoanService } from '../../services/loan.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { extractGraphQLError } from '../../../../core/interceptors/error.interceptor';
 
-import { CreateLoanInput, Loan, LoanStatus, UpdateLoanInput } from '../../models/loan.model';
-
+import { CreateBulkLoansInput, Loan, LoanStatus, UpdateLoanInput } from '../../models/loan.model';
 @Component({
   selector: 'app-loans-page',
   imports: [PageHeader, LoanFilters, EmptyState, ListLoans],
@@ -80,17 +79,17 @@ export default class LoansPage implements OnInit {
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(LoanFormDialog, {
       width: '95vw',
-      maxWidth: '680px',
+      maxWidth: '720px',    // un poco más ancho para acomodar la lista de juegos
       maxHeight: '90vh',
       data: {} satisfies LoanFormDialogData,
     });
 
-    dialogRef.afterClosed().subscribe((result: CreateLoanInput | undefined) => {
+    dialogRef.afterClosed().subscribe((result: CreateBulkLoansInput | undefined) => {
       if (!result) return;
 
-      this.loanService.create(result).subscribe({
-        next: () => {
-          this.notification.success('Préstamo registrado exitosamente');
+      this.loanService.createBulk(result).subscribe({
+        next: (loans) => {
+          this.notification.success(`${loans.length} préstamo(s) registrado(s) exitosamente`);
           this.loadLoans();
         },
         error: (err) => {

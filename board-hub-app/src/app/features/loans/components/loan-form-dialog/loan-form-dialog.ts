@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,17 +18,36 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { ChangeDetectionStrategy } from '@angular/core';
+import { FormControl, FormsModule } from '@angular/forms';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { NotificationService } from '../../../../core/services/notification.service';
 import { GameService } from '../../../games/services/game.service';
 import { ClientService } from '../../../clients/services/client.service';
 import { Game } from '../../../games/models/game.model';
 import { Client } from '../../../clients/models/client.model';
-import { CreateLoanInput, Loan, UpdateLoanInput } from '../../models/loan.model';
+import {
+  CreateBulkLoansInput,
+  Loan,
+  UpdateLoanInput,
+} from '../../models/loan.model';
+
+
+/** A game selected for the bulk loan with its quantity */
+export interface SelectedGameItem {
+  game: Game;
+  quantity: number;
+}
 
 export interface LoanFormDialogData {
   loan?: Loan;
 }
+
+/** The dialog returns either a bulk create input or an update input */
+export type LoanFormDialogResult = CreateBulkLoansInput | UpdateLoanInput;
 
 @Component({
   selector: 'app-loan-form-dialog',
@@ -43,7 +62,12 @@ export interface LoanFormDialogData {
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTooltipModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideNativeDateAdapter()],
   styles: [`
     .section-title {
       font-size: 0.7rem;
@@ -63,16 +87,40 @@ export class LoanFormDialog implements OnInit {
   readonly dialogRef = inject(MatDialogRef<LoanFormDialog>);
   readonly data: LoanFormDialogData = inject(MAT_DIALOG_DATA);
 
+  /** Main form: shared fields (client, dates, notes) */
   form!: FormGroup;
+
+  /** Mini-form for adding games in create mode */
+  gamePickerForm!: FormGroup;
+
   readonly isEdit: boolean = !!this.data?.loan;
 
   readonly games = signal<Game[]>([]);
   readonly clients = signal<Client[]>([]);
-  readonly selectedGame = signal<Game | null>(null);
   readonly loadingGames = signal(false);
   readonly loadingClients = signal(false);
 
+  /** Selected games list for bulk create */
+  readonly selectedGames = signal<SelectedGameItem[]>([]);
+
+  /** Currently picked game in the game picker (for showing stock info) */
+  readonly pickerSelectedGame = signal<Game | null>(null);
+
+  /** For edit mode only */
+  readonly selectedGame = signal<Game | null>(null);
+
   readonly today = new Date();
+
+  /** Available games = all games minus already selected ones */
+  readonly availableGames = computed(() => {
+    const selected = new Set(this.selectedGames().map(sg => sg.game.id));
+    return this.games().filter(g => !selected.has(g.id));
+  });
+
+  /** Grand total price of all selected games (create mode) */
+  readonly grandTotal = computed(() =>
+    this.selectedGames().reduce((sum, sg) => sum + sg.quantity * sg.game.pricePerDay, 0)
+  );
 
   ngOnInit(): void {
     this.buildForm();
@@ -85,14 +133,39 @@ export class LoanFormDialog implements OnInit {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    this.form = this.fb.group({
-      gameId: [loan?.gameId ?? '', [Validators.required]],
-      clientId: [loan?.clientId ?? '', [Validators.required]],
-      quantity: [loan?.quantity ?? 1, [Validators.required, Validators.min(1)]],
-      startDate: [loan ? new Date(loan.startDate) : this.today, [Validators.required]],
-      endDate: [loan ? new Date(loan.endDate) : tomorrow, [Validators.required]],
-      notes: [loan?.notes ?? ''],
-    });
+    if (this.isEdit) {
+      // Edit mode: single game form (same as before)
+      this.form = this.fb.group({
+        gameId: [loan!.gameId, [Validators.required]],
+        clientId: [loan!.clientId, [Validators.required]],
+        quantity: [loan!.quantity, [Validators.required, Validators.min(1)]],
+        dateRange: this.fb.group({
+          start: [new Date(loan!.startDate), [Validators.required]],
+          end: [new Date(loan!.endDate), [Validators.required]],
+        }),
+        notes: [loan!.notes ?? ''],
+      });
+    } else {
+      // Create mode: shared fields only
+      this.form = this.fb.group({
+        clientId: ['', [Validators.required]],
+        dateRange: this.fb.group({
+          start: [this.today, [Validators.required]],
+          end: [tomorrow, [Validators.required]],
+        }),
+        notes: [''],
+      });
+
+      // Game picker mini-form
+      this.gamePickerForm = this.fb.group({
+        gameId: ['', [Validators.required]],
+        quantity: [1, [Validators.required, Validators.min(1)]],
+      });
+    }
+  }
+
+  get dateRangeGroup(): FormGroup {
+    return this.form.get('dateRange') as FormGroup;
   }
 
   private loadGames(): void {
@@ -100,18 +173,16 @@ export class LoanFormDialog implements OnInit {
     this.gameService.getAll().subscribe({
       next: (games) => {
         if (this.isEdit) {
-          // In edit mode, show all non-deleted games (current game might have 0 stock)
-          this.games.set(games.filter((g) => !g.isDeleted));
+          this.games.set(games.filter(g => !g.isDeleted));
         } else {
-          this.games.set(games.filter((g) => !g.isDeleted && g.stockAvailable > 0));
+          this.games.set(games.filter(g => !g.isDeleted && g.stockAvailable > 0));
         }
         this.loadingGames.set(false);
 
-        // Pre-select game in edit mode
-        if (this.data?.loan?.gameId) {
-          const game = games.find((g) => g.id === this.data.loan!.gameId) ?? null;
+        if (this.isEdit && this.data.loan?.gameId) {
+          const game = games.find(g => g.id === this.data.loan!.gameId) ?? null;
           this.selectedGame.set(game);
-          this.updateQuantityValidators(game);
+          this.updateEditQuantityValidators(game);
         }
       },
       error: () => {
@@ -125,7 +196,7 @@ export class LoanFormDialog implements OnInit {
     this.loadingClients.set(true);
     this.clientService.getAll().subscribe({
       next: (clients) => {
-        this.clients.set(clients.filter((c) => c.isActive));
+        this.clients.set(clients.filter(c => c.isActive));
         this.loadingClients.set(false);
       },
       error: () => {
@@ -135,22 +206,20 @@ export class LoanFormDialog implements OnInit {
     });
   }
 
+  // ─── Edit mode: game change ───
   onGameChange(gameId: string): void {
-    const game = this.games().find((g) => g.id === gameId) ?? null;
+    const game = this.games().find(g => g.id === gameId) ?? null;
     this.selectedGame.set(game);
-    this.updateQuantityValidators(game);
+    this.updateEditQuantityValidators(game);
   }
 
-  private updateQuantityValidators(game: Game | null): void {
+  private updateEditQuantityValidators(game: Game | null): void {
     if (!game) return;
-
     const quantityControl = this.form.get('quantity');
-    // In edit mode, available stock = current stock + loan's current quantity
     let maxQuantity = game.stockAvailable;
     if (this.isEdit && this.data.loan && game.id === this.data.loan.gameId) {
       maxQuantity += this.data.loan.quantity;
     }
-
     quantityControl?.setValidators([
       Validators.required,
       Validators.min(1),
@@ -162,7 +231,6 @@ export class LoanFormDialog implements OnInit {
   getMaxQuantity(): number {
     const game = this.selectedGame();
     if (!game) return 1;
-
     let max = game.stockAvailable;
     if (this.isEdit && this.data.loan && game.id === this.data.loan.gameId) {
       max += this.data.loan.quantity;
@@ -170,6 +238,49 @@ export class LoanFormDialog implements OnInit {
     return max;
   }
 
+  // ─── Create mode: game picker ───
+  onPickerGameChange(gameId: string): void {
+    const game = this.games().find(g => g.id === gameId) ?? null;
+    this.pickerSelectedGame.set(game);
+
+    if (game) {
+      const qtyCtrl = this.gamePickerForm.get('quantity');
+      qtyCtrl?.setValidators([
+        Validators.required,
+        Validators.min(1),
+        Validators.max(game.stockAvailable),
+      ]);
+      qtyCtrl?.setValue(1);
+      qtyCtrl?.updateValueAndValidity();
+    }
+  }
+
+  getPickerMaxQuantity(): number {
+    return this.pickerSelectedGame()?.stockAvailable ?? 1;
+  }
+
+  addGame(): void {
+    if (this.gamePickerForm.invalid) {
+      this.gamePickerForm.markAllAsTouched();
+      return;
+    }
+
+    const { gameId, quantity } = this.gamePickerForm.getRawValue();
+    const game = this.games().find(g => g.id === gameId);
+    if (!game) return;
+
+    this.selectedGames.update(list => [...list, { game, quantity }]);
+
+    // Reset picker
+    this.gamePickerForm.reset({ gameId: '', quantity: 1 });
+    this.pickerSelectedGame.set(null);
+  }
+
+  removeGame(index: number): void {
+    this.selectedGames.update(list => list.filter((_, i) => i !== index));
+  }
+
+  // ─── Submit ───
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -178,9 +289,8 @@ export class LoanFormDialog implements OnInit {
     }
 
     const raw = this.form.getRawValue();
-
-    const startDate = new Date(raw.startDate);
-    const endDate = new Date(raw.endDate);
+    const startDate = new Date(raw.dateRange.start);
+    const endDate = new Date(raw.dateRange.end);
 
     if (endDate <= startDate) {
       this.notification.error('La fecha de fin debe ser posterior a la fecha de inicio');
@@ -199,10 +309,18 @@ export class LoanFormDialog implements OnInit {
       };
       this.dialogRef.close(result);
     } else {
-      const result: CreateLoanInput = {
-        gameId: raw.gameId,
+      // Bulk create
+      if (this.selectedGames().length === 0) {
+        this.notification.error('Agrega al menos un juego al préstamo');
+        return;
+      }
+
+      const result: CreateBulkLoansInput = {
         clientId: raw.clientId,
-        quantity: Number(raw.quantity),
+        items: this.selectedGames().map(sg => ({
+          gameId: sg.game.id,
+          quantity: sg.quantity,
+        })),
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
         ...(raw.notes?.trim() ? { notes: raw.notes.trim() } : {}),

@@ -79,3 +79,11 @@ export const DELETE_LOAN = gql`
     removeLoan(id: $id)
   }
 `;
+
+export const CREATE_BULK_LOANS = gql`
+  mutation CreateBulkLoans($createBulkLoansInput: CreateBulkLoansInput!) {
+    createBulkLoans(createBulkLoansInput: $createBulkLoansInput) {
+      ${LOAN_FRAGMENT}
+    }
+  }
+`;
