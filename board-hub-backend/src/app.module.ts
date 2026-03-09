@@ -58,7 +58,9 @@ import { LoanModule } from './modules/loan/loan.module';
       useFactory: (configService: ConfigService) => ({
         throttlers: [
           {
+            // TTL: Time To Live (Tiempo en milisegundos)
             ttl: configService.get<number>('app.throttleTtl', 60000),
+            // LIMIT: Cantidad de peticiones permitidas en ese tiempo
             limit: configService.get<number>('app.throttleLimit', 100),
           },
         ],
